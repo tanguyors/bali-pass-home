@@ -257,9 +257,16 @@ const Map: React.FC = () => {
         ))}
 
         {/* Info window */}
-        {selectedPartner && selectedPartner.lat && selectedPartner.lng && (
+        {selectedPartner && 
+         selectedPartner.lat && 
+         selectedPartner.lng && 
+         typeof selectedPartner.lat === 'number' && 
+         typeof selectedPartner.lng === 'number' && (
           <InfoWindow
-            position={{ lat: selectedPartner.lat, lng: selectedPartner.lng }}
+            position={{ 
+              lat: Number(selectedPartner.lat), 
+              lng: Number(selectedPartner.lng) 
+            }}
             onCloseClick={() => setSelectedPartner(null)}
           >
             <div className="w-64">
