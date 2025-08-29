@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { MapPin, Star } from "lucide-react";
@@ -23,6 +24,7 @@ interface EnhancedOffer extends Offer {
 }
 
 export function FeaturedOffers() {
+  const navigate = useNavigate();
   const [offers, setOffers] = useState<EnhancedOffer[]>([]);
 
   useEffect(() => {
@@ -153,7 +155,12 @@ export function FeaturedOffers() {
                 
                 {/* Centered Action Button */}
                 <div className="flex justify-center">
-                  <Button variant="pill" size="sm" className="px-6">
+                  <Button 
+                    variant="pill" 
+                    size="sm" 
+                    className="px-6"
+                    onClick={() => navigate(`/offer/${offer.id}`)}
+                  >
                     Voir l'offre
                   </Button>
                 </div>

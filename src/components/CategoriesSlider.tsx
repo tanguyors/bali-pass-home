@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Category {
@@ -14,6 +15,7 @@ interface CategoryWithOffers extends Category {
 }
 
 export function CategoriesSlider() {
+  const navigate = useNavigate();
   const [categories, setCategories] = useState<CategoryWithOffers[]>([]);
 
   // Gradient palette for categories
@@ -79,6 +81,7 @@ export function CategoriesSlider() {
           {categories.map((category) => (
             <button
               key={category.id}
+              onClick={() => navigate(`/explorer?category=${category.slug}`)}
               className="flex-shrink-0 w-32 h-32 rounded-3xl relative overflow-hidden tap-target hover:scale-105 transition-transform duration-200 shadow-bali-2"
               style={{ scrollSnapAlign: 'start' }}
             >

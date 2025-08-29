@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { MapPin } from "lucide-react";
 
@@ -14,6 +15,7 @@ interface CityWithOffers extends City {
 }
 
 export function DestinationsSection() {
+  const navigate = useNavigate();
   const [cities, setCities] = useState<CityWithOffers[]>([]);
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
   const [filteredCities, setFilteredCities] = useState<CityWithOffers[]>([]);
@@ -114,9 +116,10 @@ export function DestinationsSection() {
       <div className="overflow-x-auto">
         <div className="flex gap-4 px-4 pb-2">
           {filteredCities.map((city) => (
-            <div
+            <button
               key={city.id}
-              className="flex-shrink-0 w-72 bg-card rounded-2xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-shadow duration-200"
+              onClick={() => navigate(`/explorer?city=${city.slug}`)}
+              className="flex-shrink-0 w-72 bg-card rounded-2xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-shadow duration-200 text-left"
             >
               {/* City Image */}
               <div className="h-32 bg-gradient-card flex items-center justify-center relative overflow-hidden">
@@ -140,7 +143,7 @@ export function DestinationsSection() {
                   </div>
                 </div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </div>

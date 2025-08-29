@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { BaliPassHeader } from "@/components/BaliPassHeader";
+import { FilterBottomSheet } from "@/components/FilterBottomSheet";
 import { HeroUnauthenticated } from "@/components/HeroUnauthenticated";
 import { HeroNoPass } from "@/components/HeroNoPass";
 import { HeroWithPass } from "@/components/HeroWithPass";
@@ -12,7 +14,6 @@ import { FinalCTABanner } from "@/components/FinalCTABanner";
 import { BottomNavigation } from "@/components/BottomNavigation";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
 import { PassSummarySection } from "@/components/PassSummarySection";
-import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { User, Session } from "@supabase/supabase-js";
 
@@ -28,6 +29,7 @@ const Index = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [userPass, setUserPass] = useState<UserPass | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     // Set up auth state listener
@@ -94,7 +96,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header - Sticky */}
-      <BaliPassHeader />
+      <BaliPassHeader onFilterClick={() => setShowFilters(true)} />
       
       {/* Main Content */}
       <main className="pb-20">
@@ -133,6 +135,12 @@ const Index = () => {
       
       {/* Bottom Navigation */}
       <BottomNavigation />
+      
+      {/* Filters Bottom Sheet */}
+      <FilterBottomSheet 
+        isOpen={showFilters} 
+        onClose={() => setShowFilters(false)} 
+      />
     </div>
   );
 };
