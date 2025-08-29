@@ -4,37 +4,45 @@ export function ReassuranceSection() {
   const reassuranceItems = [
     {
       icon: Shield,
+      emoji: "🔒",
       title: "Paiement sécurisé",
-      subtitle: "SSL & crypté"
+      bgColor: "bg-primary/10",
+      iconColor: "text-primary"
     },
     {
       icon: Clock,
+      emoji: "⏳",
       title: "Valide 12 mois",
-      subtitle: "Dès l'activation"
+      bgColor: "bg-lagoon/10",
+      iconColor: "text-lagoon"
     },
     {
       icon: CheckCircle,
+      emoji: "✅",
       title: "Partenaires vérifiés",
-      subtitle: "Qualité garantie"
+      bgColor: "bg-coral/10",
+      iconColor: "text-coral"
     }
   ];
 
   return (
     <div className="mt-8 px-4">
-      <div className="grid grid-cols-3 gap-3">
+      <div className="flex items-center justify-center gap-8">
         {reassuranceItems.map((item, index) => (
           <div
             key={index}
-            className="bg-card rounded-2xl p-3 text-center shadow-bali-2"
+            className="flex flex-col items-center text-center max-w-20"
           >
-            <div className="w-8 h-8 mx-auto mb-2 bg-primary/10 rounded-lg flex items-center justify-center">
-              <item.icon className="w-4 h-4 text-primary" />
+            {/* Circular Icon */}
+            <div className={`w-16 h-16 rounded-full ${item.bgColor} flex items-center justify-center mb-3 shadow-bali-2`}>
+              <span className="text-2xl" role="img" aria-label={item.title}>
+                {item.emoji}
+              </span>
             </div>
-            <h3 className="text-xs font-semibold text-foreground mb-1">
+            
+            {/* Label */}
+            <p className="text-xs font-semibold text-foreground leading-tight">
               {item.title}
-            </h3>
-            <p className="text-xs text-muted-foreground">
-              {item.subtitle}
             </p>
           </div>
         ))}
