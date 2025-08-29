@@ -12,13 +12,16 @@ export function FloatingActionButton() {
   };
 
   return (
-    <Button
-      variant="fab"
-      onClick={handleQRScan}
-      className="shadow-lg"
-      aria-label="Scanner QR code partenaire"
-    >
-      <QrCode className="w-6 h-6" />
-    </Button>
+    <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-50">
+      <Button
+        variant="fab"
+        onClick={handleQRScan}
+        className="relative w-16 h-16 rounded-full shadow-bali-4 animate-pulse-soft"
+        aria-label="Scanner QR code partenaire"
+        style={{ position: 'static' }}
+      >
+        <QrCode className="w-7 h-7" />
+      </Button>
+    </div>
   );
 }

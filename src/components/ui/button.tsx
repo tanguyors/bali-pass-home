@@ -23,7 +23,7 @@ const buttonVariants = cva(
         pill: "bg-primary text-primary-foreground rounded-full font-medium tap-target hover:bg-primary/90 shadow-bali-2",
         pillWhite: "bg-white text-primary rounded-full font-medium tap-target hover:bg-white/90 shadow-bali-2",
         pillOrange: "gradient-orange text-white rounded-full font-medium tap-target hover:opacity-90 transition-all duration-200 shadow-bali-2",
-        fab: "fab rounded-full w-14 h-14 text-white hover:opacity-90 transition-all duration-200 fixed bottom-20 right-4 z-50 shadow-bali-4",
+        fab: "fab rounded-full w-14 h-14 text-white hover:opacity-90 transition-all duration-200 shadow-bali-4",
       },
       size: {
         default: "h-10 px-4 py-2",
