@@ -44,7 +44,7 @@ export function QuickActions() {
           <button
             key={index}
             onClick={action.action}
-            className={`${action.bgColor} rounded-2xl p-4 flex items-center gap-4 tap-target hover:opacity-80 transition-opacity`}
+            className={`bg-card rounded-2xl p-4 flex items-center gap-4 tap-target hover:opacity-80 transition-opacity shadow-bali-2`}
           >
             <div className={`w-12 h-12 rounded-xl ${action.bgColor} flex items-center justify-center`}>
               <action.icon className={`w-6 h-6 ${action.iconColor}`} />

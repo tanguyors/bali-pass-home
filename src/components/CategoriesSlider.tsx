@@ -61,14 +61,14 @@ export function CategoriesSlider() {
           {categories.map((category, index) => (
             <button
               key={category.id}
-              className="flex-shrink-0 w-28 h-28 rounded-3xl bg-gradient-to-br from-primary/10 to-lagoon/10 flex flex-col items-center justify-center gap-2 tap-target hover:opacity-80 transition-opacity shadow-sm"
+              className="flex-shrink-0 w-28 h-28 rounded-3xl bg-card shadow-bali-2 flex flex-col items-center justify-center gap-2 tap-target hover:opacity-80 transition-opacity"
             >
               {/* Icon placeholder or emoji */}
-              <div className="w-8 h-8 rounded-lg bg-white/50 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl gradient-card flex items-center justify-center">
                 {category.icon ? (
-                  <span className="text-lg">{category.icon}</span>
+                  <span className="text-xl">{category.icon}</span>
                 ) : (
-                  <div className="w-4 h-4 bg-primary/40 rounded" />
+                  <div className="w-5 h-5 bg-primary/60 rounded" />
                 )}
               </div>
               

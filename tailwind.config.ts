@@ -36,6 +36,10 @@ export default {
 					DEFAULT: 'hsl(var(--lagoon))',
 					foreground: 'hsl(var(--lagoon-foreground))'
 				},
+				orange: {
+					DEFAULT: 'hsl(var(--orange))',
+					foreground: 'hsl(var(--orange-foreground))'
+				},
 				coral: {
 					DEFAULT: 'hsl(var(--coral))',
 					foreground: 'hsl(var(--coral-foreground))'

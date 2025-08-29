@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 export function FinalCTABanner() {
   return (
     <div className="mt-8 mx-4 mb-8">
-      <div className="gradient-hero rounded-3xl p-6 text-center text-white">
+      <div className="gradient-tropical rounded-3xl p-6 text-center text-white shadow-bali-4">
         <h2 className="text-xl font-bold mb-2">
           Prêt à profiter de Bali ?
         </h2>

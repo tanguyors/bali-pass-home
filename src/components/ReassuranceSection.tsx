@@ -25,7 +25,7 @@ export function ReassuranceSection() {
         {reassuranceItems.map((item, index) => (
           <div
             key={index}
-            className="bg-card rounded-2xl p-3 text-center shadow-sm"
+            className="bg-card rounded-2xl p-3 text-center shadow-bali-2"
           >
             <div className="w-8 h-8 mx-auto mb-2 bg-primary/10 rounded-lg flex items-center justify-center">
               <item.icon className="w-4 h-4 text-primary" />

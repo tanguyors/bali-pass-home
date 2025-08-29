@@ -127,7 +127,7 @@ export function FeaturedOffers() {
               </div>
               
               {/* Action button */}
-              <Button variant="pill" size="sm" className="w-full">
+              <Button variant="pillOrange" size="sm" className="w-full">
                 Voir
               </Button>
             </div>

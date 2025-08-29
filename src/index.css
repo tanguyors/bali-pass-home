@@ -8,34 +8,39 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Bali'Pass Color Palette */
-    --background: 44 52% 97%; /* #FAF9F6 - Light sand */
+    /* Bali'Pass Enhanced Color Palette */
+    --background: 44 52% 97%; /* #FAF9F6 - Light sand beige (kept as requested) */
     --foreground: 199 47% 15%; /* #172B2D - Dark green text */
 
-    --card: 0 0% 100%; /* White cards */
+    /* Cards - Pure white for better contrast */
+    --card: 0 0% 100%; /* Pure white cards */
     --card-foreground: 199 47% 15%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 199 47% 15%;
 
-    /* Primary - Jungle Green */
-    --primary: 159 71% 33%; /* #1A936F */
+    /* Enhanced Tropical Colors */
+    --primary: 159 84% 30%; /* #0D8B63 - Deeper emerald green */
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary - Sand Beige */
+    /* Secondary - Keep sand beige for subtle elements */
     --secondary: 44 52% 89%; /* #F4E9CD */
     --secondary-foreground: 199 47% 15%;
 
-    /* Lagoon - Complementary color */
-    --lagoon: 183 64% 52%; /* #3DCCC7 */
+    /* Lagoon - Enhanced blue-green */
+    --lagoon: 180 75% 45%; /* #1FB5AC - Vibrant lagoon */
     --lagoon-foreground: 0 0% 100%;
 
-    /* Coral accent */
+    /* Orange accents for secondary CTAs */
+    --orange: 20 95% 60%; /* #F25C2B - Vibrant orange */
+    --orange-foreground: 0 0% 100%;
+
+    /* Coral - kept for variety */
     --coral: 16 100% 64%; /* #FF7F50 */
     --coral-foreground: 0 0% 100%;
 
     /* Gold accent */
-    --gold: 51 100% 50%; /* #FFD700 */
+    --gold: 45 90% 55%; /* #E6B800 - Deeper gold */
     --gold-foreground: 199 47% 15%;
 
     --muted: 44 52% 94%;
@@ -49,7 +54,7 @@ All colors MUST be HSL.
 
     --border: 44 52% 85%;
     --input: 44 52% 85%;
-    --ring: 159 71% 33%;
+    --ring: 159 84% 30%;
 
     --radius: 0.5rem;
 
@@ -118,9 +123,13 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 
-  /* Bali'Pass Gradients */
+  /* Enhanced Bali'Pass Gradients */
   .gradient-hero {
     background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--lagoon)) 100%);
+  }
+
+  .gradient-tropical {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--lagoon)) 60%, hsl(var(--lagoon)) 100%);
   }
 
   .gradient-overlay {
@@ -128,7 +137,11 @@ All colors MUST be HSL.
   }
 
   .gradient-card {
-    background: linear-gradient(135deg, hsl(var(--lagoon) / 0.1) 0%, hsl(var(--primary) / 0.1) 100%);
+    background: linear-gradient(135deg, hsl(var(--lagoon) / 0.08) 0%, hsl(var(--primary) / 0.08) 100%);
+  }
+
+  .gradient-orange {
+    background: linear-gradient(135deg, hsl(var(--orange)) 0%, hsl(var(--coral)) 100%);
   }
 
   /* Mobile-first typography */
@@ -148,9 +161,21 @@ All colors MUST be HSL.
     line-height: 1.5;
   }
 
-  /* Card shadows */
+  /* Enhanced Card Shadows - Elevation 2-4 */
   .shadow-bali {
-    box-shadow: 0 8px 20px hsl(var(--foreground) / 0.12);
+    box-shadow: 0 4px 12px hsl(var(--foreground) / 0.08), 0 2px 4px hsl(var(--foreground) / 0.06);
+  }
+
+  .shadow-bali-2 {
+    box-shadow: 0 2px 8px hsl(var(--foreground) / 0.06), 0 1px 3px hsl(var(--foreground) / 0.04);
+  }
+
+  .shadow-bali-4 {
+    box-shadow: 0 8px 25px hsl(var(--foreground) / 0.12), 0 4px 10px hsl(var(--foreground) / 0.08);
+  }
+
+  .shadow-tropical {
+    box-shadow: 0 4px 20px hsl(var(--primary) / 0.15), 0 2px 8px hsl(var(--lagoon) / 0.1);
   }
 
   /* Floating Action Button styles */
