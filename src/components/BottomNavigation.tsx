@@ -1,12 +1,16 @@
 import { Home, Search, Map, CreditCard, User } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export function BottomNavigation() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  
   const navItems = [
-    { icon: Home, label: "Accueil", active: true },
-    { icon: Search, label: "Explorer", active: false },
-    { icon: Map, label: "Carte", active: false },
-    { icon: CreditCard, label: "Mon Pass", active: false },
-    { icon: User, label: "Profil", active: false },
+    { icon: Home, label: "Accueil", path: "/", active: location.pathname === "/" },
+    { icon: Search, label: "Explorer", path: "/explorer", active: location.pathname === "/explorer" },
+    { icon: Map, label: "Carte", path: "/map", active: location.pathname === "/map" },
+    { icon: CreditCard, label: "Mon Pass", path: "/pass", active: location.pathname === "/pass" },
+    { icon: User, label: "Profil", path: "/profile", active: location.pathname === "/profile" },
   ];
 
   return (
@@ -15,6 +19,7 @@ export function BottomNavigation() {
         {navItems.map((item, index) => (
           <button
             key={index}
+            onClick={() => navigate(item.path)}
             className={`flex flex-col items-center gap-1 tap-target p-2 rounded-lg transition-colors ${
               item.active 
                 ? 'text-primary' 
