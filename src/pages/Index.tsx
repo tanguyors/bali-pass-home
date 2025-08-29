@@ -12,7 +12,6 @@ import { FinalCTABanner } from "@/components/FinalCTABanner";
 import { BottomNavigation } from "@/components/BottomNavigation";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
 import { PassSummarySection } from "@/components/PassSummarySection";
-import { AuthButtons } from "@/components/AuthButtons";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { User, Session } from "@supabase/supabase-js";
@@ -103,9 +102,6 @@ const Index = () => {
         {!isAuthenticated && <HeroUnauthenticated />}
         {isAuthenticated && !hasActivePass && <HeroNoPass />}
         {isAuthenticated && hasActivePass && <HeroWithPass user={user} />}
-        
-        {/* Auth Buttons for unauthenticated users */}
-        {!isAuthenticated && <AuthButtons />}
         
         {/* Pricing Highlight - only show for unauthenticated or users without pass */}
         {(!isAuthenticated || !hasActivePass) && <PricingHighlight />}
