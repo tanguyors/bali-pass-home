@@ -22,6 +22,7 @@ import {
   HelpCircle,
   TrendingUp
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 
@@ -57,6 +58,7 @@ interface Profile {
 }
 
 const MonPass: React.FC = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
@@ -237,10 +239,10 @@ const MonPass: React.FC = () => {
                 </p>
                 
                 <div className="space-y-3">
-                  <Button className="w-full">
+                  <Button className="w-full" onClick={() => navigate('/auth')}>
                     Se connecter
                   </Button>
-                  <Button variant="outline" className="w-full">
+                  <Button variant="outline" className="w-full" onClick={() => navigate('/auth')}>
                     Créer un compte
                   </Button>
                   <Button variant="ghost" className="w-full">
