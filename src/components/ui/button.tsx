@@ -18,6 +18,10 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        hero: "gradient-hero text-white font-semibold rounded-full tap-target hover:opacity-90 transition-all duration-200",
+        pill: "bg-primary text-primary-foreground rounded-full font-medium tap-target hover:bg-primary/90",
+        pillWhite: "bg-white text-primary rounded-full font-medium tap-target hover:bg-white/90",
+        fab: "fab rounded-full w-14 h-14 text-white hover:opacity-90 transition-all duration-200 fixed bottom-20 right-4 z-50",
       },
       size: {
         default: "h-10 px-4 py-2",

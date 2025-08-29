@@ -8,33 +8,48 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Bali'Pass Color Palette */
+    --background: 44 52% 97%; /* #FAF9F6 - Light sand */
+    --foreground: 199 47% 15%; /* #172B2D - Dark green text */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%; /* White cards */
+    --card-foreground: 199 47% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 199 47% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Jungle Green */
+    --primary: 159 71% 33%; /* #1A936F */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Sand Beige */
+    --secondary: 44 52% 89%; /* #F4E9CD */
+    --secondary-foreground: 199 47% 15%;
 
-    --muted: 210 40% 96.1%;
+    /* Lagoon - Complementary color */
+    --lagoon: 183 64% 52%; /* #3DCCC7 */
+    --lagoon-foreground: 0 0% 100%;
+
+    /* Coral accent */
+    --coral: 16 100% 64%; /* #FF7F50 */
+    --coral-foreground: 0 0% 100%;
+
+    /* Gold accent */
+    --gold: 51 100% 50%; /* #FFD700 */
+    --gold-foreground: 199 47% 15%;
+
+    --muted: 44 52% 94%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 44 52% 89%;
+    --accent-foreground: 199 47% 15%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 44 52% 85%;
+    --input: 44 52% 85%;
+    --ring: 159 71% 33%;
 
     --radius: 0.5rem;
 
@@ -101,5 +116,52 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Bali'Pass Gradients */
+  .gradient-hero {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--lagoon)) 100%);
+  }
+
+  .gradient-overlay {
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.35) 100%);
+  }
+
+  .gradient-card {
+    background: linear-gradient(135deg, hsl(var(--lagoon) / 0.1) 0%, hsl(var(--primary) / 0.1) 100%);
+  }
+
+  /* Mobile-first typography */
+  .text-mobile-hero {
+    font-size: clamp(1.25rem, 4vw, 1.5rem);
+    line-height: 1.2;
+    font-weight: 700;
+  }
+
+  .text-mobile-subtitle {
+    font-size: clamp(0.875rem, 3vw, 1rem);
+    line-height: 1.4;
+  }
+
+  .text-mobile-body {
+    font-size: clamp(0.875rem, 2.5vw, 0.9375rem);
+    line-height: 1.5;
+  }
+
+  /* Card shadows */
+  .shadow-bali {
+    box-shadow: 0 8px 20px hsl(var(--foreground) / 0.12);
+  }
+
+  /* Floating Action Button styles */
+  .fab {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--lagoon)) 100%);
+    box-shadow: 0 4px 16px hsl(var(--primary) / 0.3);
+  }
+
+  /* Tap target minimum size */
+  .tap-target {
+    min-width: 44px;
+    min-height: 44px;
   }
 }
