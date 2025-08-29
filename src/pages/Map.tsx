@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { FilterBottomSheet } from '@/components/FilterBottomSheet';
+import { BottomNavigation } from '@/components/BottomNavigation';
 
 interface Partner {
   id: string;
@@ -362,6 +363,9 @@ const Map: React.FC = () => {
 
       {/* Floating QR button */}
       <FloatingActionButton />
+
+      {/* Bottom Navigation */}
+      <BottomNavigation />
     </div>
   );
 };
