@@ -13,20 +13,21 @@ import {
   CreditCard,
   Search,
   QrCode,
-  Edit,
   Bell,
   Mail,
   Globe,
   HelpCircle,
   MessageCircle,
   FileText,
-  Lock,
   LogOut,
   Phone,
   MapPin
 } from 'lucide-react';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
+import { EditProfileDialog } from '@/components/EditProfileDialog';
+import { ChangePasswordDialog } from '@/components/ChangePasswordDialog';
+import { SupportLink } from '@/components/SupportLink';
 import { useToast } from '@/hooks/use-toast';
 
 interface Profile {
@@ -328,6 +329,13 @@ const Profil: React.FC = () => {
                 <Button 
                   variant="ghost" 
                   className="flex flex-col items-center gap-2 h-auto py-4"
+                  onClick={() => {
+                    // Open QR scanner - you could implement camera access here
+                    toast({
+                      title: "Scanner QR",
+                      description: "Fonctionnalité de scan QR à venir",
+                    });
+                  }}
                 >
                   <QrCode className="w-6 h-6" />
                   <span className="text-sm">Scanner QR</span>
@@ -341,9 +349,10 @@ const Profil: React.FC = () => {
             <CardContent className="p-4">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="font-semibold">Mes informations personnelles</h3>
-                <Button variant="ghost" size="icon">
-                  <Edit className="w-4 h-4" />
-                </Button>
+                <EditProfileDialog 
+                  profile={profile} 
+                  onProfileUpdate={(updatedProfile) => setProfile(updatedProfile)}
+                />
               </div>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -394,7 +403,17 @@ const Profil: React.FC = () => {
                       Voir mon pass
                     </Button>
                     {pass.status === 'expired' && (
-                      <Button variant="outline" className="flex-1">
+                      <Button 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={() => {
+                          toast({
+                            title: "Renouvellement",
+                            description: "Redirection vers l'achat du pass...",
+                          });
+                          // Navigate to payment flow
+                        }}
+                      >
                         Renouveler
                       </Button>
                     )}
@@ -461,26 +480,26 @@ const Profil: React.FC = () => {
             <CardContent className="p-4">
               <h3 className="font-semibold mb-4">Support & Légal</h3>
               <div className="space-y-2">
-                <Button variant="ghost" className="w-full justify-start">
+                <SupportLink href="https://help.balipass.com" external>
                   <HelpCircle className="w-4 h-4 mr-3" />
                   Centre d'aide
-                </Button>
-                <Button variant="ghost" className="w-full justify-start">
+                </SupportLink>
+                <SupportLink href="https://faq.balipass.com" external>
                   <MessageCircle className="w-4 h-4 mr-3" />
                   FAQ
-                </Button>
-                <Button variant="ghost" className="w-full justify-start">
+                </SupportLink>
+                <SupportLink href="https://balipass.com/legal" external>
                   <FileText className="w-4 h-4 mr-3" />
                   CGV & Confidentialité
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  className="w-full justify-start"
-                  onClick={() => window.open('mailto:support@balipass.com', '_blank')}
-                >
+                </SupportLink>
+                <SupportLink href="mailto:support@balipass.com" external>
                   <Mail className="w-4 h-4 mr-3" />
                   Contact support
-                </Button>
+                </SupportLink>
+                <SupportLink href="https://wa.me/33123456789" external>
+                  <MessageCircle className="w-4 h-4 mr-3" />
+                  WhatsApp Support
+                </SupportLink>
               </div>
             </CardContent>
           </Card>
@@ -490,10 +509,7 @@ const Profil: React.FC = () => {
             <CardContent className="p-4">
               <h3 className="font-semibold mb-4">Gestion du compte</h3>
               <div className="space-y-2">
-                <Button variant="ghost" className="w-full justify-start">
-                  <Lock className="w-4 h-4 mr-3" />
-                  Changer de mot de passe
-                </Button>
+                <ChangePasswordDialog />
                 <Separator className="my-2" />
                 <Button 
                   variant="ghost" 
