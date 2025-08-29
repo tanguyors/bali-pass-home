@@ -10,7 +10,7 @@ export function BottomNavigation() {
     { icon: Search, label: "Explorer", path: "/explorer", active: location.pathname === "/explorer" },
     { icon: Map, label: "Carte", path: "/map", active: location.pathname === "/map" },
     { icon: CreditCard, label: "Mon Pass", path: "/mon-pass", active: location.pathname === "/mon-pass" },
-    { icon: User, label: "Profil", path: "/profile", active: location.pathname === "/profile" },
+    { icon: User, label: "Profil", path: "/profil", active: location.pathname === "/profil" },
   ];
 
   return (
