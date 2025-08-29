@@ -148,6 +148,19 @@ All colors MUST be HSL.
     background: linear-gradient(135deg, hsl(var(--orange)) 0%, hsl(var(--coral)) 100%);
   }
 
+  /* Quick Actions Gradients */
+  .gradient-turquoise {
+    background: linear-gradient(135deg, hsl(var(--lagoon) / 0.15) 0%, hsl(var(--primary) / 0.1) 100%);
+  }
+
+  .gradient-coral-soft {
+    background: linear-gradient(135deg, hsl(var(--coral) / 0.15) 0%, hsl(var(--orange) / 0.1) 100%);
+  }
+
+  .gradient-gold-soft {
+    background: linear-gradient(135deg, hsl(var(--gold) / 0.15) 0%, hsl(var(--gold) / 0.1) 100%);
+  }
+
   /* Mobile-first typography */
   .text-mobile-hero {
     font-size: clamp(1.25rem, 4vw, 1.5rem);
@@ -201,5 +214,40 @@ All colors MUST be HSL.
   .tap-target {
     min-width: 44px;
     min-height: 44px;
+  }
+
+  /* Animations for Quick Actions */
+  .animate-pulse-soft {
+    animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-radar {
+    animation: radar 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-soft {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes radar {
+    0% {
+      transform: scale(1) rotate(0deg);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.1) rotate(180deg);
+      opacity: 0.7;
+    }
+    100% {
+      transform: scale(1) rotate(360deg);
+      opacity: 1;
+    }
   }
 }
