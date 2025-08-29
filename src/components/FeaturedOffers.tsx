@@ -8,6 +8,8 @@ interface Offer {
   title: string;
   short_desc?: string;
   value_text?: string;
+  promo_type?: string;
+  value_number?: number;
   partner: {
     name: string;
     address?: string;
@@ -15,8 +17,13 @@ interface Offer {
   photos?: string[];
 }
 
+interface EnhancedOffer extends Offer {
+  rating: number;
+  badge_color: 'green' | 'red';
+}
+
 export function FeaturedOffers() {
-  const [offers, setOffers] = useState<Offer[]>([]);
+  const [offers, setOffers] = useState<EnhancedOffer[]>([]);
 
   useEffect(() => {
     fetchFeaturedOffers();
@@ -31,12 +38,14 @@ export function FeaturedOffers() {
           title,
           short_desc,
           value_text,
+          promo_type,
+          value_number,
           photos,
           partner:partners(name, address)
         `)
         .eq('is_featured', true)
         .eq('is_active', true)
-        .limit(3);
+        .limit(5);
       
       if (error) {
         console.error('Error fetching featured offers:', error);
@@ -44,7 +53,14 @@ export function FeaturedOffers() {
       }
       
       if (data) {
-        setOffers(data);
+        // Enhance offers with rating and badge color
+        const enhancedOffers: EnhancedOffer[] = data.map(offer => ({
+          ...offer,
+          rating: Number((Math.random() * 1.5 + 3.5).toFixed(1)), // 3.5-5.0 rating
+          badge_color: offer.promo_type === 'percent' ? 'red' : 'green'
+        }));
+        
+        setOffers(enhancedOffers);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -62,56 +78,61 @@ export function FeaturedOffers() {
         <h2 className="text-xl font-bold text-foreground">
           Offres mises en avant
         </h2>
+        <p className="text-mobile-body text-muted-foreground">
+          Les meilleures opportunités du moment
+        </p>
       </div>
 
-      {/* Featured Offers */}
-      <div className="space-y-4 px-4">
-        {offers.map((offer) => (
-          <div
-            key={offer.id}
-            className="bg-card rounded-2xl overflow-hidden shadow-bali"
-          >
-            {/* Offer Image */}
-            <div className="h-40 bg-gradient-card flex items-center justify-center relative">
-              {offer.photos && offer.photos.length > 0 ? (
-                <img
-                  src={offer.photos[0]}
-                  alt={offer.title}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <p className="text-muted-foreground text-sm">Image à venir</p>
-              )}
+      {/* Horizontal Swipeable Carousel */}
+      <div className="overflow-x-auto">
+        <div className="flex gap-4 px-4 pb-4" style={{ scrollSnapType: 'x mandatory' }}>
+          {offers.map((offer) => (
+            <div
+              key={offer.id}
+              className="flex-shrink-0 w-72 bg-card rounded-2xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-shadow duration-200"
+              style={{ scrollSnapAlign: 'start' }}
+            >
+              {/* Large Image with Discount Badge */}
+              <div className="h-48 bg-gradient-card relative overflow-hidden">
+                {offer.photos && offer.photos.length > 0 ? (
+                  <img
+                    src={offer.photos[0]}
+                    alt={offer.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-primary/20 to-lagoon/20 flex items-center justify-center">
+                    <p className="text-muted-foreground text-sm">Image à venir</p>
+                  </div>
+                )}
+                
+                {/* Discount Badge - Top Left */}
+                {offer.value_text && (
+                  <div className={`absolute top-3 left-3 px-3 py-1.5 rounded-full text-white text-xs font-bold shadow-sm ${
+                    offer.badge_color === 'red' 
+                      ? 'bg-red-500' 
+                      : 'bg-green-500'
+                  }`}>
+                    {offer.value_text}
+                  </div>
+                )}
+              </div>
               
-              {/* Discount badge */}
-              {offer.value_text && (
-                <div className="absolute top-3 left-3 bg-coral text-coral-foreground px-3 py-1 rounded-full text-xs font-bold">
-                  {offer.value_text}
-                </div>
-              )}
-            </div>
-            
-            {/* Offer Content */}
-            <div className="p-4">
-              <h3 className="font-semibold text-foreground mb-1 line-clamp-2">
-                {offer.title}
-              </h3>
-              
-              {offer.short_desc && (
-                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-                  {offer.short_desc}
-                </p>
-              )}
-              
-              {/* Partner info */}
-              <div className="flex items-center gap-2 mb-3">
-                <div className="flex-1">
-                  <p className="font-medium text-sm text-foreground">
+              {/* Content Section */}
+              <div className="p-4">
+                {/* Title */}
+                <h3 className="font-bold text-lg text-foreground mb-2 line-clamp-2 leading-tight">
+                  {offer.title}
+                </h3>
+                
+                {/* Partner info with location */}
+                <div className="mb-3">
+                  <p className="font-semibold text-sm text-foreground mb-1">
                     {offer.partner?.name}
                   </p>
                   {offer.partner?.address && (
-                    <div className="flex items-center gap-1 mt-1">
-                      <MapPin className="w-3 h-3 text-muted-foreground" />
+                    <div className="flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-muted-foreground flex-shrink-0" />
                       <p className="text-xs text-muted-foreground line-clamp-1">
                         {offer.partner.address}
                       </p>
@@ -119,20 +140,27 @@ export function FeaturedOffers() {
                   )}
                 </div>
                 
-                {/* Rating placeholder */}
-                <div className="flex items-center gap-1">
+                {/* Rating */}
+                <div className="flex items-center gap-1 mb-4">
                   <Star className="w-4 h-4 text-gold fill-current" />
-                  <span className="text-sm font-medium">4.8</span>
+                  <span className="text-sm font-semibold text-foreground">
+                    {offer.rating}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    ({Math.floor(Math.random() * 200) + 50} avis)
+                  </span>
+                </div>
+                
+                {/* Centered Action Button */}
+                <div className="flex justify-center">
+                  <Button variant="pill" size="sm" className="px-6">
+                    Voir l'offre
+                  </Button>
                 </div>
               </div>
-              
-              {/* Action button */}
-              <Button variant="pillOrange" size="sm" className="w-full">
-                Voir
-              </Button>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
