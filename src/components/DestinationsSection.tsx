@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronRight } from "lucide-react";
+import { MapPin } from "lucide-react";
 
 interface City {
   id: string;
@@ -9,9 +9,14 @@ interface City {
   is_featured: boolean;
 }
 
+interface CityWithOffers extends City {
+  offers_count?: number;
+}
+
 export function DestinationsSection() {
-  const [cities, setCities] = useState<City[]>([]);
+  const [cities, setCities] = useState<CityWithOffers[]>([]);
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
+  const [filteredCities, setFilteredCities] = useState<CityWithOffers[]>([]);
 
   useEffect(() => {
     fetchCities();
@@ -31,15 +36,32 @@ export function DestinationsSection() {
       }
       
       if (data) {
-        setCities(data);
+        // Add mock offers count for demo (in real app, this would come from a join or separate query)
+        const citiesWithOffers = data.map(city => ({
+          ...city,
+          offers_count: Math.floor(Math.random() * 20) + 5 // 5-24 offers
+        }));
+        
+        setCities(citiesWithOffers);
+        setFilteredCities(citiesWithOffers);
+        
         // Select first featured city or first city
-        const defaultCity = data.find(city => city.is_featured) || data[0];
+        const defaultCity = citiesWithOffers.find(city => city.is_featured) || citiesWithOffers[0];
         if (defaultCity) {
           setSelectedCity(defaultCity.id);
         }
       }
     } catch (error) {
       console.error('Error:', error);
+    }
+  };
+
+  const handleCityFilter = (cityId: string | null) => {
+    setSelectedCity(cityId);
+    if (cityId) {
+      setFilteredCities(cities.filter(city => city.id === cityId));
+    } else {
+      setFilteredCities(cities);
     }
   };
 
@@ -59,14 +81,24 @@ export function DestinationsSection() {
         </p>
       </div>
 
-      {/* City Chips */}
+      {/* Compact Filter Chips */}
       <div className="px-4 mb-4">
         <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => handleCityFilter(null)}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium tap-target transition-all ${
+              !selectedCity
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-muted text-muted-foreground hover:bg-primary/10'
+            }`}
+          >
+            Toutes
+          </button>
           {cities.map((city) => (
             <button
               key={city.id}
-              onClick={() => setSelectedCity(city.id)}
-              className={`px-4 py-2 rounded-full text-sm font-medium tap-target transition-all ${
+              onClick={() => handleCityFilter(city.id)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium tap-target transition-all ${
                 selectedCity === city.id
                   ? 'bg-primary text-primary-foreground'
                   : 'bg-muted text-muted-foreground hover:bg-primary/10'
@@ -78,36 +110,38 @@ export function DestinationsSection() {
         </div>
       </div>
 
-      {/* Destination Cards Carousel */}
+      {/* Visual Carousel */}
       <div className="overflow-x-auto">
         <div className="flex gap-4 px-4 pb-2">
-          {cities
-            .filter(city => !selectedCity || city.id === selectedCity)
-            .map((city) => (
-              <div
-                key={city.id}
-                className="flex-shrink-0 w-64 bg-card rounded-2xl overflow-hidden shadow-bali"
-              >
-                {/* Placeholder for city image */}
-                <div className="h-32 bg-gradient-card flex items-center justify-center">
-                  <p className="text-muted-foreground text-sm">Image à venir</p>
-                </div>
-                
-                <div className="p-4">
-                  <h3 className="font-semibold text-foreground mb-1">
-                    {city.name}
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    Offres disponibles
-                  </p>
-                  
-                  <button className="flex items-center gap-2 text-primary text-sm font-medium tap-target">
-                    Explorer
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
+          {filteredCities.map((city) => (
+            <div
+              key={city.id}
+              className="flex-shrink-0 w-72 bg-card rounded-2xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-shadow duration-200"
+            >
+              {/* City Image */}
+              <div className="h-32 bg-gradient-card flex items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-lagoon/20"></div>
+                <div className="relative z-10 text-center">
+                  <MapPin className="w-8 h-8 text-primary/60 mx-auto mb-2" />
+                  <p className="text-sm text-muted-foreground">Photo à venir</p>
                 </div>
               </div>
-            ))}
+              
+              <div className="p-4">
+                <h3 className="font-bold text-lg text-foreground mb-1">
+                  {city.name}
+                </h3>
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-muted-foreground">
+                    {city.offers_count} offres disponibles
+                  </p>
+                  <div className="bg-primary/10 text-primary text-xs font-semibold px-2 py-1 rounded-full">
+                    {city.is_featured ? 'Populaire' : 'Explorer'}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
