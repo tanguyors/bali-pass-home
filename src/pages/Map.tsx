@@ -49,7 +49,7 @@ const Map: React.FC = () => {
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY || '',
+    googleMapsApiKey: 'AIzaSyBFw0Qbyq9zTFTd-tUY6dQTl0JiXk-JvJ0', // This should be replaced with your actual Google Maps API key
   });
 
   const fetchPartners = useCallback(async () => {
