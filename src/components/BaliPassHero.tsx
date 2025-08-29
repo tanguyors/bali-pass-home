@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { ArrowRight, CreditCard } from "lucide-react";
 import baliHeroImage from "@/assets/bali-hero.jpg";
 
 interface PassSettings {
@@ -45,7 +46,7 @@ export function BaliPassHero() {
   };
 
   return (
-    <div className="relative h-64 overflow-hidden rounded-b-3xl">
+    <div className="relative h-[45vh] min-h-80 overflow-hidden rounded-b-3xl">
       {/* Background image */}
       <img 
         src={baliHeroImage}
@@ -53,47 +54,49 @@ export function BaliPassHero() {
         className="absolute inset-0 w-full h-full object-cover"
       />
       
-      {/* Overlay */}
-      <div className="absolute inset-0 gradient-overlay" />
+      {/* Bottom gradient overlay only */}
+      <div className="absolute inset-0 gradient-overlay-bottom" />
       
-      {/* Content */}
-      <div className="relative z-10 flex flex-col justify-end h-full p-4 text-white">
+      {/* Content positioned at bottom */}
+      <div className="relative z-10 flex flex-col justify-end h-full p-6 text-white">
         {/* Top chips */}
-        <div className="flex flex-wrap gap-2 mb-6">
+        <div className="flex flex-wrap gap-2 mb-8">
           {getSettingValue('validity_period') && (
-            <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium">
+            <div className="bg-white/25 backdrop-blur-sm rounded-full px-3 py-1.5 text-xs font-medium">
               {getSettingValue('validity_period')}
             </div>
           )}
           {getSettingValue('partner_count') && (
-            <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium">
+            <div className="bg-white/25 backdrop-blur-sm rounded-full px-3 py-1.5 text-xs font-medium">
               {getSettingValue('partner_count')} Partenaires
             </div>
           )}
           {getSettingValue('security_badge') && (
-            <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium">
+            <div className="bg-white/25 backdrop-blur-sm rounded-full px-3 py-1.5 text-xs font-medium">
               {getSettingValue('security_badge')}
             </div>
           )}
         </div>
         
-        {/* Headlines */}
-        <h1 className="text-mobile-hero font-bold mb-2">
+        {/* Headlines with text shadow */}
+        <h1 className="text-mobile-hero font-bold mb-3 text-shadow-strong">
           Explore More. Spend Less.
         </h1>
-        <p className="text-mobile-subtitle mb-4 opacity-90">
+        <p className="text-mobile-subtitle mb-6 opacity-95 text-shadow">
           Profite d'avantages exclusifs à Bali.
         </p>
         
         {/* CTA Buttons */}
-        <div className="space-y-3">
-          <Button variant="hero" className="w-full h-12 text-base">
+        <div className="space-y-4">
+          <Button variant="hero" className="w-full flex items-center justify-center gap-3">
+            <CreditCard className="w-5 h-5" />
             {ctaText}
           </Button>
           
-          <button className="text-white/90 text-sm underline underline-offset-2 tap-target">
+          <Button variant="heroSecondary" className="text-shadow">
             Voir les offres
-          </button>
+            <ArrowRight className="w-4 h-4" />
+          </Button>
         </div>
       </div>
     </div>

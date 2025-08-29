@@ -133,7 +133,11 @@ All colors MUST be HSL.
   }
 
   .gradient-overlay {
-    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.35) 100%);
+    background: linear-gradient(180deg, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.4) 100%);
+  }
+
+  .gradient-overlay-bottom {
+    background: linear-gradient(180deg, transparent 0%, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
   }
 
   .gradient-card {
@@ -182,6 +186,15 @@ All colors MUST be HSL.
   .fab {
     background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--lagoon)) 100%);
     box-shadow: 0 4px 16px hsl(var(--primary) / 0.3);
+  }
+
+  /* Text shadows for readability */
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .text-shadow-strong {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   }
 
   /* Tap target minimum size */
