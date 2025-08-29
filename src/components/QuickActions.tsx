@@ -1,6 +1,10 @@
 import { QrCode, MapPin, Grid3X3, Radar } from "lucide-react";
 
-export function QuickActions() {
+interface QuickActionsProps {
+  hasActivePass?: boolean;
+}
+
+export function QuickActions({ hasActivePass = false }: QuickActionsProps) {
   const actions = [
     {
       icon: QrCode,
