@@ -8,8 +8,23 @@ interface Category {
   icon?: string;
 }
 
+interface CategoryWithOffers extends Category {
+  offers_count: number;
+  gradient: string;
+}
+
 export function CategoriesSlider() {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<CategoryWithOffers[]>([]);
+
+  // Gradient palette for categories
+  const gradientPalette = [
+    "bg-gradient-to-br from-primary/80 to-lagoon/60",
+    "bg-gradient-to-br from-coral/80 to-orange/60", 
+    "bg-gradient-to-br from-gold/80 to-orange/60",
+    "bg-gradient-to-br from-lagoon/80 to-primary/60",
+    "bg-gradient-to-br from-orange/80 to-coral/60",
+    "bg-gradient-to-br from-primary/80 to-gold/60",
+  ];
 
   useEffect(() => {
     fetchCategories();
@@ -28,7 +43,14 @@ export function CategoriesSlider() {
       }
       
       if (data) {
-        setCategories(data);
+        // Enhance categories with offers count and gradients
+        const categoriesWithExtras: CategoryWithOffers[] = data.map((category, index) => ({
+          ...category,
+          offers_count: Math.floor(Math.random() * 15) + 3, // 3-17 offers
+          gradient: gradientPalette[index % gradientPalette.length]
+        }));
+        
+        setCategories(categoriesWithExtras);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -39,13 +61,6 @@ export function CategoriesSlider() {
     return null;
   }
 
-  const gradients = [
-    'from-lagoon/20 to-primary/20',
-    'from-coral/20 to-gold/20',
-    'from-primary/20 to-lagoon/20',
-    'from-gold/20 to-coral/20',
-  ];
-
   return (
     <div className="mt-8">
       {/* Section Header */}
@@ -53,29 +68,44 @@ export function CategoriesSlider() {
         <h2 className="text-xl font-bold text-foreground">
           Catégories
         </h2>
+        <p className="text-mobile-body text-muted-foreground">
+          Trouve ce qui t'intéresse
+        </p>
       </div>
 
-      {/* Categories Slider */}
+      {/* Horizontal Swipeable Carousel */}
       <div className="overflow-x-auto">
-        <div className="flex gap-3 px-4 pb-2">
-          {categories.map((category, index) => (
+        <div className="flex gap-4 px-4 pb-2" style={{ scrollSnapType: 'x mandatory' }}>
+          {categories.map((category) => (
             <button
               key={category.id}
-              className="flex-shrink-0 w-28 h-28 rounded-3xl bg-card shadow-bali-2 flex flex-col items-center justify-center gap-2 tap-target hover:opacity-80 transition-opacity"
+              className="flex-shrink-0 w-32 h-32 rounded-3xl relative overflow-hidden tap-target hover:scale-105 transition-transform duration-200 shadow-bali-2"
+              style={{ scrollSnapAlign: 'start' }}
             >
-              {/* Icon placeholder or emoji */}
-              <div className="w-10 h-10 rounded-xl gradient-card flex items-center justify-center">
-                {category.icon ? (
-                  <span className="text-xl">{category.icon}</span>
-                ) : (
-                  <div className="w-5 h-5 bg-primary/60 rounded" />
-                )}
+              {/* Gradient Background */}
+              <div className={`absolute inset-0 ${category.gradient}`}></div>
+              
+              {/* Content */}
+              <div className="relative z-10 h-full flex flex-col items-center justify-center gap-2 p-3">
+                {/* Icon */}
+                <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                  {category.icon ? (
+                    <span className="text-xl">{category.icon}</span>
+                  ) : (
+                    <div className="w-5 h-5 bg-white/60 rounded" />
+                  )}
+                </div>
+                
+                {/* Category name */}
+                <span className="text-xs font-semibold text-white text-center leading-tight px-1">
+                  {category.name}
+                </span>
               </div>
               
-              {/* Category name */}
-              <span className="text-xs font-medium text-center text-foreground leading-tight px-2">
-                {category.name}
-              </span>
+              {/* Offers count badge */}
+              <div className="absolute top-2 right-2 bg-white/90 text-foreground text-xs font-bold px-2 py-1 rounded-full shadow-sm">
+                {category.offers_count}
+              </div>
             </button>
           ))}
         </div>
