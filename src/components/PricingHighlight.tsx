@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { DollarSign, Gift } from "lucide-react";
 
 interface PricingData {
   price?: string;
@@ -51,30 +52,49 @@ export function PricingHighlight() {
   return (
     <div className="mx-4 -mt-6 relative z-20">
       <div className="bg-card rounded-3xl p-6 shadow-bali">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center">
           {/* Left column - Price */}
-          <div className="flex-1">
-            <p className="text-sm text-muted-foreground mb-1">Vous payez</p>
-            <p className="text-2xl font-bold text-primary">
-              {pricingData.price || "Prix à venir"}
-            </p>
-          </div>
-          
-          {/* Right column - Savings */}
-          {pricingData.max_savings && (
-            <div className="flex-1 text-right">
-              <p className="text-sm text-muted-foreground mb-1">Vous économisez</p>
-              <p className="text-2xl font-bold text-coral">
-                {pricingData.max_savings}
+          <div className="flex-1 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <DollarSign className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide mb-1">
+                Vous payez
+              </p>
+              <p className="text-xl font-bold text-foreground">
+                {pricingData.price || "Prix à venir"}
               </p>
             </div>
+          </div>
+          
+          {/* Vertical separator */}
+          {pricingData.max_savings && (
+            <>
+              <div className="w-px h-12 bg-border mx-4"></div>
+              
+              {/* Right column - Savings */}
+              <div className="flex-1 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-coral/10 flex items-center justify-center">
+                  <Gift className="w-5 h-5 text-coral" />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide mb-1">
+                    Vous économisez
+                  </p>
+                  <p className="text-xl font-bold text-coral">
+                    {pricingData.max_savings}
+                  </p>
+                </div>
+              </div>
+            </>
           )}
         </div>
         
         {/* Availability chip */}
         {pricingData.availability_status && (
-          <div className="mt-4 flex justify-center">
-            <div className="bg-primary/10 text-primary text-xs font-medium px-3 py-1 rounded-full">
+          <div className="mt-5 pt-4 border-t border-border/50 flex justify-center">
+            <div className="bg-primary/10 text-primary text-xs font-semibold px-4 py-2 rounded-full">
               {pricingData.availability_status}
             </div>
           </div>
