@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Capacitor } from "@capacitor/core";
 import { Camera as CapCamera, CameraResultType, CameraSource } from "@capacitor/camera";
+import QrScanner from "qr-scanner";
 
 interface QRScannerProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ interface QRScannerProps {
 export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const qrScannerRef = useRef<QrScanner | null>(null);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState(false);
   const [manualInput, setManualInput] = useState("");
@@ -49,7 +51,7 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
       return;
     }
 
-    // Utiliser l'API web pour le navigateur
+    // Utiliser l'API web pour le navigateur avec QR Scanner
     try {
       console.log("Requesting camera access...");
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -64,6 +66,24 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
         console.log("Setting video source");
         videoRef.current.srcObject = stream;
         streamRef.current = stream;
+        
+        // Initialiser le scanner QR
+        console.log("Initializing QR Scanner");
+        qrScannerRef.current = new QrScanner(
+          videoRef.current,
+          (result) => {
+            console.log("QR Code detected:", result.data);
+            handleScanResult(result.data);
+          },
+          {
+            highlightScanRegion: true,
+            highlightCodeOutline: true,
+            preferredCamera: 'environment',
+          }
+        );
+        
+        await qrScannerRef.current.start();
+        console.log("QR Scanner started");
       }
       
       // Mettre hasPermission à true immédiatement après avoir obtenu le stream
@@ -120,10 +140,20 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   };
 
   const stopCamera = () => {
+    // Arrêter le scanner QR
+    if (qrScannerRef.current) {
+      console.log("Stopping QR Scanner");
+      qrScannerRef.current.stop();
+      qrScannerRef.current.destroy();
+      qrScannerRef.current = null;
+    }
+    
+    // Arrêter le stream de caméra
     if (streamRef.current) {
       streamRef.current.getTracks().forEach(track => track.stop());
       streamRef.current = null;
     }
+    
     if (videoRef.current) {
       videoRef.current.srcObject = null;
     }
