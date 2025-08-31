@@ -225,6 +225,10 @@ All colors MUST be HSL.
     animation: radar 3s ease-in-out infinite;
   }
 
+  .animate-scan-line {
+    animation: scan-line 2s linear infinite;
+  }
+
   @keyframes pulse-soft {
     0%, 100% {
       opacity: 1;
@@ -248,6 +252,15 @@ All colors MUST be HSL.
     100% {
       transform: scale(1) rotate(360deg);
       opacity: 1;
+    }
+  }
+
+  @keyframes scan-line {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(15rem);
     }
   }
 }
