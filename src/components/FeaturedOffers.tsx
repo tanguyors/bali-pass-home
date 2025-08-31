@@ -14,8 +14,8 @@ interface Offer {
   partner: {
     name: string;
     address?: string;
+    photos?: string[];
   };
-  photos?: string[];
 }
 
 interface EnhancedOffer extends Offer {
@@ -42,8 +42,7 @@ export function FeaturedOffers() {
           value_text,
           promo_type,
           value_number,
-          photos,
-          partner:partners(name, address)
+          partner:partners(name, address, photos)
         `)
         .eq('is_featured', true)
         .eq('is_active', true)
@@ -96,9 +95,9 @@ export function FeaturedOffers() {
             >
               {/* Large Image with Discount Badge */}
               <div className="h-48 bg-gradient-card relative overflow-hidden">
-                {offer.photos && offer.photos.length > 0 ? (
+                {offer.partner?.photos && offer.partner.photos.length > 0 ? (
                   <img
-                    src={offer.photos[0]}
+                    src={offer.partner.photos[0]}
                     alt={offer.title}
                     className="w-full h-full object-cover"
                   />

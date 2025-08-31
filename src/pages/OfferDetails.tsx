@@ -23,8 +23,8 @@ interface Offer {
     phone?: string;
     website?: string;
     instagram?: string;
+    photos?: string[];
   };
-  photos?: string[];
   category: {
     name: string;
     icon?: string;
@@ -62,8 +62,7 @@ export default function OfferDetails() {
           terms_url,
           start_date,
           end_date,
-          photos,
-          partner:partners(name, address, phone, website, instagram),
+          partner:partners(name, address, phone, website, instagram, photos),
           category:categories(name, icon)
         `)
         .eq('id', offerId)
@@ -228,9 +227,9 @@ export default function OfferDetails() {
       <div className="pb-20">
         {/* Image */}
         <div className="h-64 bg-gradient-card relative overflow-hidden">
-          {offer.photos && offer.photos.length > 0 ? (
+          {offer.partner.photos && offer.partner.photos.length > 0 ? (
             <img
-              src={offer.photos[0]}
+              src={offer.partner.photos[0]}
               alt={offer.title}
               className="w-full h-full object-cover"
             />
