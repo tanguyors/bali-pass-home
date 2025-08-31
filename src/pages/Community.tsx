@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Heart, MessageCircle, Star, Filter, Search, Users, Award, Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -14,6 +15,7 @@ import CreatePostDialog from '@/components/CreatePostDialog';
 const Community: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
+  const navigate = useNavigate();
   
   const { posts, topContributors, loading, createPost, toggleLike } = useCommunity();
 
@@ -311,6 +313,7 @@ const Community: React.FC = () => {
                       <Button 
                         variant="ghost" 
                         size="sm" 
+                        onClick={() => navigate(`/partner/${post.partners.slug}`)}
                         className="text-xs bg-primary/10 text-primary hover:bg-primary/20 transition-all duration-300"
                       >
                         Voir le partenaire
