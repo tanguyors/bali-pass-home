@@ -64,11 +64,12 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
         console.log("Setting video source");
         videoRef.current.srcObject = stream;
         streamRef.current = stream;
-        
-        // Passer directement à l'interface de scan sur mobile
-        console.log("Setting permission to true");
-        setHasPermission(true);
       }
+      
+      // Mettre hasPermission à true immédiatement après avoir obtenu le stream
+      console.log("Setting permission to true");
+      setHasPermission(true);
+      
     } catch (error) {
       console.error("Erreur lors de l'accès à la caméra:", error);
       
