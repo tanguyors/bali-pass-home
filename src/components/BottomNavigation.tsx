@@ -1,4 +1,4 @@
-import { Home, Search, CreditCard, User } from "lucide-react";
+import { Home, Search, Users, CreditCard, User } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export function BottomNavigation() {
@@ -8,6 +8,7 @@ export function BottomNavigation() {
   const navItems = [
     { icon: Home, label: "Accueil", path: "/", active: location.pathname === "/" },
     { icon: Search, label: "Explorer", path: "/explorer", active: location.pathname === "/explorer" },
+    { icon: Users, label: "Communauté", path: "/community", active: location.pathname === "/community" },
     { icon: CreditCard, label: "Mon Pass", path: "/mon-pass", active: location.pathname === "/mon-pass" },
     { icon: User, label: "Profil", path: "/profil", active: location.pathname === "/profil" },
   ];
