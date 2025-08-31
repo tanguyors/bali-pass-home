@@ -63,10 +63,10 @@ export function HeroUnauthenticated() {
       {/* Bottom gradient overlay only */}
       <div className="absolute inset-0 gradient-overlay-bottom" />
       
-      {/* Content positioned at bottom */}
-      <div className="relative z-10 flex flex-col justify-end h-full p-6 text-white">
+      {/* Content positioned center */}
+      <div className="relative z-10 flex flex-col justify-center items-center h-full p-6 text-white text-center">
         {/* Top chips */}
-        <div className="flex flex-wrap gap-2 mb-8">
+        <div className="flex flex-wrap justify-center gap-2 mb-6">
           {getSettingValue('validity_period') && (
             <div className="bg-white/25 backdrop-blur-sm rounded-full px-3 py-1.5 text-xs font-medium">
               {getSettingValue('validity_period')}
@@ -88,12 +88,12 @@ export function HeroUnauthenticated() {
         <h1 className="text-mobile-hero font-bold mb-3 text-shadow-strong">
           Explore More. Spend Less.
         </h1>
-        <p className="text-mobile-subtitle mb-6 opacity-95 text-shadow">
+        <p className="text-mobile-subtitle mb-8 opacity-95 text-shadow">
           Profite d'avantages exclusifs à Bali.
         </p>
         
         {/* CTA Button */}
-        <div className="space-y-4">
+        <div className="w-full max-w-sm">
           <Button 
             variant="hero" 
             className="w-full flex items-center justify-center gap-3"
