@@ -122,9 +122,9 @@ export function SearchHeader({
           <div className="flex items-center gap-2 overflow-x-auto pb-2">
             {/* Category filter */}
             <Select 
-              value={filters.category || ''} 
+              value={filters.category || 'all'} 
               onValueChange={(value) => 
-                onFiltersChange({ ...filters, category: value || null })
+                onFiltersChange({ ...filters, category: value === 'all' ? null : value })
               }
             >
               <SelectTrigger className="w-auto h-8 rounded-full text-xs bg-background">
@@ -137,7 +137,7 @@ export function SearchHeader({
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Toutes les catégories</SelectItem>
+                <SelectItem value="all">Toutes les catégories</SelectItem>
                 {categories.map((category) => (
                   <SelectItem key={category.id} value={category.id}>
                     <span className="flex items-center gap-2">
@@ -174,11 +174,11 @@ export function SearchHeader({
             {/* Distance filter (only if location available) */}
             {userLocation && (
               <Select 
-                value={filters.maxDistance?.toString() || ''} 
+                value={filters.maxDistance?.toString() || 'all'} 
                 onValueChange={(value) => 
                   onFiltersChange({ 
                     ...filters, 
-                    maxDistance: value ? parseInt(value) : null 
+                    maxDistance: value === 'all' ? null : parseInt(value) 
                   })
                 }
               >
@@ -188,7 +188,7 @@ export function SearchHeader({
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Toutes distances</SelectItem>
+                  <SelectItem value="all">Toutes distances</SelectItem>
                   <SelectItem value="5">5 km</SelectItem>
                   <SelectItem value="10">10 km</SelectItem>
                   <SelectItem value="25">25 km</SelectItem>
