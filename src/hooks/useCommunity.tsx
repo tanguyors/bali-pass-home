@@ -191,7 +191,7 @@ export function useCommunity() {
     }
   };
 
-  const createPost = async (content: string, rating?: number, partnerId?: string, offerId?: string) => {
+  const createPost = async (content: string, rating?: number, partnerId?: string, offerId?: string, photos?: string[]) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       
@@ -212,6 +212,7 @@ export function useCommunity() {
           rating,
           partner_id: partnerId,
           offer_id: offerId,
+          photos: photos || []
         })
         .select()
         .single();
