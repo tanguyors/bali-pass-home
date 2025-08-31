@@ -6,7 +6,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   User as UserIcon, 
@@ -20,8 +19,14 @@ import {
   MessageCircle,
   FileText,
   LogOut,
-  Phone,
-  MapPin
+  Edit,
+  Shield,
+  Star,
+  Award,
+  Calendar,
+  MapPin,
+  Settings,
+  ChevronRight
 } from 'lucide-react';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
@@ -127,8 +132,8 @@ const Profil: React.FC = () => {
       // Set preferences from profile data
       if (profileData) {
         setPreferences({
-          push_notifications: true, // Default as we don't have this field yet
-          email_notifications: true, // Default as we don't have this field yet
+          push_notifications: true,
+          email_notifications: true,
           language: profileData.locale || 'fr'
         });
       }
@@ -160,7 +165,6 @@ const Profil: React.FC = () => {
     try {
       setPreferences(prev => ({ ...prev, [key]: value }));
       
-      // For language, update the profile locale
       if (key === 'language' && user) {
         await supabase
           .from('profiles')
@@ -238,7 +242,7 @@ const Profil: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-background">
-        <p className="text-muted-foreground">Chargement...</p>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -246,27 +250,40 @@ const Profil: React.FC = () => {
   // Not authenticated state
   if (!user) {
     return (
-      <div className="flex-1 bg-background min-h-screen">
+      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
         <div className="flex-1 p-4">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <Card className="w-full max-w-sm">
-              <CardContent className="p-6 text-center">
-                <UserIcon className="w-16 h-16 mx-auto mb-4 text-primary" />
-                <h2 className="text-xl font-semibold mb-2">
-                  Connecte-toi pour accéder à ton profil
+          <div className="flex items-center justify-center min-h-[80vh]">
+            <Card className="w-full max-w-sm shadow-xl border-0 bg-card/60 backdrop-blur-sm">
+              <CardContent className="p-8 text-center">
+                <div className="w-20 h-20 bg-gradient-to-br from-primary to-primary/60 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <UserIcon className="w-10 h-10 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold mb-3 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                  Connecte-toi
                 </h2>
-                <p className="text-muted-foreground mb-6">
-                  Gérer tes informations et tes préférences
+                <p className="text-muted-foreground mb-8 leading-relaxed">
+                  Accède à ton profil et manage tes préférences Bali'Pass
                 </p>
                 
                 <div className="space-y-3">
-                  <Button className="w-full" onClick={() => navigate('/auth')}>
+                  <Button 
+                    className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg transition-all duration-300" 
+                    onClick={() => navigate('/auth')}
+                  >
                     Se connecter
                   </Button>
-                  <Button variant="outline" className="w-full" onClick={() => navigate('/auth')}>
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-primary/20 hover:bg-primary/5 transition-all duration-300" 
+                    onClick={() => navigate('/auth')}
+                  >
                     Créer un compte
                   </Button>
-                  <Button variant="ghost" className="w-full" onClick={() => navigate('/')}>
+                  <Button 
+                    variant="ghost" 
+                    className="w-full text-muted-foreground hover:text-foreground transition-all duration-300" 
+                    onClick={() => navigate('/')}
+                  >
                     Découvrir Bali'Pass
                   </Button>
                 </div>
@@ -281,250 +298,267 @@ const Profil: React.FC = () => {
 
   // Authenticated profile content
   return (
-    <div className="flex-1 bg-background min-h-screen">
-      <div className="flex-1 p-4 pb-20">
-        <div className="space-y-6">
-          {/* Header */}
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-4">
-                <Avatar className="w-16 h-16">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+      <div className="p-4 pb-24 space-y-6">
+        {/* Profile Header with Gradient */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-primary/90 to-primary/70 text-white shadow-2xl">
+          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="relative p-6">
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <Avatar className="w-16 h-16 ring-4 ring-white/20 shadow-xl">
                   <AvatarImage src="" />
-                  <AvatarFallback className="bg-primary text-primary-foreground">
+                  <AvatarFallback className="bg-white/20 text-white font-bold text-lg backdrop-blur-sm">
                     {getInitials(profile?.name, profile?.first_name, profile?.last_name)}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1">
-                  <h2 className="text-xl font-bold">{getDisplayName()}</h2>
-                  <p className="text-muted-foreground">{user.email}</p>
-                  <Badge variant={getPassStatusVariant()} className="mt-2">
-                    {getPassStatusLabel()}
-                  </Badge>
-                </div>
+                <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 border-2 border-white rounded-full"></div>
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Quick Actions */}
-          <Card>
-            <CardContent className="p-4">
-              <h3 className="font-semibold mb-4">Actions rapides</h3>
-              <div className="flex justify-around">
-                <Button 
-                  variant="ghost" 
-                  className="flex flex-col items-center gap-2 h-auto py-4"
-                  onClick={() => navigate('/mon-pass')}
+              <div className="flex-1">
+                <h1 className="text-2xl font-bold mb-1">{getDisplayName()}</h1>
+                <p className="text-white/80 text-sm mb-2">{user.email}</p>
+                <Badge 
+                  variant={pass?.status === 'active' ? 'secondary' : 'outline'} 
+                  className={`${pass?.status === 'active' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-white/20 text-white border-white/30'}`}
                 >
-                  <CreditCard className="w-6 h-6" />
-                  <span className="text-sm">Mon Pass</span>
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  className="flex flex-col items-center gap-2 h-auto py-4"
-                  onClick={() => navigate('/explorer')}
-                >
-                  <Search className="w-6 h-6" />
-                  <span className="text-sm">Explorer</span>
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  className="flex flex-col items-center gap-2 h-auto py-4"
-                  onClick={() => {
-                    // Open QR scanner - you could implement camera access here
-                    toast({
-                      title: "Scanner QR",
-                      description: "Fonctionnalité de scan QR à venir",
-                    });
-                  }}
-                >
-                  <QrCode className="w-6 h-6" />
-                  <span className="text-sm">Scanner QR</span>
-                </Button>
+                  {getPassStatusLabel()}
+                </Badge>
               </div>
+              <EditProfileDialog 
+                profile={profile} 
+                onProfileUpdate={(updatedProfile) => setProfile(updatedProfile)}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-3 gap-3">
+          <Card className="bg-gradient-to-br from-blue-50 to-blue-100/50 border-blue-200/50 shadow-sm">
+            <CardContent className="p-4 text-center">
+              <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                <Award className="w-5 h-5 text-white" />
+              </div>
+              <p className="text-2xl font-bold text-blue-700">12</p>
+              <p className="text-xs text-blue-600">Offres utilisées</p>
             </CardContent>
           </Card>
-
-          {/* Account Info */}
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="font-semibold">Mes informations personnelles</h3>
-                <EditProfileDialog 
-                  profile={profile} 
-                  onProfileUpdate={(updatedProfile) => setProfile(updatedProfile)}
-                />
+          
+          <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 border-emerald-200/50 shadow-sm">
+            <CardContent className="p-4 text-center">
+              <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                <Star className="w-5 h-5 text-white" />
               </div>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Nom complet</span>
-                  <span>{getDisplayName()}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Email</span>
-                  <span>{user.email}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Téléphone</span>
-                  <span>{profile?.phone || 'Non renseigné'}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Langue</span>
-                  <span>{preferences.language === 'fr' ? 'Français' : 'English'}</span>
-                </div>
-              </div>
+              <p className="text-2xl font-bold text-emerald-700">4.8</p>
+              <p className="text-xs text-emerald-600">Note moyenne</p>
             </CardContent>
           </Card>
-
-          {/* Pass Info */}
-          <Card>
-            <CardContent className="p-4">
-              <h3 className="font-semibold mb-4">Mon Pass</h3>
-              {pass ? (
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Statut</span>
-                    <Badge variant={getPassStatusVariant()}>
-                      {getPassStatusLabel()}
-                    </Badge>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Date d'achat</span>
-                    <span>{formatDate(pass.purchased_at)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Expire le</span>
-                    <span>{formatDate(pass.expires_at)}</span>
-                  </div>
-                  <div className="flex gap-2 mt-4">
-                    <Button 
-                      className="flex-1"
-                      onClick={() => navigate('/mon-pass')}
-                    >
-                      Voir mon pass
-                    </Button>
-                    {pass.status === 'expired' && (
-                      <Button 
-                        variant="outline" 
-                        className="flex-1"
-                        onClick={() => {
-                          toast({
-                            title: "Renouvellement",
-                            description: "Redirection vers l'achat du pass...",
-                          });
-                          // Navigate to payment flow
-                        }}
-                      >
-                        Renouveler
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div className="text-center py-6">
-                  <p className="text-muted-foreground mb-4">Aucun pass actif</p>
-                  <Button onClick={() => navigate('/mon-pass')}>
-                    Obtenir le Bali'Pass
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Preferences */}
-          <Card>
-            <CardContent className="p-4">
-              <h3 className="font-semibold mb-4">Préférences & Notifications</h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Bell className="w-4 h-4 text-muted-foreground" />
-                    <span>Notifications push</span>
-                  </div>
-                  <Switch
-                    checked={preferences.push_notifications}
-                    onCheckedChange={(checked) => updatePreference('push_notifications', checked)}
-                    disabled={updating}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-muted-foreground" />
-                    <span>Alertes email</span>
-                  </div>
-                  <Switch
-                    checked={preferences.email_notifications}
-                    onCheckedChange={(checked) => updatePreference('email_notifications', checked)}
-                    disabled={updating}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Globe className="w-4 h-4 text-muted-foreground" />
-                    <span>Langue</span>
-                  </div>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => updatePreference('language', preferences.language === 'fr' ? 'en' : 'fr')}
-                    disabled={updating}
-                  >
-                    {preferences.language === 'fr' ? 'FR' : 'EN'}
-                  </Button>
-                </div>
+          
+          <Card className="bg-gradient-to-br from-purple-50 to-purple-100/50 border-purple-200/50 shadow-sm">
+            <CardContent className="p-4 text-center">
+              <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                <MapPin className="w-5 h-5 text-white" />
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Support & Legal */}
-          <Card>
-            <CardContent className="p-4">
-              <h3 className="font-semibold mb-4">Support & Légal</h3>
-              <div className="space-y-2">
-                <SupportLink href="https://help.balipass.com" external>
-                  <HelpCircle className="w-4 h-4 mr-3" />
-                  Centre d'aide
-                </SupportLink>
-                <SupportLink href="https://faq.balipass.com" external>
-                  <MessageCircle className="w-4 h-4 mr-3" />
-                  FAQ
-                </SupportLink>
-                <SupportLink href="https://balipass.com/legal" external>
-                  <FileText className="w-4 h-4 mr-3" />
-                  CGV & Confidentialité
-                </SupportLink>
-                <SupportLink href="mailto:support@balipass.com" external>
-                  <Mail className="w-4 h-4 mr-3" />
-                  Contact support
-                </SupportLink>
-                <SupportLink href="https://wa.me/33123456789" external>
-                  <MessageCircle className="w-4 h-4 mr-3" />
-                  WhatsApp Support
-                </SupportLink>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Account Management */}
-          <Card>
-            <CardContent className="p-4">
-              <h3 className="font-semibold mb-4">Gestion du compte</h3>
-              <div className="space-y-2">
-                <ChangePasswordDialog />
-                <Separator className="my-2" />
-                <Button 
-                  variant="ghost" 
-                  className="w-full justify-start text-destructive hover:text-destructive"
-                  onClick={handleSignOut}
-                >
-                  <LogOut className="w-4 h-4 mr-3" />
-                  Se déconnecter
-                </Button>
-              </div>
+              <p className="text-2xl font-bold text-purple-700">8</p>
+              <p className="text-xs text-purple-600">Lieux visités</p>
             </CardContent>
           </Card>
         </div>
+
+        {/* Quick Actions */}
+        <Card className="shadow-lg border-0 bg-card/60 backdrop-blur-sm">
+          <CardContent className="p-6">
+            <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+              <div className="w-2 h-6 bg-gradient-to-b from-primary to-primary/60 rounded-full"></div>
+              Actions rapides
+            </h3>
+            <div className="grid grid-cols-3 gap-4">
+              <Button 
+                variant="ghost" 
+                className="flex flex-col items-center gap-3 h-auto py-4 hover:bg-primary/5 transition-all duration-300 group"
+                onClick={() => navigate('/mon-pass')}
+              >
+                <div className="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <CreditCard className="w-6 h-6 text-primary" />
+                </div>
+                <span className="text-sm font-medium">Mon Pass</span>
+              </Button>
+              
+              <Button 
+                variant="ghost" 
+                className="flex flex-col items-center gap-3 h-auto py-4 hover:bg-primary/5 transition-all duration-300 group"
+                onClick={() => navigate('/explorer')}
+              >
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500/10 to-blue-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <Search className="w-6 h-6 text-blue-600" />
+                </div>
+                <span className="text-sm font-medium">Explorer</span>
+              </Button>
+              
+              <Button 
+                variant="ghost" 
+                className="flex flex-col items-center gap-3 h-auto py-4 hover:bg-primary/5 transition-all duration-300 group"
+                onClick={() => {
+                  toast({
+                    title: "Scanner QR",
+                    description: "Fonctionnalité de scan QR à venir",
+                  });
+                }}
+              >
+                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <QrCode className="w-6 h-6 text-emerald-600" />
+                </div>
+                <span className="text-sm font-medium">Scanner</span>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Account Info */}
+        <Card className="shadow-lg border-0 bg-card/60 backdrop-blur-sm">
+          <CardContent className="p-6">
+            <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+              <div className="w-2 h-6 bg-gradient-to-b from-blue-500 to-blue-400 rounded-full"></div>
+              Informations personnelles
+            </h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+                <div className="flex items-center gap-3">
+                  <UserIcon className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Nom complet</span>
+                </div>
+                <span className="font-medium">{getDisplayName()}</span>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+                <div className="flex items-center gap-3">
+                  <Mail className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Email</span>
+                </div>
+                <span className="font-medium">{user.email}</span>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+                <div className="flex items-center gap-3">
+                  <Globe className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Langue</span>
+                </div>
+                <Badge variant="outline">
+                  {preferences.language === 'fr' ? 'Français' : 'English'}
+                </Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Pass Information */}
+        {pass && (
+          <Card className="shadow-lg border-0 bg-gradient-to-br from-emerald-50/50 to-emerald-100/30 border-emerald-200/50">
+            <CardContent className="p-6">
+              <h3 className="font-bold text-lg mb-4 flex items-center gap-2 text-emerald-800">
+                <div className="w-2 h-6 bg-gradient-to-b from-emerald-500 to-emerald-400 rounded-full"></div>
+                Mon Bali'Pass
+              </h3>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-emerald-700">Statut</span>
+                  <Badge variant={getPassStatusVariant()}>
+                    {getPassStatusLabel()}
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-emerald-700">Expire le</span>
+                  <span className="font-medium text-emerald-800">{formatDate(pass.expires_at)}</span>
+                </div>
+                <Button 
+                  className="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 shadow-lg"
+                  onClick={() => navigate('/mon-pass')}
+                >
+                  <CreditCard className="w-4 h-4 mr-2" />
+                  Voir mon pass
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Settings */}
+        <Card className="shadow-lg border-0 bg-card/60 backdrop-blur-sm">
+          <CardContent className="p-6">
+            <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+              <div className="w-2 h-6 bg-gradient-to-b from-purple-500 to-purple-400 rounded-full"></div>
+              Préférences
+            </h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+                <div className="flex items-center gap-3">
+                  <Bell className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm">Notifications push</span>
+                </div>
+                <Switch
+                  checked={preferences.push_notifications}
+                  onCheckedChange={(checked) => updatePreference('push_notifications', checked)}
+                  disabled={updating}
+                />
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+                <div className="flex items-center gap-3">
+                  <Mail className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm">Alertes email</span>
+                </div>
+                <Switch
+                  checked={preferences.email_notifications}
+                  onCheckedChange={(checked) => updatePreference('email_notifications', checked)}
+                  disabled={updating}
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Support */}
+        <Card className="shadow-lg border-0 bg-card/60 backdrop-blur-sm">
+          <CardContent className="p-6">
+            <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+              <div className="w-2 h-6 bg-gradient-to-b from-orange-500 to-orange-400 rounded-full"></div>
+              Support & Aide
+            </h3>
+            <div className="space-y-2">
+              <SupportLink href="https://help.balipass.com" external>
+                <div className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/30 transition-colors duration-200">
+                  <div className="flex items-center gap-3">
+                    <HelpCircle className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm">Centre d'aide</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                </div>
+              </SupportLink>
+              <SupportLink href="mailto:support@balipass.com" external>
+                <div className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/30 transition-colors duration-200">
+                  <div className="flex items-center gap-3">
+                    <MessageCircle className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm">Contact support</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                </div>
+              </SupportLink>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Sign Out */}
+        <Card className="shadow-lg border-0 bg-card/60 backdrop-blur-sm">
+          <CardContent className="p-6">
+            <Button 
+              variant="outline" 
+              className="w-full border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 transition-all duration-300"
+              onClick={handleSignOut}
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Se déconnecter
+            </Button>
+          </CardContent>
+        </Card>
       </div>
-      
+
       <FloatingActionButton />
       <BottomNavigation />
     </div>
