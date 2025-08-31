@@ -22,7 +22,7 @@ export function FloatingActionButton() {
         <Button
           variant="fab"
           onClick={handleQRScan}
-          className="relative w-16 h-16 rounded-full shadow-bali-4 animate-pulse-soft"
+          className="relative w-16 h-16 rounded-full shadow-bali-4"
           aria-label="Scanner QR code partenaire"
           style={{ position: 'static' }}
         >
