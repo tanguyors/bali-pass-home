@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { X, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Capacitor } from "@capacitor/core";
@@ -270,6 +271,9 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-sm mx-auto">
+          <VisuallyHidden>
+            <DialogTitle>Initialisation du scanner QR</DialogTitle>
+          </VisuallyHidden>
           <div className="text-center p-6">
             <Camera className="w-12 h-12 mx-auto mb-4 text-muted-foreground animate-pulse" />
             <h3 className="text-lg font-semibold mb-2">Initialisation de la caméra...</h3>
@@ -286,6 +290,9 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-sm mx-auto">
+          <VisuallyHidden>
+            <DialogTitle>Scanner QR indisponible</DialogTitle>
+          </VisuallyHidden>
           <div className="text-center p-6">
             <Camera className="w-12 h-12 mx-auto mb-4 text-destructive" />
             <h3 className="text-lg font-semibold mb-2">Scanner temporairement indisponible</h3>
@@ -325,6 +332,9 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-full max-h-full w-full h-full p-0 border-0">
+        <VisuallyHidden>
+          <DialogTitle>Scanner QR des partenaires</DialogTitle>
+        </VisuallyHidden>
         <div className="relative w-full h-full bg-black">
           {/* Video element for camera feed (web uniquement) */}
           {!Capacitor.isNativePlatform() && (
