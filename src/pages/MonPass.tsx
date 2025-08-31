@@ -5,8 +5,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Separator } from '@/components/ui/separator';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { 
   User as UserIcon, 
   QrCode, 
@@ -14,17 +12,19 @@ import {
   Calendar, 
   MapPin, 
   CheckCircle, 
-  ChevronDown,
-  Bell,
-  Globe,
-  LogOut,
-  Mail,
-  HelpCircle,
-  TrendingUp
+  TrendingUp,
+  CreditCard,
+  Wallet,
+  Gift,
+  Clock,
+  Star,
+  Award,
+  ChevronRight
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
+import { useToast } from '@/hooks/use-toast';
 
 interface Pass {
   id: string;
@@ -32,6 +32,7 @@ interface Pass {
   expires_at: string;
   purchased_at: string;
   user_id: string;
+  qr_token: string;
 }
 
 interface Redemption {
@@ -59,6 +60,7 @@ interface Profile {
 
 const MonPass: React.FC = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
@@ -66,9 +68,6 @@ const MonPass: React.FC = () => {
   const [redemptions, setRedemptions] = useState<Redemption[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [totalSavings, setTotalSavings] = useState<number>(0);
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const [isConditionsOpen, setIsConditionsOpen] = useState(false);
-  const [isSupportOpen, setIsSupportOpen] = useState(false);
 
   // Auth state management
   useEffect(() => {
@@ -197,27 +196,36 @@ const MonPass: React.FC = () => {
     });
   };
 
-  const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error('Erreur lors de la déconnexion:', error);
+  const getDisplayName = (): string => {
+    if (profile?.first_name && profile?.last_name) {
+      return `${profile.first_name} ${profile.last_name}`;
     }
+    if (profile?.name) {
+      return profile.name;
+    }
+    return user?.email?.split('@')[0] || 'Utilisateur';
+  };
+
+  const getDaysRemaining = (): number => {
+    if (!pass) return 0;
+    const now = new Date();
+    const expiryDate = new Date(pass.expires_at);
+    const diffTime = expiryDate.getTime() - now.getTime();
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   };
 
   const handleScanPartner = () => {
-    // TODO: Implement QR scanner with Expo Camera
-    console.log('Scanner QR - Fonctionnalité bientôt disponible');
-  };
-
-  const handleContactSupport = () => {
-    window.open('mailto:support@balipass.com', '_blank');
+    toast({
+      title: "Scanner QR",
+      description: "Fonctionnalité de scan QR à venir",
+    });
   };
 
   // Loading state
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-background">
-        <p className="text-muted-foreground">Chargement...</p>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -225,28 +233,41 @@ const MonPass: React.FC = () => {
   // Not authenticated state
   if (!user) {
     return (
-      <div className="flex-1 bg-background min-h-screen">
+      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
         <div className="flex-1 p-4">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <Card className="w-full max-w-sm">
-              <CardContent className="p-6 text-center">
-                <UserIcon className="w-16 h-16 mx-auto mb-4 text-primary" />
-                <h2 className="text-xl font-semibold mb-2">
-                  Connecte-toi pour accéder à ton pass
+          <div className="flex items-center justify-center min-h-[80vh]">
+            <Card className="w-full max-w-sm shadow-xl border-0 bg-card/60 backdrop-blur-sm">
+              <CardContent className="p-8 text-center">
+                <div className="w-20 h-20 bg-gradient-to-br from-primary to-primary/60 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <CreditCard className="w-10 h-10 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold mb-3 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                  Ton Bali'Pass
                 </h2>
-                <p className="text-muted-foreground mb-6">
-                  Découvre tes économies et ton historique d'utilisations
+                <p className="text-muted-foreground mb-8 leading-relaxed">
+                  Connecte-toi pour accéder à ton pass et découvrir tes économies
                 </p>
                 
                 <div className="space-y-3">
-                  <Button className="w-full" onClick={() => navigate('/auth')}>
+                  <Button 
+                    className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg transition-all duration-300" 
+                    onClick={() => navigate('/auth')}
+                  >
                     Se connecter
                   </Button>
-                  <Button variant="outline" className="w-full" onClick={() => navigate('/auth')}>
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-primary/20 hover:bg-primary/5 transition-all duration-300" 
+                    onClick={() => navigate('/auth')}
+                  >
                     Créer un compte
                   </Button>
-                  <Button variant="ghost" className="w-full">
-                    En savoir plus sur Bali'Pass
+                  <Button 
+                    variant="ghost" 
+                    className="w-full text-muted-foreground hover:text-foreground transition-all duration-300" 
+                    onClick={() => navigate('/')}
+                  >
+                    En savoir plus
                   </Button>
                 </div>
               </CardContent>
@@ -261,41 +282,58 @@ const MonPass: React.FC = () => {
   // Authenticated but no active pass
   if (!pass) {
     return (
-      <div className="flex-1 bg-background min-h-screen">
-        <div className="flex-1 p-4">
-          <div className="space-y-6">
-            <h1 className="text-2xl font-bold text-center">
+      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+        <div className="p-4 space-y-6">
+          <div className="text-center">
+            <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
               Obtiens ton Bali'Pass
             </h1>
-            
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Avantages inclus :</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-primary mr-3" />
-                    <span>Réductions exclusives chez des partenaires vérifiés</span>
-                  </div>
-                  <div className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-primary mr-3" />
-                    <span>Utilisation simple : scanne le QR du partenaire</span>
-                  </div>
-                  <div className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-primary mr-3" />
-                    <span>Pass valable 12 mois</span>
-                  </div>
+            <p className="text-muted-foreground">Accède à des réductions exclusives partout à Bali</p>
+          </div>
+          
+          <Card className="shadow-2xl border-0 bg-gradient-to-br from-primary via-primary/90 to-primary/70 text-white">
+            <CardContent className="p-8">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Gift className="w-8 h-8 text-white" />
                 </div>
-              </CardContent>
-            </Card>
+                <h3 className="text-xl font-bold mb-2">Avantages inclus</h3>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-green-300 flex-shrink-0" />
+                  <span>Réductions exclusives chez +50 partenaires</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-green-300 flex-shrink-0" />
+                  <span>Scan simple avec QR code</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-green-300 flex-shrink-0" />
+                  <span>Valable 12 mois</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-green-300 flex-shrink-0" />
+                  <span>Support client 24/7</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-            <div className="space-y-3">
-              <Button className="w-full">
-                Obtenir le Bali'Pass
-              </Button>
-              <Button variant="outline" className="w-full">
-                Voir les offres
-              </Button>
-            </div>
+          <div className="space-y-3">
+            <Button className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg text-lg font-semibold">
+              <CreditCard className="w-5 h-5 mr-2" />
+              Obtenir le Bali'Pass
+            </Button>
+            <Button 
+              variant="outline" 
+              className="w-full h-12 border-primary/20 hover:bg-primary/5 transition-all duration-300"
+              onClick={() => navigate('/explorer')}
+            >
+              <Search className="w-5 h-5 mr-2" />
+              Découvrir les offres
+            </Button>
           </div>
         </div>
         <BottomNavigation />
@@ -305,206 +343,174 @@ const MonPass: React.FC = () => {
 
   // Authenticated with active pass - full content
   return (
-    <div className="flex-1 bg-background min-h-screen">
-      <div className="flex-1 p-4 pb-20">
-        <div className="space-y-6">
-          {/* Pass Status Card */}
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <p className="text-sm text-muted-foreground mb-1">Statut</p>
-                  <Badge variant={pass.status === 'active' ? 'default' : 'destructive'}>
-                    {pass.status === 'active' ? 'Actif' : pass.status === 'expired' ? 'Expiré' : 'En attente'}
-                  </Badge>
-                </div>
-                <div className="flex-1 text-right">
-                  <p className="text-sm text-muted-foreground mb-1">Valide jusqu'au</p>
-                  <p className="font-medium">{formatDate(pass.expires_at)}</p>
-                  <div className="w-24 mt-2 ml-auto">
-                    <Progress value={getPassProgress()} className="h-2" />
-                  </div>
-                </div>
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+      <div className="p-4 pb-24 space-y-6">
+        {/* Pass Header with Gradient */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-primary/90 to-primary/70 text-white shadow-2xl">
+          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="relative p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h1 className="text-2xl font-bold">Mon Bali'Pass</h1>
+                <p className="text-white/80">{getDisplayName()}</p>
               </div>
-            </CardContent>
-          </Card>
+              <Badge 
+                variant="secondary" 
+                className="bg-green-100 text-green-800 border-green-200"
+              >
+                {pass.status === 'active' ? 'Actif' : 'Inactif'}
+              </Badge>
+            </div>
+            
+            <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-white/80 text-sm">Expire le</span>
+                <span className="font-semibold">{formatDate(pass.expires_at)}</span>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-white/80">Validité</span>
+                  <span>{getDaysRemaining()} jours restants</span>
+                </div>
+                <Progress 
+                  value={100 - getPassProgress()} 
+                  className="h-2 bg-white/20" 
+                />
+              </div>
+            </div>
+          </div>
+        </div>
 
-          {/* Actions Row */}
-          <div className="flex gap-3">
+        {/* QR Code Card */}
+        <Card className="shadow-lg border-0 bg-card/60 backdrop-blur-sm">
+          <CardContent className="p-6 text-center">
+            <h3 className="font-bold text-lg mb-4">Code QR du Pass</h3>
+            <div className="w-48 h-48 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-40 h-40 bg-white rounded-xl shadow-lg flex items-center justify-center">
+                <QrCode className="w-32 h-32 text-gray-800" />
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">
+              Montre ce code QR aux partenaires pour bénéficier de tes réductions
+            </p>
             <Button 
               onClick={handleScanPartner}
-              className="flex-1 flex items-center justify-center gap-2"
+              className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg"
             >
-              <QrCode className="w-4 h-4" />
+              <QrCode className="w-4 h-4 mr-2" />
               Scanner un partenaire
             </Button>
-            <Button 
-              variant="outline"
-              className="flex-1 flex items-center justify-center gap-2"
-            >
-              <Search className="w-4 h-4" />
-              Voir les offres
-            </Button>
-          </div>
+          </CardContent>
+        </Card>
 
-          {/* Savings Summary */}
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold">Mes économies</h3>
-                  <p className="text-2xl font-bold text-primary">
-                    {totalSavings > 0 ? `${totalSavings}%` : 'Aucune économie enregistrée'}
-                  </p>
+        {/* Quick Actions */}
+        <Card className="shadow-lg border-0 bg-card/60 backdrop-blur-sm">
+          <CardContent className="p-6">
+            <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+              <div className="w-2 h-6 bg-gradient-to-b from-primary to-primary/60 rounded-full"></div>
+              Actions rapides
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              <Button 
+                variant="ghost" 
+                className="flex flex-col items-center gap-3 h-auto py-6 hover:bg-primary/5 transition-all duration-300 group"
+                onClick={() => navigate('/explorer')}
+              >
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500/10 to-blue-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <Search className="w-6 h-6 text-blue-600" />
                 </div>
-                <TrendingUp className="w-8 h-8 text-primary" />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Redemption History */}
-          <Card>
-            <CardContent className="p-4">
-              <h3 className="text-lg font-semibold mb-4">Historique d'utilisations</h3>
+                <span className="text-sm font-medium">Voir les offres</span>
+              </Button>
               
-              {redemptions.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">
-                  Aucune utilisation enregistrée
+              <Button 
+                variant="ghost" 
+                className="flex flex-col items-center gap-3 h-auto py-6 hover:bg-primary/5 transition-all duration-300 group"
+                onClick={() => navigate('/community')}
+              >
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500/10 to-purple-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <Star className="w-6 h-6 text-purple-600" />
+                </div>
+                <span className="text-sm font-medium">Communauté</span>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Savings Summary */}
+        <Card className="shadow-lg border-0 bg-gradient-to-br from-emerald-50/50 to-emerald-100/30 border-emerald-200/50">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-bold text-lg text-emerald-800 mb-1">Mes économies</h3>
+                <p className="text-3xl font-bold text-emerald-700">
+                  {totalSavings > 0 ? `${totalSavings}%` : '0%'}
                 </p>
-              ) : (
-                <div className="space-y-3">
-                  {redemptions.slice(0, 5).map((redemption) => (
-                    <div key={redemption.id} className="border-b border-border pb-3 last:border-b-0">
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <p className="font-medium truncate">
-                            {redemption.partner.name}
-                          </p>
-                          <p className="text-sm text-muted-foreground truncate">
-                            {redemption.offer.title}
-                          </p>
-                          <div className="flex items-center mt-1">
-                            <MapPin className="w-3 h-3 text-muted-foreground mr-1" />
-                            <span className="text-xs text-muted-foreground mr-3">
-                              {redemption.partner.city.name}
-                            </span>
-                            <Calendar className="w-3 h-3 text-muted-foreground mr-1" />
-                            <span className="text-xs text-muted-foreground">
-                              {formatDate(redemption.redeemed_at)}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex flex-col items-end">
-                          {redemption.offer.value_number && (
-                            <Badge variant="secondary">
-                              -{redemption.offer.value_number}%
-                            </Badge>
-                          )}
-                          <CheckCircle className="w-4 h-4 text-green-500 mt-1" />
-                        </div>
+                <p className="text-sm text-emerald-600">
+                  {redemptions.length} utilisation{redemptions.length > 1 ? 's' : ''}
+                </p>
+              </div>
+              <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-400 rounded-full flex items-center justify-center">
+                <TrendingUp className="w-8 h-8 text-white" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Recent Activity */}
+        <Card className="shadow-lg border-0 bg-card/60 backdrop-blur-sm">
+          <CardContent className="p-6">
+            <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+              <div className="w-2 h-6 bg-gradient-to-b from-orange-500 to-orange-400 rounded-full"></div>
+              Dernières utilisations
+            </h3>
+            
+            {redemptions.length === 0 ? (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 bg-muted/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Clock className="w-8 h-8 text-muted-foreground" />
+                </div>
+                <p className="text-muted-foreground mb-2">Aucune utilisation</p>
+                <p className="text-sm text-muted-foreground">
+                  Commence à utiliser ton pass pour voir tes économies ici
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {redemptions.slice(0, 3).map((redemption) => (
+                  <div key={redemption.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full flex items-center justify-center">
+                        <Award className="w-5 h-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-sm">{redemption.partner.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {redemption.partner.city.name} • {formatDate(redemption.redeemed_at)}
+                        </p>
                       </div>
                     </div>
-                  ))}
-                  
-                  {redemptions.length > 5 && (
-                    <Button variant="ghost" className="w-full">
-                      Voir plus
-                    </Button>
-                  )}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Pass Details Accordion */}
-          <Card>
-            <CardContent className="p-4">
-              <Collapsible open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-                <CollapsibleTrigger className="flex justify-between items-center w-full">
-                  <span className="font-medium">Détails du pass</span>
-                  <ChevronDown className="w-4 h-4" />
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <Separator className="my-3" />
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Date d'achat</span>
-                      <span>{formatDate(pass.purchased_at)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Validité</span>
-                      <span>12 mois</span>
+                    <div className="flex items-center gap-2">
+                      {redemption.offer.value_number && (
+                        <Badge variant="secondary" className="bg-green-100 text-green-800">
+                          -{redemption.offer.value_number}%
+                        </Badge>
+                      )}
+                      <ChevronRight className="w-4 h-4 text-muted-foreground" />
                     </div>
                   </div>
-                </CollapsibleContent>
-              </Collapsible>
-
-              <Separator className="my-4" />
-
-              <Collapsible open={isConditionsOpen} onOpenChange={setIsConditionsOpen}>
-                <CollapsibleTrigger className="flex justify-between items-center w-full">
-                  <span className="font-medium">Conditions d'utilisation</span>
-                  <ChevronDown className="w-4 h-4" />
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <Separator className="my-3" />
-                  <p className="text-sm text-muted-foreground">
-                    Pass personnel et non transférable. Valable dans tous les établissements partenaires.
-                  </p>
-                </CollapsibleContent>
-              </Collapsible>
-
-              <Separator className="my-4" />
-
-              <Collapsible open={isSupportOpen} onOpenChange={setIsSupportOpen}>
-                <CollapsibleTrigger className="flex justify-between items-center w-full">
-                  <span className="font-medium">Assistance</span>
-                  <ChevronDown className="w-4 h-4" />
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <Separator className="my-3" />
-                  <div className="space-y-2">
-                    <Button variant="ghost" onClick={handleContactSupport} className="w-full justify-start">
-                      <Mail className="w-4 h-4 mr-2" />
-                      Contacter le support
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-start">
-                      <HelpCircle className="w-4 h-4 mr-2" />
-                      FAQ
-                    </Button>
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
-            </CardContent>
-          </Card>
-
-          {/* Account Shortcuts */}
-          <Card>
-            <CardContent className="p-4">
-              <h3 className="font-medium mb-3">Mon compte</h3>
-              <div className="space-y-2">
-                <Button variant="ghost" className="w-full justify-start">
-                  <UserIcon className="w-4 h-4 mr-3" />
-                  Mes informations
-                </Button>
-                <Button variant="ghost" className="w-full justify-start">
-                  <Bell className="w-4 h-4 mr-3" />
-                  Notifications
-                </Button>
-                <Button variant="ghost" className="w-full justify-start">
-                  <Globe className="w-4 h-4 mr-3" />
-                  Langue
-                </Button>
-                <Button variant="ghost" onClick={handleSignOut} className="w-full justify-start">
-                  <LogOut className="w-4 h-4 mr-3" />
-                  Se déconnecter
-                </Button>
+                ))}
+                
+                {redemptions.length > 3 && (
+                  <Button variant="ghost" className="w-full mt-4">
+                    Voir tout l'historique
+                  </Button>
+                )}
               </div>
-            </CardContent>
-          </Card>
-        </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
-      
+
       <FloatingActionButton />
       <BottomNavigation />
     </div>
