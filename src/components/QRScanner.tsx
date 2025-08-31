@@ -37,27 +37,61 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
     if (!videoRef.current) return;
 
     try {
-      // Check if camera is available
-      const hasCamera = await QrScanner.hasCamera();
+      // Set timeout pour éviter le blocage sur iOS
+      const timeout = setTimeout(() => {
+        console.error("Timeout lors de l'initialisation de la caméra");
+        setHasPermission(false);
+      }, 10000); // 10 secondes timeout
+
+      // Check if camera is available (avec gestion d'erreur iOS)
+      let hasCamera = false;
+      try {
+        hasCamera = await QrScanner.hasCamera();
+      } catch (cameraCheckError) {
+        console.warn("Erreur lors de la vérification de la caméra, tentative directe:", cameraCheckError);
+        hasCamera = true; // On assume qu'il y a une caméra sur iOS
+      }
+
       if (!hasCamera) {
+        clearTimeout(timeout);
         setHasPermission(false);
         return;
       }
 
-      // Create QR scanner instance
+      // Create QR scanner instance avec gestion iOS améliorée
       qrScannerRef.current = new QrScanner(
         videoRef.current,
         (result) => handleScanResult(result.data),
         {
           highlightScanRegion: true,
           highlightCodeOutline: true,
+          preferredCamera: 'environment', // Caméra arrière par défaut
+          maxScansPerSecond: 5, // Limite pour iOS
         }
       );
 
+      // Démarrer le scanner avec gestion d'erreur iOS
       await qrScannerRef.current.start();
+      clearTimeout(timeout);
       setHasPermission(true);
+      
     } catch (error) {
       console.error("Erreur lors du démarrage du scanner:", error);
+      
+      // Messages d'erreur spécifiques pour iOS
+      let errorMessage = "Impossible d'accéder à la caméra.";
+      if (error.name === 'NotAllowedError') {
+        errorMessage = "Veuillez autoriser l'accès à la caméra dans les paramètres.";
+      } else if (error.name === 'NotFoundError') {
+        errorMessage = "Aucune caméra détectée sur cet appareil.";
+      }
+      
+      toast({
+        title: "Erreur caméra",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      
       setHasPermission(false);
     }
   };
