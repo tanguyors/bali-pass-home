@@ -37,13 +37,13 @@ export const usePartnerFavorites = () => {
         .from('partner_favorites')
         .select(`
           *,
-          partners:partner_id (
+          partners!partner_favorites_partner_id_fkey (
             id,
             name,
             slug,
             logo_url,
             city_id,
-            cities:city_id (
+            cities (
               name
             )
           )
@@ -156,6 +156,17 @@ export const usePartnerFavorites = () => {
 
   useEffect(() => {
     fetchFavorites();
+    
+    // Listen to auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_IN') {
+        fetchFavorites();
+      } else if (event === 'SIGNED_OUT') {
+        setFavorites([]);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   return {
