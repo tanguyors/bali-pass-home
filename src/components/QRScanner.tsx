@@ -31,7 +31,10 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
       console.log("QRScanner is opening...");
       setScanned(false);
       setManualInput("");
-      startCamera();
+      // Ne pas démarrer la caméra immédiatement, attendre que le DOM soit prêt
+      setTimeout(() => {
+        startCamera();
+      }, 100);
     } else {
       console.log("QRScanner is closing...");
       stopCamera();
