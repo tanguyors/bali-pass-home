@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Camera, Heart, MessageCircle, Star, Filter, Search, TrendingUp, Users, Award } from 'lucide-react';
+import { Camera, Heart, MessageCircle, Star, Filter, Search, TrendingUp, Users, Award, Plus } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,85 +8,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
-
-interface CommunityPost {
-  id: string;
-  user: {
-    name: string;
-    avatar: string;
-    badge?: string;
-  };
-  partner: {
-    name: string;
-    category: string;
-  };
-  rating: number;
-  content: string;
-  photos: string[];
-  likes: number;
-  comments: number;
-  timeAgo: string;
-  isLiked: boolean;
-}
-
-const mockPosts: CommunityPost[] = [
-  {
-    id: '1',
-    user: {
-      name: 'Sophie Martin',
-      avatar: '/api/placeholder/40/40',
-      badge: 'Explorer'
-    },
-    partner: {
-      name: 'Warung Sunset',
-      category: 'Restaurant'
-    },
-    rating: 5,
-    content: 'Incroyable coucher de soleil et cuisine authentique ! Le nasi goreng était délicieux et l\'ambiance parfaite pour une soirée romantique. 🌅',
-    photos: ['/api/placeholder/300/200', '/api/placeholder/300/200'],
-    likes: 24,
-    comments: 8,
-    timeAgo: '2h',
-    isLiked: false
-  },
-  {
-    id: '2',
-    user: {
-      name: 'Alexandre Dubois',
-      avatar: '/api/placeholder/40/40',
-      badge: 'Aventurier'
-    },
-    partner: {
-      name: 'Surf School Canggu',
-      category: 'Activités'
-    },
-    rating: 4,
-    content: 'Super cours de surf avec -30% grâce au pass ! Les instructeurs sont top et les vagues parfaites pour débuter. 🏄‍♂️',
-    photos: ['/api/placeholder/300/200'],
-    likes: 18,
-    comments: 5,
-    timeAgo: '5h',
-    isLiked: true
-  },
-  {
-    id: '3',
-    user: {
-      name: 'Marie Lopez',
-      avatar: '/api/placeholder/40/40'
-    },
-    partner: {
-      name: 'Spa Wellness Ubud',
-      category: 'Bien-être'
-    },
-    rating: 5,
-    content: 'Massage traditionnel balinais exceptionnel ! L\'ambiance zen et les produits naturels m\'ont transportée. Un vrai moment de détente.',
-    photos: [],
-    likes: 32,
-    comments: 12,
-    timeAgo: '1j',
-    isLiked: false
-  }
-];
+import { useCommunity } from '@/hooks/useCommunity';
+import CreatePostDialog from '@/components/CreatePostDialog';
 
 const topUsers = [
   { name: 'Sophie M.', avatar: '/api/placeholder/32/32', posts: 28, badge: 'Explorer' },
@@ -97,28 +20,68 @@ const topUsers = [
 const Community: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('recent');
-  const [posts, setPosts] = useState(mockPosts);
+  const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
+  
+  const { posts, loading, createPost, toggleLike } = useCommunity();
 
-  const toggleLike = (postId: string) => {
-    setPosts(posts.map(post => 
-      post.id === postId 
-        ? { 
-            ...post, 
-            isLiked: !post.isLiked,
-            likes: post.isLiked ? post.likes - 1 : post.likes + 1
-          }
-        : post
-    ));
+  const getTimeAgo = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    if (diffInSeconds < 3600) {
+      const minutes = Math.floor(diffInSeconds / 60);
+      return `${minutes}min`;
+    } else if (diffInSeconds < 86400) {
+      const hours = Math.floor(diffInSeconds / 3600);
+      return `${hours}h`;
+    } else {
+      const days = Math.floor(diffInSeconds / 86400);
+      return `${days}j`;
+    }
   };
 
-  const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        className={`w-4 h-4 ${i < rating ? 'text-yellow-400 fill-current' : 'text-muted-foreground'}`}
-      />
-    ));
+  const getUserDisplayName = (profile: any) => {
+    if (!profile) return 'Utilisateur';
+    if (profile.name) return profile.name;
+    if (profile.first_name && profile.last_name) {
+      return `${profile.first_name} ${profile.last_name}`;
+    }
+    if (profile.first_name) return profile.first_name;
+    return 'Utilisateur';
   };
+
+  const renderStars = (rating?: number) => {
+    if (!rating) return null;
+    return (
+      <div className="flex items-center gap-1">
+        {Array.from({ length: 5 }, (_, i) => (
+          <Star
+            key={i}
+            className={`w-4 h-4 ${i < rating ? 'text-yellow-400 fill-current' : 'text-muted-foreground'}`}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  const filteredPosts = posts.filter(post =>
+    !searchQuery ||
+    post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    post.partners?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    getUserDisplayName(post.profiles).toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Chargement de la communauté...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -127,9 +90,13 @@ const Community: React.FC = () => {
         <div className="p-4">
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-2xl font-bold text-foreground">Communauté</h1>
-            <Button size="sm" variant="outline">
-              <Camera className="w-4 h-4 mr-2" />
-              Partager
+            <Button 
+              size="sm" 
+              onClick={() => setIsCreatePostOpen(true)}
+              className="gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Publier
             </Button>
           </div>
           
@@ -213,77 +180,90 @@ const Community: React.FC = () => {
 
             {/* Posts Feed */}
             <div className="space-y-4 px-4">
-              {posts.map((post) => (
-                <Card key={post.id}>
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start gap-3">
-                      <Avatar className="w-10 h-10">
-                        <AvatarImage src={post.user.avatar} />
-                        <AvatarFallback>{post.user.name[0]}</AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <p className="font-medium text-sm">{post.user.name}</p>
-                          {post.user.badge && (
+              {filteredPosts.length === 0 ? (
+                <div className="text-center py-12">
+                  <Users className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="font-semibold mb-2">Aucun post pour le moment</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Soyez le premier à partager votre expérience !
+                  </p>
+                  <Button onClick={() => setIsCreatePostOpen(true)}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Créer un post
+                  </Button>
+                </div>
+              ) : (
+                filteredPosts.map((post) => (
+                  <Card key={post.id}>
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start gap-3">
+                        <Avatar className="w-10 h-10">
+                          <AvatarFallback>{getUserDisplayName(post.profiles)[0]?.toUpperCase()}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <p className="font-medium text-sm">{getUserDisplayName(post.profiles)}</p>
                             <Badge variant="secondary" className="text-xs">
-                              {post.user.badge}
+                              Membre
                             </Badge>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <span>{post.partner.name}</span>
-                          <span>•</span>
-                          <span>{post.partner.category}</span>
-                          <span>•</span>
-                          <span>{post.timeAgo}</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        {renderStars(post.rating)}
-                      </div>
-                    </div>
-                  </CardHeader>
-                  
-                  <CardContent className="pt-0">
-                    <p className="text-sm mb-3 leading-relaxed">{post.content}</p>
-                    
-                    {post.photos.length > 0 && (
-                      <div className={`grid gap-2 mb-3 ${
-                        post.photos.length === 1 ? 'grid-cols-1' : 'grid-cols-2'
-                      }`}>
-                        {post.photos.map((photo, index) => (
-                          <div key={index} className="aspect-video bg-muted rounded-lg overflow-hidden">
-                            <img
-                              src={photo}
-                              alt={`Photo ${index + 1}`}
-                              className="w-full h-full object-cover"
-                            />
                           </div>
-                        ))}
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            {post.partners && (
+                              <>
+                                <span>{post.partners.name}</span>
+                                <span>•</span>
+                              </>
+                            )}
+                            <span>{getTimeAgo(post.created_at)}</span>
+                          </div>
+                        </div>
+                        {post.rating && renderStars(post.rating)}
                       </div>
-                    )}
+                    </CardHeader>
                     
-                    <div className="flex items-center justify-between pt-3 border-t border-border">
-                      <div className="flex items-center gap-4">
-                        <button
-                          onClick={() => toggleLike(post.id)}
-                          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                        >
-                          <Heart className={`w-4 h-4 ${post.isLiked ? 'text-red-500 fill-current' : ''}`} />
-                          {post.likes}
-                        </button>
-                        <button className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                          <MessageCircle className="w-4 h-4" />
-                          {post.comments}
-                        </button>
+                    <CardContent className="pt-0">
+                      <p className="text-sm mb-3 leading-relaxed">{post.content}</p>
+                      
+                      {post.photos && post.photos.length > 0 && (
+                        <div className={`grid gap-2 mb-3 ${
+                          post.photos.length === 1 ? 'grid-cols-1' : 'grid-cols-2'
+                        }`}>
+                          {post.photos.map((photo, index) => (
+                            <div key={index} className="aspect-video bg-muted rounded-lg overflow-hidden">
+                              <img
+                                src={photo}
+                                alt={`Photo ${index + 1}`}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      
+                      <div className="flex items-center justify-between pt-3 border-t border-border">
+                        <div className="flex items-center gap-4">
+                          <button
+                            onClick={() => toggleLike(post.id)}
+                            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            <Heart className={`w-4 h-4 ${post.user_has_liked ? 'text-red-500 fill-current' : ''}`} />
+                            {post.likes_count}
+                          </button>
+                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                            <MessageCircle className="w-4 h-4" />
+                            {post.comments_count}
+                          </div>
+                        </div>
+                        {post.partners && (
+                          <Button variant="ghost" size="sm" className="text-xs">
+                            Voir le partenaire
+                          </Button>
+                        )}
                       </div>
-                      <Button variant="ghost" size="sm" className="text-xs">
-                        Voir l'offre
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardContent>
+                  </Card>
+                ))
+              )}
             </div>
           </TabsContent>
 
@@ -312,6 +292,13 @@ const Community: React.FC = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Create Post Dialog */}
+      <CreatePostDialog
+        isOpen={isCreatePostOpen}
+        onClose={() => setIsCreatePostOpen(false)}
+        onSubmit={createPost}
+      />
 
       {/* Floating Action Button */}
       <FloatingActionButton />
