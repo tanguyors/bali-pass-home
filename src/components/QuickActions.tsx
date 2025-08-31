@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { QrCode, MapPin, Grid3X3, Radar } from "lucide-react";
+import { QrCode, Heart, Grid3X3, Radar } from "lucide-react";
 import { QRScanner } from "@/components/QRScanner";
 import { PartnerOffersModal } from "@/components/PartnerOffersModal";
 
@@ -31,16 +31,15 @@ export function QuickActions({ hasActivePass = false }: QuickActionsProps) {
       }
     },
     {
-      icon: Radar,
-      title: "Autour de moi",
-      subtitle: "Géolocalisation",
+      icon: Heart,
+      title: "Mes Favoris",
+      subtitle: "Partenaires sauvegardés",
       gradientClass: "gradient-coral-soft",
       iconBgColor: "bg-coral",
       iconColor: "text-white",
-      animationClass: "animate-radar",
+      animationClass: "",
       action: () => {
-        // Get geolocation and show nearby offers
-        console.log("Getting nearby offers");
+        navigate("/favorites");
       }
     },
     {

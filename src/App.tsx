@@ -10,6 +10,8 @@ import MonPass from "./pages/MonPass";
 import Auth from "./pages/Auth";
 import Profil from "./pages/Profil";
 import OfferDetails from "./pages/OfferDetails";
+import Favorites from "./pages/Favorites";
+import PartnerDetail from "./pages/PartnerDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +30,8 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/profil" element={<Profil />} />
           <Route path="/offer/:id" element={<OfferDetails />} />
+          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/partner/:slug" element={<PartnerDetail />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
