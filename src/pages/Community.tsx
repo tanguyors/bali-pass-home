@@ -11,18 +11,13 @@ import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { useCommunity } from '@/hooks/useCommunity';
 import CreatePostDialog from '@/components/CreatePostDialog';
 
-const topUsers = [
-  { name: 'Sophie M.', avatar: '/api/placeholder/32/32', posts: 28, badge: 'Explorer' },
-  { name: 'Alex D.', avatar: '/api/placeholder/32/32', posts: 24, badge: 'Aventurier' },
-  { name: 'Marie L.', avatar: '/api/placeholder/32/32', posts: 19, badge: 'Local' }
-];
 
 const Community: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('recent');
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
   
-  const { posts, loading, createPost, toggleLike } = useCommunity();
+  const { posts, topContributors, loading, createPost, toggleLike } = useCommunity();
 
   const getTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
@@ -147,32 +142,40 @@ const Community: React.FC = () => {
                     <Badge variant="secondary">Cette semaine</Badge>
                   </div>
                   <div className="space-y-3">
-                    {topUsers.map((user, index) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="flex items-center gap-2">
-                            <Badge variant="outline" className="text-xs px-2 py-1">
-                              #{index + 1}
-                            </Badge>
-                            <Avatar className="w-8 h-8">
-                              <AvatarImage src={user.avatar} />
-                              <AvatarFallback>{user.name[0]}</AvatarFallback>
-                            </Avatar>
-                          </div>
-                          <div>
-                            <p className="font-medium text-sm">{user.name}</p>
-                            <div className="flex items-center gap-1">
-                              <Award className="w-3 h-3 text-primary" />
-                              <span className="text-xs text-muted-foreground">{user.badge}</span>
+                    {topContributors.length > 0 ? topContributors.map((contributor, index) => {
+                      const displayName = getUserDisplayName(contributor.profile);
+                      return (
+                        <div key={index} className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-2">
+                              <Badge variant="outline" className="text-xs px-2 py-1">
+                                #{index + 1}
+                              </Badge>
+                              <Avatar className="w-8 h-8">
+                                <AvatarFallback>{displayName[0]?.toUpperCase()}</AvatarFallback>
+                              </Avatar>
+                            </div>
+                            <div>
+                              <p className="font-medium text-sm">{displayName}</p>
+                              <div className="flex items-center gap-1">
+                                <Award className="w-3 h-3 text-primary" />
+                                <span className="text-xs text-muted-foreground">
+                                  {contributor.count >= 10 ? 'Expert' : contributor.count >= 5 ? 'Aventurier' : 'Explorer'}
+                                </span>
+                              </div>
                             </div>
                           </div>
+                          <div className="text-right">
+                            <p className="text-sm font-medium">{contributor.count}</p>
+                            <p className="text-xs text-muted-foreground">posts</p>
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <p className="text-sm font-medium">{user.posts}</p>
-                          <p className="text-xs text-muted-foreground">posts</p>
-                        </div>
+                      );
+                    }) : (
+                      <div className="text-center py-4">
+                        <p className="text-sm text-muted-foreground">Aucun contributeur pour le moment</p>
                       </div>
-                    ))}
+                    )}
                   </div>
                 </CardContent>
               </Card>

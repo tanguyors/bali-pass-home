@@ -45,6 +45,7 @@ export interface CommunityComment {
 
 export function useCommunity() {
   const [posts, setPosts] = useState<CommunityPost[]>([]);
+  const [topContributors, setTopContributors] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
@@ -129,6 +130,64 @@ export function useCommunity() {
       console.error('Error:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchTopContributors = async () => {
+    try {
+      // Fetch all posts to count per user
+      const { data: postsData, error } = await supabase
+        .from('community_posts')
+        .select('user_id');
+
+      if (error) {
+        console.error('Error fetching posts for contributors:', error);
+        return;
+      }
+
+      if (!postsData || postsData.length === 0) {
+        setTopContributors([]);
+        return;
+      }
+
+      // Count posts per user
+      const userPostCounts = postsData.reduce((acc: any, post) => {
+        const userId = post.user_id;
+        if (!acc[userId]) {
+          acc[userId] = { count: 0, userId };
+        }
+        acc[userId].count++;
+        return acc;
+      }, {});
+
+      // Get top 3 users by post count
+      const topUserIds = Object.values(userPostCounts)
+        .sort((a: any, b: any) => b.count - a.count)
+        .slice(0, 3);
+
+      // Get profiles for these users
+      const userIds = topUserIds.map((user: any) => user.userId);
+      const { data: profilesData } = await supabase
+        .from('profiles')
+        .select('user_id, name, first_name, last_name')
+        .in('user_id', userIds);
+
+      // Combine data
+      const contributors = topUserIds.map((user: any) => {
+        const profile = profilesData?.find(p => p.user_id === user.userId);
+        return {
+          profile: profile ? {
+            name: profile.name,
+            first_name: profile.first_name,
+            last_name: profile.last_name,
+          } : null,
+          count: user.count
+        };
+      });
+
+      setTopContributors(contributors);
+    } catch (error) {
+      console.error('Error in fetchTopContributors:', error);
     }
   };
 
@@ -332,10 +391,12 @@ export function useCommunity() {
 
   useEffect(() => {
     fetchPosts();
+    fetchTopContributors();
   }, []);
 
   return {
     posts,
+    topContributors,
     loading,
     createPost,
     toggleLike,
