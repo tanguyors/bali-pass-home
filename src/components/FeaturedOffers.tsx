@@ -34,21 +34,33 @@ export function FeaturedOffers() {
   const openNavigation = (address: string) => {
     if (!address) return;
     
+    console.log("=== GPS Navigation Debug ===");
+    console.log("Adresse reçue:", address);
+    console.log("Adresse encodée:", encodeURIComponent(address));
+    
     const encodedAddress = encodeURIComponent(address);
     
     // Detect platform and open appropriate navigation app
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const isAndroid = /Android/.test(navigator.userAgent);
     
+    console.log("Plateforme détectée:", { isIOS, isAndroid });
+    
     if (isIOS) {
       // Open Apple Maps on iOS
-      window.location.href = `maps://maps.apple.com/?q=${encodedAddress}`;
+      const url = `maps://maps.apple.com/?q=${encodedAddress}`;
+      console.log("URL Apple Maps:", url);
+      window.location.href = url;
     } else if (isAndroid) {
       // Open Google Maps on Android
-      window.location.href = `geo:0,0?q=${encodedAddress}`;
+      const url = `geo:0,0?q=${encodedAddress}`;
+      console.log("URL Android Maps:", url);
+      window.location.href = url;
     } else {
       // Open Google Maps in browser for web
-      window.open(`https://maps.google.com/maps?q=${encodedAddress}`, '_blank');
+      const url = `https://maps.google.com/maps?q=${encodedAddress}`;
+      console.log("URL Google Maps Web:", url);
+      window.open(url, '_blank');
     }
   };
 
