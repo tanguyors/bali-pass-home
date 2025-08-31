@@ -36,7 +36,6 @@ export function FeaturedOffers() {
     
     console.log("=== GPS Navigation Debug ===");
     console.log("Adresse reçue:", address);
-    console.log("Adresse encodée:", encodeURIComponent(address));
     
     const encodedAddress = encodeURIComponent(address);
     
@@ -47,20 +46,25 @@ export function FeaturedOffers() {
     console.log("Plateforme détectée:", { isIOS, isAndroid });
     
     if (isIOS) {
-      // Open Apple Maps on iOS
-      const url = `maps://maps.apple.com/?q=${encodedAddress}`;
-      console.log("URL Apple Maps:", url);
-      window.location.href = url;
+      // Try Apple Maps first, fallback to Google Maps
+      const appleUrl = `maps://maps.apple.com/?q=${encodedAddress}`;
+      console.log("Tentative Apple Maps:", appleUrl);
+      try {
+        window.location.href = appleUrl;
+      } catch (error) {
+        // Fallback to Google Maps
+        window.open(`https://www.google.com/maps/search/${encodedAddress}`, '_blank');
+      }
     } else if (isAndroid) {
-      // Open Google Maps on Android
-      const url = `geo:0,0?q=${encodedAddress}`;
-      console.log("URL Android Maps:", url);
-      window.location.href = url;
+      // Try native intent first, fallback to web
+      const androidUrl = `https://www.google.com/maps/search/${encodedAddress}`;
+      console.log("URL Android/Web:", androidUrl);
+      window.open(androidUrl, '_blank');
     } else {
-      // Open Google Maps in browser for web
-      const url = `https://maps.google.com/maps?q=${encodedAddress}`;
-      console.log("URL Google Maps Web:", url);
-      window.open(url, '_blank');
+      // Use Google Maps search URL instead of the maps URL
+      const webUrl = `https://www.google.com/maps/search/${encodedAddress}`;
+      console.log("URL Web Google Maps:", webUrl);
+      window.open(webUrl, '_blank');
     }
   };
 
