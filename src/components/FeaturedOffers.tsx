@@ -46,25 +46,20 @@ export function FeaturedOffers() {
     console.log("Plateforme détectée:", { isIOS, isAndroid });
     
     if (isIOS) {
-      // Try Apple Maps first, fallback to Google Maps
+      // Try Apple Maps first
       const appleUrl = `maps://maps.apple.com/?q=${encodedAddress}`;
       console.log("Tentative Apple Maps:", appleUrl);
-      try {
-        window.location.href = appleUrl;
-      } catch (error) {
-        // Fallback to Google Maps
-        window.open(`https://www.google.com/maps/search/${encodedAddress}`, '_blank');
-      }
+      window.location.href = appleUrl;
     } else if (isAndroid) {
-      // Try native intent first, fallback to web
-      const androidUrl = `https://www.google.com/maps/search/${encodedAddress}`;
-      console.log("URL Android/Web:", androidUrl);
-      window.open(androidUrl, '_blank');
+      // Try Android Maps intent
+      const androidUrl = `geo:0,0?q=${encodedAddress}`;
+      console.log("URL Android Maps:", androidUrl);
+      window.location.href = androidUrl;
     } else {
-      // Use Google Maps search URL instead of the maps URL
-      const webUrl = `https://www.google.com/maps/search/${encodedAddress}`;
-      console.log("URL Web Google Maps:", webUrl);
-      window.open(webUrl, '_blank');
+      // Use OpenStreetMap for web (works better in sandbox)
+      const osmUrl = `https://www.openstreetmap.org/search?query=${encodedAddress}#map=15`;
+      console.log("URL OpenStreetMap:", osmUrl);
+      window.open(osmUrl, '_blank');
     }
   };
 
