@@ -1,0 +1,275 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Heart, MapPin, Navigation, Phone } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Offer } from '@/hooks/useOffers';
+
+interface OfferCardProps {
+  offer: Offer;
+  onToggleFavorite: (offerId: string) => void;
+  viewMode: 'grid' | 'list';
+}
+
+export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps) {
+  const navigate = useNavigate();
+  const [imageError, setImageError] = useState(false);
+
+  const handleNavigation = () => {
+    if (!offer.partner.address) return;
+    
+    const encodedAddress = encodeURIComponent(offer.partner.address);
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isAndroid = /Android/.test(navigator.userAgent);
+    
+    if (isIOS) {
+      window.location.href = `maps://maps.apple.com/?q=${encodedAddress}`;
+    } else if (isAndroid) {
+      window.location.href = `geo:0,0?q=${encodedAddress}`;
+    } else {
+      window.open(`https://www.google.com/maps/search/${encodedAddress}`, '_blank');
+    }
+  };
+
+  const handleCall = () => {
+    if (offer.partner.phone) {
+      window.location.href = `tel:${offer.partner.phone}`;
+    }
+  };
+
+  const getImageUrl = () => {
+    return offer.partner.photos && offer.partner.photos.length > 0 
+      ? offer.partner.photos[0] 
+      : null;
+  };
+
+  if (viewMode === 'list') {
+    return (
+      <div className="bg-card rounded-xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-all duration-200">
+        <div className="flex">
+          {/* Image */}
+          <div className="w-32 h-24 flex-shrink-0 relative">
+            {getImageUrl() && !imageError ? (
+              <img
+                src={getImageUrl()!}
+                alt={offer.title}
+                className="w-full h-full object-cover"
+                onError={() => setImageError(true)}
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-primary/20 to-lagoon/20 flex items-center justify-center">
+                <span className="text-xs text-muted-foreground">Image à venir</span>
+              </div>
+            )}
+            
+            {/* Discount Badge */}
+            {offer.value_text && (
+              <div className="absolute top-1 left-1 px-2 py-0.5 rounded-full text-white text-xs font-bold bg-red-500">
+                {offer.value_text}
+              </div>
+            )}
+
+            {/* Favorite Button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleFavorite(offer.id);
+              }}
+              className="absolute top-1 right-1 w-6 h-6 p-0 bg-white/80 hover:bg-white"
+            >
+              <Heart className={`w-3 h-3 ${offer.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+            </Button>
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 p-3">
+            <div className="flex justify-between items-start mb-2">
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-sm text-foreground line-clamp-1 mb-1">
+                  {offer.title}
+                </h3>
+                <p className="text-xs text-primary font-medium mb-1">
+                  {offer.partner.name}
+                </p>
+              </div>
+              
+              {offer.category && (
+                <Badge variant="secondary" className="text-xs ml-2 flex-shrink-0">
+                  {offer.category.icon} {offer.category.name}
+                </Badge>
+              )}
+            </div>
+
+            {/* Location & Distance */}
+            <div className="flex items-center gap-2 mb-2">
+              {offer.partner.address && (
+                <div className="flex items-center gap-1 min-w-0">
+                  <MapPin className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                  <span className="text-xs text-muted-foreground truncate">
+                    {offer.partner.address}
+                  </span>
+                </div>
+              )}
+              
+              {offer.distance && (
+                <span className="text-xs text-primary font-medium flex-shrink-0">
+                  {offer.distance.toFixed(1)} km
+                </span>
+              )}
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-2">
+              <Button 
+                variant="default" 
+                size="sm" 
+                onClick={() => navigate(`/offer/${offer.id}`)}
+                className="text-xs px-3 h-7 flex-1"
+              >
+                Voir l'offre
+              </Button>
+              
+              {offer.partner.phone && (
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={handleCall}
+                  className="w-7 h-7 p-0"
+                  title="Appeler"
+                >
+                  <Phone className="w-3 h-3" />
+                </Button>
+              )}
+              
+              {offer.partner.address && (
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={handleNavigation}
+                  className="w-7 h-7 p-0"
+                  title="Navigation"
+                >
+                  <Navigation className="w-3 h-3" />
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Grid view
+  return (
+    <div className="bg-card rounded-xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-all duration-200">
+      {/* Image */}
+      <div className="h-40 relative">
+        {getImageUrl() && !imageError ? (
+          <img
+            src={getImageUrl()!}
+            alt={offer.title}
+            className="w-full h-full object-cover"
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-primary/20 to-lagoon/20 flex items-center justify-center">
+            <span className="text-sm text-muted-foreground">Image à venir</span>
+          </div>
+        )}
+        
+        {/* Discount Badge */}
+        {offer.value_text && (
+          <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-white text-xs font-bold bg-red-500">
+            {offer.value_text}
+          </div>
+        )}
+
+        {/* Favorite Button */}
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleFavorite(offer.id);
+          }}
+          className="absolute top-2 right-2 w-8 h-8 p-0 bg-white/80 hover:bg-white"
+        >
+          <Heart className={`w-4 h-4 ${offer.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+        </Button>
+
+        {/* Distance */}
+        {offer.distance && (
+          <div className="absolute bottom-2 right-2 px-2 py-1 rounded-full bg-white/80 text-xs font-medium text-primary">
+            {offer.distance.toFixed(1)} km
+          </div>
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="p-3">
+        <div className="flex items-start justify-between mb-2">
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-sm text-foreground line-clamp-2 mb-1">
+              {offer.title}
+            </h3>
+            <p className="text-xs text-primary font-medium">
+              {offer.partner.name}
+            </p>
+          </div>
+          
+          {offer.category && (
+            <Badge variant="secondary" className="text-xs ml-2 flex-shrink-0">
+              {offer.category.icon}
+            </Badge>
+          )}
+        </div>
+
+        {/* Location */}
+        {offer.partner.address && (
+          <div className="flex items-center gap-1 mb-3">
+            <MapPin className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+            <span className="text-xs text-muted-foreground line-clamp-1">
+              {offer.partner.address}
+            </span>
+          </div>
+        )}
+
+        {/* Phone */}
+        {offer.partner.phone && (
+          <div className="flex items-center gap-1 mb-3">
+            <Phone className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+            <span className="text-xs text-muted-foreground">
+              {offer.partner.phone}
+            </span>
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="flex gap-2">
+          <Button 
+            variant="default" 
+            size="sm" 
+            onClick={() => navigate(`/offer/${offer.id}`)}
+            className="text-xs px-3 h-8 flex-1"
+          >
+            Voir l'offre
+          </Button>
+          
+          {offer.partner.address && (
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={handleNavigation}
+              className="w-8 h-8 p-0"
+              title="Navigation"
+            >
+              <Navigation className="w-3 h-3" />
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
