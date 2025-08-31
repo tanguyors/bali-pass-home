@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { MapPin, Star } from "lucide-react";
+import { MapPin, Star, Navigation } from "lucide-react";
 
 interface Offer {
   id: string;
@@ -30,6 +30,27 @@ export function FeaturedOffers() {
   useEffect(() => {
     fetchFeaturedOffers();
   }, []);
+
+  const openNavigation = (address: string) => {
+    if (!address) return;
+    
+    const encodedAddress = encodeURIComponent(address);
+    
+    // Detect platform and open appropriate navigation app
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isAndroid = /Android/.test(navigator.userAgent);
+    
+    if (isIOS) {
+      // Open Apple Maps on iOS
+      window.location.href = `maps://maps.apple.com/?q=${encodedAddress}`;
+    } else if (isAndroid) {
+      // Open Google Maps on Android
+      window.location.href = `geo:0,0?q=${encodedAddress}`;
+    } else {
+      // Open Google Maps in browser for web
+      window.open(`https://maps.google.com/maps?q=${encodedAddress}`, '_blank');
+    }
+  };
 
   const fetchFeaturedOffers = async () => {
     try {
@@ -152,16 +173,27 @@ export function FeaturedOffers() {
                   </span>
                 </div>
                 
-                {/* Centered Action Button */}
-                <div className="flex justify-center">
+                {/* Action Buttons */}
+                <div className="flex gap-2 justify-center">
                   <Button 
                     variant="pill" 
                     size="sm" 
-                    className="px-6"
+                    className="px-4 flex-1"
                     onClick={() => navigate(`/offer/${offer.id}`)}
                   >
                     Voir l'offre
                   </Button>
+                  {offer.partner?.address && (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="px-3"
+                      onClick={() => openNavigation(offer.partner.address!)}
+                      title="Navigation GPS"
+                    >
+                      <Navigation className="w-4 h-4" />
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>

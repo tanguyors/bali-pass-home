@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, MapPin, Star, Heart, Clock, Share2, Percent, Euro } from "lucide-react";
+import { ArrowLeft, MapPin, Star, Heart, Clock, Share2, Percent, Euro, Navigation } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface Offer {
@@ -167,6 +167,27 @@ export default function OfferDetails() {
         title: "Lien copié",
         description: "Le lien a été copié dans le presse-papiers",
       });
+    }
+  };
+
+  const openNavigation = (address: string) => {
+    if (!address) return;
+    
+    const encodedAddress = encodeURIComponent(address);
+    
+    // Detect platform and open appropriate navigation app
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isAndroid = /Android/.test(navigator.userAgent);
+    
+    if (isIOS) {
+      // Open Apple Maps on iOS
+      window.location.href = `maps://maps.apple.com/?q=${encodedAddress}`;
+    } else if (isAndroid) {
+      // Open Google Maps on Android
+      window.location.href = `geo:0,0?q=${encodedAddress}`;
+    } else {
+      // Open Google Maps in browser for web
+      window.open(`https://maps.google.com/maps?q=${encodedAddress}`, '_blank');
     }
   };
 
@@ -348,9 +369,22 @@ export default function OfferDetails() {
 
       {/* Bottom Action */}
       <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4">
-        <Button className="w-full" size="lg">
-          Utiliser cette offre
-        </Button>
+        <div className="flex gap-3">
+          <Button className="flex-1" size="lg">
+            Utiliser cette offre
+          </Button>
+          {offer.partner.address && (
+            <Button 
+              variant="outline" 
+              size="lg"
+              className="px-4"
+              onClick={() => openNavigation(offer.partner.address!)}
+              title="Navigation GPS"
+            >
+              <Navigation className="w-5 h-5" />
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );
