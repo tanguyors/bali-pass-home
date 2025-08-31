@@ -381,28 +381,6 @@ const MonPass: React.FC = () => {
           </div>
         </div>
 
-        {/* QR Code Card */}
-        <Card className="shadow-lg border-0 bg-card/60 backdrop-blur-sm">
-          <CardContent className="p-6 text-center">
-            <h3 className="font-bold text-lg mb-4">Code QR du Pass</h3>
-            <div className="w-48 h-48 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <div className="w-40 h-40 bg-white rounded-xl shadow-lg flex items-center justify-center">
-                <QrCode className="w-32 h-32 text-gray-800" />
-              </div>
-            </div>
-            <p className="text-sm text-muted-foreground mb-4">
-              Montre ce code QR aux partenaires pour bénéficier de tes réductions
-            </p>
-            <Button 
-              onClick={handleScanPartner}
-              className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg"
-            >
-              <QrCode className="w-4 h-4 mr-2" />
-              Scanner un partenaire
-            </Button>
-          </CardContent>
-        </Card>
-
         {/* Quick Actions */}
         <Card className="shadow-lg border-0 bg-card/60 backdrop-blur-sm">
           <CardContent className="p-6">
@@ -414,23 +392,23 @@ const MonPass: React.FC = () => {
               <Button 
                 variant="ghost" 
                 className="flex flex-col items-center gap-3 h-auto py-6 hover:bg-primary/5 transition-all duration-300 group"
+                onClick={handleScanPartner}
+              >
+                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <QrCode className="w-6 h-6 text-emerald-600" />
+                </div>
+                <span className="text-sm font-medium">Scanner partenaire</span>
+              </Button>
+              
+              <Button 
+                variant="ghost" 
+                className="flex flex-col items-center gap-3 h-auto py-6 hover:bg-primary/5 transition-all duration-300 group"
                 onClick={() => navigate('/explorer')}
               >
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500/10 to-blue-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <Search className="w-6 h-6 text-blue-600" />
                 </div>
                 <span className="text-sm font-medium">Voir les offres</span>
-              </Button>
-              
-              <Button 
-                variant="ghost" 
-                className="flex flex-col items-center gap-3 h-auto py-6 hover:bg-primary/5 transition-all duration-300 group"
-                onClick={() => navigate('/community')}
-              >
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500/10 to-purple-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <Star className="w-6 h-6 text-purple-600" />
-                </div>
-                <span className="text-sm font-medium">Communauté</span>
               </Button>
             </div>
           </CardContent>
