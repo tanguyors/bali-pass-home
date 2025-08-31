@@ -37,7 +37,7 @@ export const usePartnerFavorites = () => {
         .from('partner_favorites')
         .select(`
           *,
-          partners!partner_favorites_partner_id_fkey (
+          partners (
             id,
             name,
             slug,
