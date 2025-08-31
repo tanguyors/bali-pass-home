@@ -275,7 +275,7 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
               autoPlay
               playsInline
               muted
-              className="w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover z-0"
             />
           )}
           
@@ -300,12 +300,12 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
             </div>
           )}
           
-          {/* Overlay avec instructions (web uniquement) */}
+          {/* Overlay avec instructions (web uniquement) - semi-transparent pour voir la vidéo */}
           {!Capacitor.isNativePlatform() && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <div className="relative mb-8">
+            <div className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
+              <div className="relative mb-8 pointer-events-auto">
                 {/* Zone de scan */}
-                <div className="w-64 h-64 border-4 border-white border-opacity-50 rounded-lg">
+                <div className="w-64 h-64 border-4 border-white border-opacity-50 rounded-lg bg-transparent">
                   {/* Coins du cadre */}
                   <div className="absolute -top-1 -left-1 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-lg"></div>
                   <div className="absolute -top-1 -right-1 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-lg"></div>
@@ -314,34 +314,36 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
                   
                   {/* Ligne de scan animée */}
                   <div className="absolute inset-0 overflow-hidden rounded-lg">
-                    <div className="w-full h-1 bg-primary animate-scan-line"></div>
+                    <div className="w-full h-1 bg-primary animate-scan-line opacity-80"></div>
                   </div>
                 </div>
               </div>
 
-              {/* Instructions et saisie manuelle pour web */}
-              <div className="text-center space-y-4 px-4">
-                <p className="text-white text-sm bg-black bg-opacity-50 px-4 py-2 rounded-lg">
-                  Pointez la caméra vers le QR code du partenaire
-                </p>
-                
-                <div className="bg-black bg-opacity-70 p-4 rounded-lg">
-                  <p className="text-white text-xs mb-2">Ou saisissez le code manuellement :</p>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={manualInput}
-                      onChange={(e) => setManualInput(e.target.value)}
-                      placeholder="PARTNER_XXXXX"
-                      className="px-3 py-2 rounded text-sm flex-1"
-                    />
-                    <Button 
-                      size="sm"
-                      onClick={handleManualSubmit}
-                      disabled={!manualInput.trim()}
-                    >
-                      OK
-                    </Button>
+              {/* Instructions - plus bas pour ne pas couvrir la zone de scan */}
+              <div className="absolute bottom-32 left-4 right-4 pointer-events-auto">
+                <div className="text-center space-y-4">
+                  <p className="text-white text-sm bg-black bg-opacity-70 px-4 py-2 rounded-lg">
+                    Pointez la caméra vers le QR code du partenaire
+                  </p>
+                  
+                  <div className="bg-black bg-opacity-80 p-4 rounded-lg">
+                    <p className="text-white text-xs mb-2">Ou saisissez le code manuellement :</p>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={manualInput}
+                        onChange={(e) => setManualInput(e.target.value)}
+                        placeholder="PARTNER_XXXXX"
+                        className="px-3 py-2 rounded text-sm flex-1"
+                      />
+                      <Button 
+                        size="sm"
+                        onClick={handleManualSubmit}
+                        disabled={!manualInput.trim()}
+                      >
+                        OK
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
