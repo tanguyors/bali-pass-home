@@ -5,7 +5,6 @@ import { HeroNoPass } from "@/components/HeroNoPass";
 import { HeroWithPass } from "@/components/HeroWithPass";
 import { PricingHighlight } from "@/components/PricingHighlight";
 import { QuickActions } from "@/components/QuickActions";
-import { DestinationsSection } from "@/components/DestinationsSection";
 import { CategoriesSlider } from "@/components/CategoriesSlider";
 import { FeaturedOffers } from "@/components/FeaturedOffers";
 import { ReassuranceSection } from "@/components/ReassuranceSection";
@@ -109,9 +108,6 @@ const Index = () => {
         
         {/* Pass Summary - only for users with active pass */}
         {isAuthenticated && hasActivePass && userPass && <PassSummarySection pass={userPass} />}
-        
-        {/* Destinations */}
-        <DestinationsSection />
         
         {/* Categories Slider */}
         <CategoriesSlider />
