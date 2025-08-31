@@ -332,38 +332,6 @@ const Profil: React.FC = () => {
           </div>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-3 gap-3">
-          <Card className="bg-gradient-to-br from-blue-50 to-blue-100/50 border-blue-200/50 shadow-sm">
-            <CardContent className="p-4 text-center">
-              <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                <Award className="w-5 h-5 text-white" />
-              </div>
-              <p className="text-2xl font-bold text-blue-700">12</p>
-              <p className="text-xs text-blue-600">Offres utilisées</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 border-emerald-200/50 shadow-sm">
-            <CardContent className="p-4 text-center">
-              <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                <Star className="w-5 h-5 text-white" />
-              </div>
-              <p className="text-2xl font-bold text-emerald-700">4.8</p>
-              <p className="text-xs text-emerald-600">Note moyenne</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-gradient-to-br from-purple-50 to-purple-100/50 border-purple-200/50 shadow-sm">
-            <CardContent className="p-4 text-center">
-              <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                <MapPin className="w-5 h-5 text-white" />
-              </div>
-              <p className="text-2xl font-bold text-purple-700">8</p>
-              <p className="text-xs text-purple-600">Lieux visités</p>
-            </CardContent>
-          </Card>
-        </div>
 
         {/* Quick Actions */}
         <Card className="shadow-lg border-0 bg-card/60 backdrop-blur-sm">
