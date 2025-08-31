@@ -185,11 +185,11 @@ export function FeaturedOffers() {
                 </div>
                 
                 {/* Action Buttons */}
-                <div className="flex gap-2 justify-center">
+                <div className="flex gap-2 justify-center items-center">
                   <Button 
                     variant="pill" 
                     size="sm" 
-                    className="px-4 flex-1"
+                    className="px-4 flex-1 h-9"
                     onClick={() => navigate(`/offer/${offer.id}`)}
                   >
                     Voir l'offre
@@ -198,7 +198,7 @@ export function FeaturedOffers() {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="px-3 h-9 bg-gradient-to-r from-primary/10 to-lagoon/10 border-primary/20 hover:from-primary/20 hover:to-lagoon/20 hover:border-primary/30 hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md"
+                      className="px-3 h-9 w-12 flex-shrink-0 bg-gradient-to-r from-primary/10 to-lagoon/10 border-primary/20 hover:from-primary/20 hover:to-lagoon/20 hover:border-primary/30 hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md"
                       onClick={() => openNavigation(offer.partner.address!)}
                       title="Navigation GPS"
                     >
