@@ -17,6 +17,7 @@ interface Partner {
   lat: number | null;
   lng: number | null;
   address: string | null;
+  phone: string | null;
   logo_url: string | null;
   cover_url: string | null;
   city: {
@@ -64,6 +65,7 @@ const Map: React.FC = () => {
           lat,
           lng,
           address,
+          phone,
           logo_url,
           cover_url,
           cities (name),
@@ -288,6 +290,11 @@ const Map: React.FC = () => {
                       <p className="text-xs text-muted-foreground truncate">
                         {selectedPartner.city.name}
                       </p>
+                      {selectedPartner.phone && (
+                        <p className="text-xs text-muted-foreground">
+                          📞 {selectedPartner.phone}
+                        </p>
+                      )}
                       {getBestOffer(selectedPartner) && (
                         <Badge variant="secondary" className="text-xs mt-1">
                           -{getBestOffer(selectedPartner)?.value_number}%

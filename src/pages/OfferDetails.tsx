@@ -304,6 +304,11 @@ export default function OfferDetails() {
                 <span className="text-sm">{offer.partner.address}</span>
               </div>
             )}
+            {offer.partner.phone && (
+              <div className="flex items-center gap-2 text-muted-foreground mb-2">
+                <span className="text-sm">📞 {offer.partner.phone}</span>
+              </div>
+            )}
             <div className="flex items-center gap-2">
               <Star className="w-4 h-4 text-gold fill-current" />
               <span className="text-sm font-semibold">

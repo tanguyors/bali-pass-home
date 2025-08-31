@@ -124,10 +124,9 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
             )}
             
             {partner.phone && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Phone className="w-4 h-4" />
-                <span>{partner.phone}</span>
-              </div>
+              <p className="text-muted-foreground text-sm">
+                📞 {partner.phone}
+              </p>
             )}
           </div>
 
