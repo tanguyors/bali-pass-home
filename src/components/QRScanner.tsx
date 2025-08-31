@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { Camera, CameraView, useCameraPermissions } from "expo-camera";
-import { X, Flashlight, FlashlightOff } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import QrScanner from "qr-scanner";
+import { X, Flashlight, FlashlightOff, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
@@ -13,21 +13,64 @@ interface QRScannerProps {
 }
 
 export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
-  const [permission, requestPermission] = useCameraPermissions();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const qrScannerRef = useRef<QrScanner | null>(null);
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState(false);
   const [flashOn, setFlashOn] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
-    if (isOpen && !permission?.granted) {
-      requestPermission();
-    }
     if (isOpen) {
       setScanned(false);
+      startScanner();
+    } else {
+      stopScanner();
     }
-  }, [isOpen, permission, requestPermission]);
 
-  const handleBarCodeScanned = async ({ type, data }: { type: string; data: string }) => {
+    return () => {
+      stopScanner();
+    };
+  }, [isOpen]);
+
+  const startScanner = async () => {
+    if (!videoRef.current) return;
+
+    try {
+      // Check if camera is available
+      const hasCamera = await QrScanner.hasCamera();
+      if (!hasCamera) {
+        setHasPermission(false);
+        return;
+      }
+
+      // Create QR scanner instance
+      qrScannerRef.current = new QrScanner(
+        videoRef.current,
+        (result) => handleScanResult(result.data),
+        {
+          highlightScanRegion: true,
+          highlightCodeOutline: true,
+        }
+      );
+
+      await qrScannerRef.current.start();
+      setHasPermission(true);
+    } catch (error) {
+      console.error("Erreur lors du démarrage du scanner:", error);
+      setHasPermission(false);
+    }
+  };
+
+  const stopScanner = () => {
+    if (qrScannerRef.current) {
+      qrScannerRef.current.stop();
+      qrScannerRef.current.destroy();
+      qrScannerRef.current = null;
+    }
+  };
+
+  const handleScanResult = async (data: string) => {
     if (scanned) return;
     
     setScanned(true);
@@ -112,19 +155,43 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
     }
   };
 
-  const toggleFlash = () => {
-    setFlashOn(!flashOn);
+  const toggleFlash = async () => {
+    if (qrScannerRef.current) {
+      try {
+        if (flashOn) {
+          await qrScannerRef.current.turnFlashOff();
+        } else {
+          await qrScannerRef.current.turnFlashOn();
+        }
+        setFlashOn(!flashOn);
+      } catch (error) {
+        console.error("Erreur lors du contrôle du flash:", error);
+      }
+    }
   };
 
-  if (!permission) {
-    return null;
-  }
-
-  if (!permission.granted) {
+  if (hasPermission === null) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-sm mx-auto">
           <div className="text-center p-6">
+            <Camera className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+            <h3 className="text-lg font-semibold mb-2">Initialisation de la caméra...</h3>
+            <p className="text-muted-foreground">
+              Veuillez patienter pendant que nous accédons à votre caméra.
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  if (hasPermission === false) {
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="max-w-sm mx-auto">
+          <div className="text-center p-6">
+            <Camera className="w-12 h-12 mx-auto mb-4 text-destructive" />
             <h3 className="text-lg font-semibold mb-2">Accès à la caméra requis</h3>
             <p className="text-muted-foreground mb-4">
               L'application a besoin d'accéder à votre caméra pour scanner les QR codes des partenaires.
@@ -140,14 +207,11 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-full max-h-full w-full h-full p-0 border-0">
         <div className="relative w-full h-full bg-black">
-          <CameraView
-            style={{ flex: 1, width: '100%', height: '100%' }}
-            facing="back"
-            enableTorch={flashOn}
-            onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
-            barcodeScannerSettings={{
-              barcodeTypes: ["qr"],
-            }}
+          {/* Video element for camera feed */}
+          <video
+            ref={videoRef}
+            className="w-full h-full object-cover"
+            style={{ transform: 'scaleX(-1)' }} // Mirror effect
           />
           
           {/* Overlay avec cadre de scan */}
@@ -177,7 +241,7 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
           </div>
 
           {/* Contrôles */}
-          <div className="absolute top-safe-top left-0 right-0 flex justify-between items-center p-4 z-10">
+          <div className="absolute top-4 left-0 right-0 flex justify-between items-center p-4 z-10">
             <Button
               variant="ghost"
               size="icon"
