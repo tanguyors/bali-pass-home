@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import QrScanner from "qr-scanner";
-import { X, Flashlight, FlashlightOff, Camera } from "lucide-react";
+import { X, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
@@ -14,76 +13,49 @@ interface QRScannerProps {
 
 export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const qrScannerRef = useRef<QrScanner | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState(false);
-  const [flashOn, setFlashOn] = useState(false);
+  const [manualInput, setManualInput] = useState("");
   const { toast } = useToast();
 
   useEffect(() => {
     if (isOpen) {
       setScanned(false);
-      startScanner();
+      setManualInput("");
+      startCamera();
     } else {
-      stopScanner();
+      stopCamera();
     }
 
     return () => {
-      stopScanner();
+      stopCamera();
     };
   }, [isOpen]);
 
-  const startScanner = async () => {
-    if (!videoRef.current) return;
-
+  const startCamera = async () => {
     try {
-      // Set timeout pour éviter le blocage sur iOS
-      const timeout = setTimeout(() => {
-        console.error("Timeout lors de l'initialisation de la caméra");
-        setHasPermission(false);
-      }, 10000); // 10 secondes timeout
-
-      // Check if camera is available (avec gestion d'erreur iOS)
-      let hasCamera = false;
-      try {
-        hasCamera = await QrScanner.hasCamera();
-      } catch (cameraCheckError) {
-        console.warn("Erreur lors de la vérification de la caméra, tentative directe:", cameraCheckError);
-        hasCamera = true; // On assume qu'il y a une caméra sur iOS
-      }
-
-      if (!hasCamera) {
-        clearTimeout(timeout);
-        setHasPermission(false);
-        return;
-      }
-
-      // Create QR scanner instance avec gestion iOS améliorée
-      qrScannerRef.current = new QrScanner(
-        videoRef.current,
-        (result) => handleScanResult(result.data),
-        {
-          highlightScanRegion: true,
-          highlightCodeOutline: true,
-          preferredCamera: 'environment', // Caméra arrière par défaut
-          maxScansPerSecond: 5, // Limite pour iOS
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: 'environment', // Caméra arrière
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
         }
-      );
+      });
 
-      // Démarrer le scanner avec gestion d'erreur iOS
-      await qrScannerRef.current.start();
-      clearTimeout(timeout);
-      setHasPermission(true);
-      
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        streamRef.current = stream;
+        setHasPermission(true);
+      }
     } catch (error) {
-      console.error("Erreur lors du démarrage du scanner:", error);
+      console.error("Erreur lors de l'accès à la caméra:", error);
       
-      // Messages d'erreur spécifiques pour iOS
       let errorMessage = "Impossible d'accéder à la caméra.";
       if (error.name === 'NotAllowedError') {
-        errorMessage = "Veuillez autoriser l'accès à la caméra dans les paramètres.";
+        errorMessage = "Veuillez autoriser l'accès à la caméra.";
       } else if (error.name === 'NotFoundError') {
-        errorMessage = "Aucune caméra détectée sur cet appareil.";
+        errorMessage = "Aucune caméra détectée.";
       }
       
       toast({
@@ -96,11 +68,19 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
     }
   };
 
-  const stopScanner = () => {
-    if (qrScannerRef.current) {
-      qrScannerRef.current.stop();
-      qrScannerRef.current.destroy();
-      qrScannerRef.current = null;
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+  };
+
+  const handleManualSubmit = () => {
+    if (manualInput.trim()) {
+      handleScanResult(manualInput.trim());
     }
   };
 
@@ -113,8 +93,8 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
       // Vérifier si c'est un QR code partenaire
       if (!data.startsWith('PARTNER_')) {
         toast({
-          title: "QR Code invalide",
-          description: "Ce n'est pas un QR code partenaire Bali'Pass valide.",
+          title: "Code invalide",
+          description: "Ce n'est pas un code partenaire Bali'Pass valide.",
           variant: "destructive",
         });
         setTimeout(() => setScanned(false), 2000);
@@ -147,7 +127,7 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
       if (error || !partner) {
         toast({
           title: "Partenaire introuvable",
-          description: "Ce QR code ne correspond à aucun partenaire actif.",
+          description: "Ce code ne correspond à aucun partenaire actif.",
           variant: "destructive",
         });
         setTimeout(() => setScanned(false), 2000);
@@ -179,28 +159,13 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
       onClose();
       
     } catch (error) {
-      console.error('Erreur lors de la validation du QR code:', error);
+      console.error('Erreur lors de la validation du code:', error);
       toast({
         title: "Erreur",
-        description: "Une erreur s'est produite lors de la validation du QR code.",
+        description: "Une erreur s'est produite lors de la validation.",
         variant: "destructive",
       });
       setTimeout(() => setScanned(false), 2000);
-    }
-  };
-
-  const toggleFlash = async () => {
-    if (qrScannerRef.current) {
-      try {
-        if (flashOn) {
-          await qrScannerRef.current.turnFlashOff();
-        } else {
-          await qrScannerRef.current.turnFlashOn();
-        }
-        setFlashOn(!flashOn);
-      } catch (error) {
-        console.error("Erreur lors du contrôle du flash:", error);
-      }
     }
   };
 
@@ -209,7 +174,7 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-sm mx-auto">
           <div className="text-center p-6">
-            <Camera className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+            <Camera className="w-12 h-12 mx-auto mb-4 text-muted-foreground animate-pulse" />
             <h3 className="text-lg font-semibold mb-2">Initialisation de la caméra...</h3>
             <p className="text-muted-foreground">
               Veuillez patienter pendant que nous accédons à votre caméra.
@@ -226,11 +191,34 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
         <DialogContent className="max-w-sm mx-auto">
           <div className="text-center p-6">
             <Camera className="w-12 h-12 mx-auto mb-4 text-destructive" />
-            <h3 className="text-lg font-semibold mb-2">Accès à la caméra requis</h3>
+            <h3 className="text-lg font-semibold mb-2">Scanner temporairement indisponible</h3>
             <p className="text-muted-foreground mb-4">
-              L'application a besoin d'accéder à votre caméra pour scanner les QR codes des partenaires.
+              Vous pouvez saisir manuellement le code partenaire en attendant.
             </p>
-            <Button onClick={onClose}>Fermer</Button>
+            
+            <div className="space-y-4">
+              <div>
+                <input
+                  type="text"
+                  value={manualInput}
+                  onChange={(e) => setManualInput(e.target.value)}
+                  placeholder="PARTNER_XXXXX"
+                  className="w-full p-3 border rounded-lg text-center"
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button 
+                  onClick={handleManualSubmit}
+                  disabled={!manualInput.trim()}
+                  className="flex-1"
+                >
+                  Valider
+                </Button>
+                <Button variant="outline" onClick={onClose}>
+                  Fermer
+                </Button>
+              </div>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
@@ -244,13 +232,15 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
           {/* Video element for camera feed */}
           <video
             ref={videoRef}
+            autoPlay
+            playsInline
+            muted
             className="w-full h-full object-cover"
-            style={{ transform: 'scaleX(-1)' }} // Mirror effect
           />
           
-          {/* Overlay avec cadre de scan */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="relative">
+          {/* Overlay avec instructions */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <div className="relative mb-8">
               {/* Zone de scan */}
               <div className="w-64 h-64 border-4 border-white border-opacity-50 rounded-lg">
                 {/* Coins du cadre */}
@@ -264,18 +254,38 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
                   <div className="w-full h-1 bg-primary animate-scan-line"></div>
                 </div>
               </div>
+            </div>
+
+            {/* Instructions et saisie manuelle */}
+            <div className="text-center space-y-4 px-4">
+              <p className="text-white text-sm bg-black bg-opacity-50 px-4 py-2 rounded-lg">
+                Pointez la caméra vers le QR code du partenaire
+              </p>
               
-              {/* Instructions */}
-              <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
-                <p className="text-white text-center text-sm bg-black bg-opacity-50 px-4 py-2 rounded-lg">
-                  Pointez la caméra vers le QR code du partenaire
-                </p>
+              <div className="bg-black bg-opacity-70 p-4 rounded-lg">
+                <p className="text-white text-xs mb-2">Ou saisissez le code manuellement :</p>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={manualInput}
+                    onChange={(e) => setManualInput(e.target.value)}
+                    placeholder="PARTNER_XXXXX"
+                    className="px-3 py-2 rounded text-sm flex-1"
+                  />
+                  <Button 
+                    size="sm"
+                    onClick={handleManualSubmit}
+                    disabled={!manualInput.trim()}
+                  >
+                    OK
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Contrôles */}
-          <div className="absolute top-4 left-0 right-0 flex justify-between items-center p-4 z-10">
+          {/* Contrôle de fermeture */}
+          <div className="absolute top-4 right-4 z-10">
             <Button
               variant="ghost"
               size="icon"
@@ -284,21 +294,12 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
             >
               <X className="w-6 h-6" />
             </Button>
-            
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleFlash}
-              className="bg-black bg-opacity-50 text-white hover:bg-black hover:bg-opacity-70"
-            >
-              {flashOn ? <FlashlightOff className="w-6 h-6" /> : <Flashlight className="w-6 h-6" />}
-            </Button>
           </div>
 
           {scanned && (
             <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
               <div className="bg-card p-6 rounded-lg">
-                <p className="text-center">Validation du QR code...</p>
+                <p className="text-center">Validation du code...</p>
               </div>
             </div>
           )}
