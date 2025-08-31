@@ -69,25 +69,41 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
         videoRef.current.srcObject = stream;
         streamRef.current = stream;
         
-        // Attendre que la métadata soit chargée avant de jouer
-        videoRef.current.onloadedmetadata = () => {
-          console.log("Video metadata loaded, starting playback");
-          if (videoRef.current) {
-            videoRef.current.play().then(() => {
-              console.log("Video is playing");
-              setHasPermission(true);
-            }).catch(error => {
-              console.error("Error playing video:", error);
-              setHasPermission(true); // On continue même si play échoue
-            });
-          }
-        };
+        // Propriétés nécessaires pour Safari mobile
+        videoRef.current.playsInline = true;
+        videoRef.current.muted = true;
+        videoRef.current.autoplay = true;
         
-        // Fallback si onloadedmetadata ne se déclenche pas
-        setTimeout(() => {
-          console.log("Fallback: setting permission to true");
+        console.log("Video element properties set");
+        
+        // Essayer de jouer immédiatement
+        try {
+          await videoRef.current.play();
+          console.log("Video started playing successfully");
           setHasPermission(true);
-        }, 1000);
+        } catch (playError) {
+          console.error("Error playing video:", playError);
+          
+          // Fallback: essayer avec un event listener
+          videoRef.current.oncanplay = () => {
+            console.log("Video can play - attempting to start");
+            if (videoRef.current) {
+              videoRef.current.play().then(() => {
+                console.log("Video playing after canplay event");
+                setHasPermission(true);
+              }).catch(e => {
+                console.error("Still can't play:", e);
+                setHasPermission(true); // Continue anyway
+              });
+            }
+          };
+          
+          // Dernier fallback
+          setTimeout(() => {
+            console.log("Final fallback: setting permission");
+            setHasPermission(true);
+          }, 2000);
+        }
       }
       
     } catch (error) {
