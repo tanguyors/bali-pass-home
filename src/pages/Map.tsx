@@ -1,341 +1,374 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import { MapControls } from '@/components/MapControls';
-import { PartnerPopup } from '@/components/PartnerPopup';
-import { MapFilters, MapFilters as MapFiltersType } from '@/components/MapFilters';
-import { BottomNavigation } from '@/components/BottomNavigation';
-import { FloatingActionButton } from '@/components/FloatingActionButton';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
+import { Search, Filter, MapPin, Star, Clock } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { useGeolocation } from '@/hooks/useGeolocation';
-
-interface Offer {
-  id: string;
-  title: string;
-  value_number: number | null;
-  promo_type: string;
-}
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { FloatingActionButton } from '@/components/FloatingActionButton';
+import { FilterBottomSheet } from '@/components/FilterBottomSheet';
+import { BottomNavigation } from '@/components/BottomNavigation';
 
 interface Partner {
   id: string;
   name: string;
   slug: string;
-  lat: number;
-  lng: number;
+  lat: number | null;
+  lng: number | null;
   address: string | null;
   phone: string | null;
   logo_url: string | null;
   cover_url: string | null;
-  city: { name: string };
-  offers: Offer[];
+  city: {
+    name: string;
+  };
+  offers: Array<{
+    id: string;
+    title: string;
+    value_number: number | null;
+    promo_type: string;
+  }>;
 }
 
-const Map = () => {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const markersRef = useRef<mapboxgl.Marker[]>([]);
-  const popupRef = useRef<mapboxgl.Popup | null>(null);
+const mapContainerStyle = {
+  width: '100%',
+  height: '100vh',
+};
 
-  const [mapboxToken, setMapboxToken] = useState<string>('');
+const center = {
+  lat: -8.409518, // Bali center
+  lng: 115.188919,
+};
+
+const Map: React.FC = () => {
   const [partners, setPartners] = useState<Partner[]>([]);
   const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filters, setFilters] = useState<MapFiltersType>({
-    categories: [],
-    maxDistance: null,
-    hasOffers: false
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: 'AIzaSyBFw0Qbyq9zTFTd-tUY6dQTl0JiXk-JvJ0', // This should be replaced with your actual Google Maps API key
   });
 
-  const { latitude, longitude, error: locationError } = useGeolocation();
-  const userLocation = latitude && longitude ? { lat: latitude, lng: longitude } : null;
-
-  // Fetch Mapbox token
-  useEffect(() => {
-    const fetchMapboxToken = async () => {
-      try {
-        const { data, error } = await supabase.functions.invoke('get-mapbox-token');
-        if (error) throw error;
-        setMapboxToken(data.token);
-      } catch (error) {
-        console.error('Error fetching Mapbox token:', error);
-      }
-    };
-
-    fetchMapboxToken();
-  }, []);
-
-  // Fetch partners
-  useEffect(() => {
-    const fetchPartners = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('partners')
-          .select(`
+  const fetchPartners = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('partners')
+        .select(`
+          id,
+          name,
+          slug,
+          lat,
+          lng,
+          address,
+          phone,
+          logo_url,
+          cover_url,
+          cities (name),
+          offers (
             id,
-            name,
-            slug,
-            lat,
-            lng,
-            address,
-            phone,
-            logo_url,
-            cover_url,
-            cities (name),
-            offers (
-              id,
-              title,
-              value_number,
-              promo_type
-            )
-          `)
-          .eq('status', 'approved')
-          .not('lat', 'is', null)
-          .not('lng', 'is', null);
+            title,
+            value_number,
+            promo_type
+          )
+        `)
+        .eq('status', 'approved')
+        .not('lat', 'is', null)
+        .not('lng', 'is', null);
 
-        if (error) {
-          console.error('Error fetching partners:', error);
-          return;
-        }
-
-        const formattedPartners = data?.map(partner => ({
-          ...partner,
-          city: partner.cities || { name: 'Bali' },
-          offers: partner.offers || [],
-        })) || [];
-
-        setPartners(formattedPartners);
-      } catch (error) {
-        console.error('Error:', error);
+      if (error) {
+        console.error('Error fetching partners:', error);
+        return;
       }
-    };
 
-    fetchPartners();
+      const formattedPartners = data?.map(partner => ({
+        ...partner,
+        city: partner.cities || { name: 'Bali' },
+        offers: partner.offers || [],
+      })) || [];
+
+      setPartners(formattedPartners);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   }, []);
 
-  // Initialize map
   useEffect(() => {
-    if (!mapContainer.current || !mapboxToken) return;
+    fetchPartners();
+  }, [fetchPartners]);
 
-    mapboxgl.accessToken = mapboxToken;
-    
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/streets-v12',
-      center: userLocation ? [userLocation.lng, userLocation.lat] : [115.188919, -8.409518],
-      zoom: userLocation ? 13 : 9,
-      pitch: 0,
-      bearing: 0
-    });
-
-    // Add navigation controls
-    map.current.addControl(
-      new mapboxgl.NavigationControl({
-        showCompass: true,
-        showZoom: false
-      }),
-      'top-right'
-    );
-
-    // Add user location marker if available
-    if (userLocation) {
-      new mapboxgl.Marker({
-        color: '#3B82F6',
-        scale: 0.8
-      })
-        .setLngLat([userLocation.lng, userLocation.lat])
-        .addTo(map.current);
-    }
-
-    return () => {
-      map.current?.remove();
-    };
-  }, [mapboxToken, userLocation]);
-
-  // Filter partners based on search and filters
-  const filteredPartners = useMemo(() => {
-    let filtered = partners;
-
-    // Search filter
-    if (searchQuery) {
-      filtered = filtered.filter(partner =>
-        partner.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        partner.offers.some(offer => 
-          offer.title.toLowerCase().includes(searchQuery.toLowerCase())
-        ) ||
-        partner.city.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // Get user location
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+        }
       );
     }
+  }, []);
 
-    // Category filter
-    if (filters.categories.length > 0) {
-      // This would need category info in partner data
-      // For now, we'll keep all partners
+  const filteredPartners = useMemo(() => {
+    if (!searchQuery) return partners;
+    
+    return partners.filter(partner =>
+      partner.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      partner.offers.some(offer => 
+        offer.title.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    );
+  }, [partners, searchQuery]);
+
+  const onLoad = useCallback((map: google.maps.Map) => {
+    setMap(map);
+  }, []);
+
+  const onUnmount = useCallback(() => {
+    setMap(null);
+  }, []);
+
+  const centerOnUserLocation = () => {
+    if (userLocation && map) {
+      map.panTo(userLocation);
+      map.setZoom(15);
     }
-
-    // Distance filter
-    if (userLocation && filters.maxDistance) {
-      filtered = filtered.filter(partner => {
-        const distance = calculateDistance(
-          userLocation.lat, 
-          userLocation.lng, 
-          partner.lat, 
-          partner.lng
-        );
-        return distance <= filters.maxDistance!;
-      });
-    }
-
-    // Offers filter
-    if (filters.hasOffers) {
-      filtered = filtered.filter(partner => partner.offers.length > 0);
-    }
-
-    return filtered;
-  }, [partners, searchQuery, filters, userLocation]);
-
-  const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
-    const R = 6371; // Earth's radius in km
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLng = (lng2 - lng1) * Math.PI / 180;
-    const a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-      Math.sin(dLng/2) * Math.sin(dLng/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    return R * c;
   };
 
-  // Update markers when partners change
-  useEffect(() => {
-    if (!map.current) return;
-
-    // Clear existing markers
-    markersRef.current.forEach(marker => marker.remove());
-    markersRef.current = [];
-
-    // Add new markers
-    filteredPartners.forEach(partner => {
-      const bestOffer = partner.offers.reduce((best, current) => {
-        if (!best) return current;
-        if (current.value_number && best.value_number) {
-          return current.value_number > best.value_number ? current : best;
-        }
-        return current;
-      }, partner.offers[0]);
-
-      // Create custom marker element
-      const el = document.createElement('div');
-      el.className = 'w-10 h-10 cursor-pointer transition-transform hover:scale-110';
-      el.innerHTML = `
-        <div class="relative">
-          <div class="w-10 h-10 bg-primary rounded-full border-2 border-background shadow-lg flex items-center justify-center">
-            <span class="text-xs font-bold text-primary-foreground">
-              ${bestOffer?.value_number ? `-${bestOffer.value_number}%` : '★'}
-            </span>
-          </div>
-          ${partner.offers.length > 0 ? '<div class="absolute -top-1 -right-1 w-3 h-3 bg-orange-500 rounded-full"></div>' : ''}
-        </div>
-      `;
-
-      const marker = new mapboxgl.Marker({ element: el })
-        .setLngLat([partner.lng, partner.lat])
-        .addTo(map.current!);
-
-      // Add click handler
-      el.addEventListener('click', () => {
-        setSelectedPartner(partner);
-        map.current?.flyTo({
-          center: [partner.lng, partner.lat],
-          zoom: 15,
-          duration: 1000
-        });
-      });
-
-      markersRef.current.push(marker);
-    });
-  }, [filteredPartners]);
-
-  const handleZoomIn = useCallback(() => {
-    map.current?.zoomIn();
-  }, []);
-
-  const handleZoomOut = useCallback(() => {
-    map.current?.zoomOut();
-  }, []);
-
-  const handleLocationClick = useCallback(() => {
-    if (userLocation && map.current) {
-      map.current.flyTo({
-        center: [userLocation.lng, userLocation.lat],
-        zoom: 15,
-        duration: 1000
-      });
+  const centerOnPartner = (partner: Partner) => {
+    if (partner.lat && partner.lng && map) {
+      map.panTo({ lat: partner.lat, lng: partner.lng });
+      map.setZoom(16);
+      setSelectedPartner(partner);
     }
-  }, [userLocation]);
+  };
 
-  const activeFiltersCount = filters.categories.length + 
-    (filters.hasOffers ? 1 : 0) + 
-    (filters.maxDistance && filters.maxDistance < 50 ? 1 : 0);
+  const getBestOffer = (partner: Partner) => {
+    if (!partner.offers.length) return null;
+    
+    return partner.offers.reduce((best, current) => {
+      if (!best) return current;
+      if (current.value_number && best.value_number) {
+        return current.value_number > best.value_number ? current : best;
+      }
+      return current;
+    }, partner.offers[0]);
+  };
+
+  const getMarkerIcon = (partner: Partner) => {
+    const bestOffer = getBestOffer(partner);
+    const hasOffer = bestOffer && bestOffer.value_number;
+    
+    return {
+      url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+        <svg width="40" height="50" viewBox="0 0 40 50" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 0C8.95 0 0 8.95 0 20C0 35 20 50 20 50S40 35 40 20C40 8.95 31.05 0 20 0Z" fill="#059669"/>
+          <circle cx="20" cy="20" r="12" fill="white"/>
+          <text x="20" y="26" text-anchor="middle" fill="#059669" font-size="10" font-weight="bold">
+            ${hasOffer ? `-${bestOffer.value_number}%` : '★'}
+          </text>
+        </svg>
+      `)}`,
+      scaledSize: new google.maps.Size(40, 50),
+      anchor: new google.maps.Point(20, 50),
+    };
+  };
+
+  if (!isLoaded) {
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+  }
 
   return (
-    <div className="relative h-screen bg-background overflow-hidden">
-      {/* Map container */}
-      <div ref={mapContainer} className="absolute inset-0" />
-
-      {/* Map controls */}
-      <MapControls
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        onFilterClick={() => setIsFilterOpen(true)}
-        onLocationClick={handleLocationClick}
-        onZoomIn={handleZoomIn}
-        onZoomOut={handleZoomOut}
-        activeFilters={activeFiltersCount}
-        userLocation={userLocation}
-      />
-
-      {/* Partner popup */}
-      {selectedPartner && (
-        <div className="absolute inset-x-4 bottom-32 z-40 flex justify-center">
-          <PartnerPopup
-            partner={selectedPartner}
-            userLocation={userLocation}
-            onClose={() => setSelectedPartner(null)}
-          />
-        </div>
-      )}
-
-      {/* Location error */}
-      {locationError && (
-        <div className="absolute top-20 left-4 right-4 z-40">
-          <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
-            <p className="text-sm text-orange-700">
-              📍 Géolocalisation non disponible. Les fonctionnalités de proximité sont désactivées.
-            </p>
+    <div className="relative h-screen bg-background">
+      {/* Header */}
+      <div className="absolute top-0 left-0 right-0 z-10 bg-background/95 backdrop-blur-sm border-b border-border">
+        <div className="flex items-center gap-2 p-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Rechercher un partenaire ou une offre…"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
           </div>
-        </div>
-      )}
-
-      {/* Results counter */}
-      <div className="absolute bottom-24 left-4 z-40">
-        <div className="bg-background/95 backdrop-blur-sm border border-border rounded-full px-3 py-1 shadow-sm">
-          <p className="text-xs text-muted-foreground">
-            {filteredPartners.length} partenaire{filteredPartners.length !== 1 ? 's' : ''}
-            {searchQuery && ` pour "${searchQuery}"`}
-          </p>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setIsFilterOpen(true)}
+          >
+            <Filter className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={centerOnUserLocation}
+          >
+            <MapPin className="h-4 w-4" />
+          </Button>
         </div>
       </div>
 
-      {/* Map filters */}
-      <MapFilters
+      {/* Map */}
+      <GoogleMap
+        mapContainerStyle={mapContainerStyle}
+        center={userLocation || center}
+        zoom={12}
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+        options={{
+          disableDefaultUI: true,
+          zoomControl: true,
+          gestureHandling: 'greedy',
+        }}
+      >
+        {/* User location marker */}
+        {userLocation && (
+          <Marker
+            position={userLocation}
+            icon={{
+              url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+                <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="10" cy="10" r="8" fill="#3B82F6" stroke="white" stroke-width="2"/>
+                  <circle cx="10" cy="10" r="3" fill="white"/>
+                </svg>
+              `)}`,
+              scaledSize: new google.maps.Size(20, 20),
+            }}
+          />
+        )}
+
+        {/* Partner markers */}
+        {filteredPartners.map((partner) => (
+          partner.lat && partner.lng && (
+            <Marker
+              key={partner.id}
+              position={{ lat: partner.lat, lng: partner.lng }}
+              icon={getMarkerIcon(partner)}
+              onClick={() => setSelectedPartner(partner)}
+            />
+          )
+        ))}
+
+        {/* Info window */}
+        {selectedPartner && 
+         selectedPartner.lat && 
+         selectedPartner.lng && 
+         typeof selectedPartner.lat === 'number' && 
+         typeof selectedPartner.lng === 'number' && (
+          <InfoWindow
+            position={{ 
+              lat: Number(selectedPartner.lat), 
+              lng: Number(selectedPartner.lng) 
+            }}
+            onCloseClick={() => setSelectedPartner(null)}
+          >
+            <div className="w-64">
+              <Card className="border-0 shadow-none">
+                <CardContent className="p-3">
+                  <div className="flex gap-3">
+                    {selectedPartner.logo_url && (
+                      <img
+                        src={selectedPartner.logo_url}
+                        alt={selectedPartner.name}
+                        className="w-12 h-12 rounded-lg object-cover"
+                      />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-sm truncate">
+                        {selectedPartner.name}
+                      </h3>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {selectedPartner.city.name}
+                      </p>
+                      {selectedPartner.phone && (
+                        <p className="text-xs text-muted-foreground">
+                          📞 {selectedPartner.phone}
+                        </p>
+                      )}
+                      {getBestOffer(selectedPartner) && (
+                        <Badge variant="secondary" className="text-xs mt-1">
+                          -{getBestOffer(selectedPartner)?.value_number}%
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                  <Button 
+                    size="sm" 
+                    className="w-full mt-3"
+                    onClick={() => {
+                      // Navigate to partner detail page
+                      window.location.href = `/partner/${selectedPartner.slug}`;
+                    }}
+                  >
+                    Voir l'offre
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </InfoWindow>
+        )}
+      </GoogleMap>
+
+      {/* Partners list at bottom */}
+      <div className="absolute bottom-20 left-0 right-0 z-10">
+        <div className="px-4">
+          <div className="flex gap-3 overflow-x-auto pb-2">
+            {filteredPartners.slice(0, 10).map((partner) => {
+              const bestOffer = getBestOffer(partner);
+              return (
+                <Card 
+                  key={partner.id}
+                  className="min-w-[200px] cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() => centerOnPartner(partner)}
+                >
+                  <CardContent className="p-3">
+                    <div className="flex gap-2">
+                      {partner.logo_url && (
+                        <img
+                          src={partner.logo_url}
+                          alt={partner.name}
+                          className="w-10 h-10 rounded object-cover"
+                        />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-sm truncate">
+                          {partner.name}
+                        </h4>
+                        <p className="text-xs text-muted-foreground">
+                          {partner.city.name}
+                        </p>
+                        {bestOffer && (
+                          <Badge variant="secondary" className="text-xs mt-1">
+                            -{bestOffer.value_number}%
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Filter bottom sheet */}
+      <FilterBottomSheet
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
-        onFiltersChange={setFilters}
-        userLocation={userLocation}
       />
 
-      {/* Floating Action Button */}
+      {/* Floating QR button */}
       <FloatingActionButton />
 
       {/* Bottom Navigation */}
