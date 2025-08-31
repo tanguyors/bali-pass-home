@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { CalendarIcon, EyeIcon, EyeOffIcon } from 'lucide-react';
+import { CalendarIcon, EyeIcon, EyeOffIcon, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -155,7 +155,16 @@ const Auth: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-primary/5 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-primary/5 flex items-center justify-center p-4 relative">
+      {/* Back Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => navigate(-1)}
+        className="absolute top-4 left-4 z-10 w-10 h-10 bg-background/80 backdrop-blur-sm hover:bg-background/90"
+      >
+        <ArrowLeft className="w-5 h-5" />
+      </Button>
       <Card className="w-full max-w-md shadow-2xl border-0">
         <CardContent className="p-8">
           {/* Logo and Branding */}
