@@ -79,9 +79,14 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
             highlightScanRegion: true,
             highlightCodeOutline: true,
             preferredCamera: 'environment',
+            maxScansPerSecond: 5,
           }
         );
         
+        // Démarrer la vidéo d'abord
+        await videoRef.current.play();
+        
+        // Puis démarrer le scanner
         await qrScannerRef.current.start();
         console.log("QR Scanner started");
       }
