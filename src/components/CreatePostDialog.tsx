@@ -82,8 +82,8 @@ const CreatePostDialog: React.FC<CreatePostDialogProps> = ({
       await onSubmit(
         content,
         rating > 0 ? rating : undefined,
-        selectedPartnerId || undefined,
-        selectedOfferId || undefined
+        selectedPartnerId && selectedPartnerId !== 'none' ? selectedPartnerId : undefined,
+        selectedOfferId && selectedOfferId !== 'none' ? selectedOfferId : undefined
       );
       
       // Reset form
@@ -134,7 +134,7 @@ const CreatePostDialog: React.FC<CreatePostDialogProps> = ({
                 <SelectValue placeholder="Choisir un partenaire..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Aucun partenaire</SelectItem>
+                <SelectItem value="none">Aucun partenaire</SelectItem>
                 {partners.map((partner) => (
                   <SelectItem key={partner.id} value={partner.id}>
                     {partner.name}
@@ -145,7 +145,7 @@ const CreatePostDialog: React.FC<CreatePostDialogProps> = ({
           </div>
 
           {/* Offer Selection */}
-          {selectedPartnerId && availableOffers.length > 0 && (
+          {selectedPartnerId && selectedPartnerId !== 'none' && availableOffers.length > 0 && (
             <div>
               <label className="text-sm font-medium mb-2 block">
                 Offre (optionnel)
@@ -154,20 +154,20 @@ const CreatePostDialog: React.FC<CreatePostDialogProps> = ({
                 <SelectTrigger>
                   <SelectValue placeholder="Choisir une offre..." />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">Aucune offre spécifique</SelectItem>
-                  {availableOffers.map((offer) => (
-                    <SelectItem key={offer.id} value={offer.id}>
-                      {offer.title}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
+              <SelectContent>
+                <SelectItem value="none">Aucune offre spécifique</SelectItem>
+                {availableOffers.map((offer) => (
+                  <SelectItem key={offer.id} value={offer.id}>
+                    {offer.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
               </Select>
             </div>
           )}
 
           {/* Rating */}
-          {selectedPartnerId && (
+          {selectedPartnerId && selectedPartnerId !== 'none' && (
             <div>
               <label className="text-sm font-medium mb-2 block">
                 Note (optionnel)
@@ -207,9 +207,9 @@ const CreatePostDialog: React.FC<CreatePostDialogProps> = ({
           </div>
 
           {/* Selected items preview */}
-          {(selectedPartnerId || rating > 0) && (
+          {((selectedPartnerId && selectedPartnerId !== 'none') || rating > 0) && (
             <div className="flex flex-wrap gap-2">
-              {selectedPartner && (
+              {selectedPartnerId && selectedPartnerId !== 'none' && selectedPartner && (
                 <Badge variant="secondary">
                   📍 {selectedPartner.name}
                 </Badge>
