@@ -122,7 +122,7 @@ export function FeaturedOffers() {
           {offers.map((offer) => (
             <div
               key={offer.id}
-              className="flex-shrink-0 w-72 bg-card rounded-2xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-shadow duration-200"
+              className="flex-shrink-0 w-72 bg-card rounded-2xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-shadow duration-200 flex flex-col"
               style={{ scrollSnapAlign: 'start' }}
             >
               {/* Large Image with Discount Badge */}
@@ -152,36 +152,38 @@ export function FeaturedOffers() {
               </div>
               
               {/* Content Section */}
-              <div className="p-4">
-                {/* Title */}
-                <h3 className="font-bold text-lg text-foreground mb-2 line-clamp-2 leading-tight">
-                  {offer.title}
-                </h3>
-                
-                {/* Partner info with location */}
-                <div className="mb-3">
-                  <p className="font-semibold text-sm text-foreground mb-1">
-                    {offer.partner?.name}
-                  </p>
-                  {offer.partner?.address && (
-                    <div className="flex items-center gap-1">
-                      <MapPin className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                      <p className="text-xs text-muted-foreground line-clamp-1">
-                        {offer.partner.address}
-                      </p>
-                    </div>
-                  )}
-                </div>
-                
-                {/* Rating */}
-                <div className="flex items-center gap-1 mb-4">
-                  <Star className="w-4 h-4 text-gold fill-current" />
-                  <span className="text-sm font-semibold text-foreground">
-                    {offer.rating}
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    ({Math.floor(Math.random() * 200) + 50} avis)
-                  </span>
+              <div className="p-4 flex-1 flex flex-col justify-between">
+                <div className="flex-1">
+                  {/* Title */}
+                  <h3 className="font-bold text-lg text-foreground mb-2 line-clamp-2 leading-tight">
+                    {offer.title}
+                  </h3>
+                  
+                  {/* Partner info with location */}
+                  <div className="mb-3">
+                    <p className="font-semibold text-sm text-foreground mb-1">
+                      {offer.partner?.name}
+                    </p>
+                    {offer.partner?.address && (
+                      <div className="flex items-center gap-1">
+                        <MapPin className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                        <p className="text-xs text-muted-foreground line-clamp-1">
+                          {offer.partner.address}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Rating */}
+                  <div className="flex items-center gap-1 mb-4">
+                    <Star className="w-4 h-4 text-gold fill-current" />
+                    <span className="text-sm font-semibold text-foreground">
+                      {offer.rating}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      ({Math.floor(Math.random() * 200) + 50} avis)
+                    </span>
+                  </div>
                 </div>
                 
                 {/* Action Buttons */}
