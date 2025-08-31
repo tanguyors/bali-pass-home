@@ -36,36 +36,34 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   }, [isOpen]);
 
   const startCamera = async () => {
+    console.log("startCamera called");
+    
     // Vérifier si on est dans un environnement natif
     if (Capacitor.isNativePlatform()) {
-      // Utiliser le plugin Capacitor Camera pour l'app native
+      console.log("Native platform detected");
       setHasPermission(true);
       return;
     }
 
     // Utiliser l'API web pour le navigateur
     try {
+      console.log("Requesting camera access...");
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
-          facingMode: 'environment', // Caméra arrière
-          width: { ideal: 1280 },
-          height: { ideal: 720 }
+          facingMode: 'environment'
         }
       });
 
+      console.log("Camera stream obtained");
+      
       if (videoRef.current) {
+        console.log("Setting video source");
         videoRef.current.srcObject = stream;
         streamRef.current = stream;
         
-        // Attendre que la vidéo soit prête avant de changer l'état
-        videoRef.current.onloadedmetadata = () => {
-          setHasPermission(true);
-        };
-        
-        // Fallback si onloadedmetadata ne se déclenche pas
-        setTimeout(() => {
-          setHasPermission(true);
-        }, 1000);
+        // Passer directement à l'interface de scan sur mobile
+        console.log("Setting permission to true");
+        setHasPermission(true);
       }
     } catch (error) {
       console.error("Erreur lors de l'accès à la caméra:", error);
