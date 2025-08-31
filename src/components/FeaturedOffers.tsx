@@ -56,10 +56,10 @@ export function FeaturedOffers() {
       console.log("URL Android Maps:", androidUrl);
       window.location.href = androidUrl;
     } else {
-      // Use OpenStreetMap for web (works better in sandbox)
-      const osmUrl = `https://www.openstreetmap.org/search?query=${encodedAddress}#map=15`;
-      console.log("URL OpenStreetMap:", osmUrl);
-      window.open(osmUrl, '_blank');
+      // Use Google Maps for web
+      const webUrl = `https://www.google.com/maps/search/${encodedAddress}`;
+      console.log("URL Web Google Maps:", webUrl);
+      window.open(webUrl, '_blank');
     }
   };
 
