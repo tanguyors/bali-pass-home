@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { MapPin, Star, Navigation } from "lucide-react";
+import { MapPin, Navigation } from "lucide-react";
 
 interface Offer {
   id: string;
@@ -19,7 +19,6 @@ interface Offer {
 }
 
 interface EnhancedOffer extends Offer {
-  rating: number;
   badge_color: 'green' | 'red';
 }
 
@@ -86,10 +85,9 @@ export function FeaturedOffers() {
       }
       
       if (data) {
-        // Enhance offers with rating and badge color
+        // Enhance offers with badge color
         const enhancedOffers: EnhancedOffer[] = data.map(offer => ({
           ...offer,
-          rating: Number((Math.random() * 1.5 + 3.5).toFixed(1)), // 3.5-5.0 rating
           badge_color: offer.promo_type === 'percent' ? 'red' : 'green'
         }));
         
@@ -172,17 +170,6 @@ export function FeaturedOffers() {
                         </p>
                       </div>
                     )}
-                  </div>
-                  
-                  {/* Rating */}
-                  <div className="flex items-center gap-1 mb-4">
-                    <Star className="w-4 h-4 text-gold fill-current" />
-                    <span className="text-sm font-semibold text-foreground">
-                      {offer.rating}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      ({Math.floor(Math.random() * 200) + 50} avis)
-                    </span>
                   </div>
                 </div>
                 
