@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Capacitor } from "@capacitor/core";
 import { Camera as CapCamera, CameraResultType, CameraSource } from "@capacitor/camera";
-import QrScanner from "qr-scanner";
+import jsQR from "jsqr";
 
 interface QRScannerProps {
   isOpen: boolean;
@@ -17,11 +17,12 @@ interface QRScannerProps {
 
 export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
-  const qrScannerRef = useRef<QrScanner | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const intervalRef = useRef<NodeJS.Timeout>();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState(false);
   const [manualInput, setManualInput] = useState("");
+  const [isScanning, setIsScanning] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -31,7 +32,8 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
       console.log("QRScanner is opening...");
       setScanned(false);
       setManualInput("");
-      // Ne pas démarrer la caméra immédiatement, attendre que le DOM soit prêt
+      setHasPermission(null);
+      // Délai pour s'assurer que le DOM est prêt
       setTimeout(() => {
         startCamera();
       }, 100);
@@ -71,7 +73,6 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
       if (videoRef.current) {
         console.log("Setting video source");
         videoRef.current.srcObject = stream;
-        streamRef.current = stream;
         
         // Propriétés nécessaires pour Safari mobile
         videoRef.current.playsInline = true;
@@ -80,34 +81,21 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
         
         console.log("Video element properties set");
         
-        // Essayer de jouer immédiatement
-        try {
-          await videoRef.current.play();
-          console.log("Video started playing successfully");
+        // Attendre que la vidéo soit prête
+        videoRef.current.onloadedmetadata = () => {
+          console.log("Video metadata loaded");
           setHasPermission(true);
-        } catch (playError) {
-          console.error("Error playing video:", playError);
-          
-          // Fallback: essayer avec un event listener
-          videoRef.current.oncanplay = () => {
-            console.log("Video can play - attempting to start");
-            if (videoRef.current) {
-              videoRef.current.play().then(() => {
-                console.log("Video playing after canplay event");
-                setHasPermission(true);
-              }).catch(e => {
-                console.error("Still can't play:", e);
-                setHasPermission(true); // Continue anyway
-              });
-            }
-          };
-          
-          // Dernier fallback
-          setTimeout(() => {
-            console.log("Final fallback: setting permission");
-            setHasPermission(true);
-          }, 2000);
-        }
+          setIsScanning(true);
+          startScanning();
+        };
+        
+        // Fallback
+        setTimeout(() => {
+          console.log("Fallback: setting permission to true");
+          setHasPermission(true);
+          setIsScanning(true);
+          startScanning();
+        }, 2000);
       }
       
     } catch (error) {
@@ -127,6 +115,46 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
       });
       
       setHasPermission(false);
+    }
+  };
+
+  const startScanning = () => {
+    console.log("Starting QR code scanning...");
+    intervalRef.current = setInterval(() => {
+      scanQRCode();
+    }, 100); // Scan toutes les 100ms
+  };
+
+  const scanQRCode = () => {
+    if (!videoRef.current || !canvasRef.current || scanned) return;
+
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+
+    if (!context || video.videoWidth === 0) return;
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0);
+
+    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+    
+    // Utilisation de jsQR avec plusieurs tentatives d'inversion
+    const code = jsQR(imageData.data, imageData.width, imageData.height, {
+      inversionAttempts: "attemptBoth",
+    });
+
+    if (code) {
+      console.log("=== QR CODE DETECTÉ ===");
+      console.log("Données brutes:", JSON.stringify(code.data));
+      
+      // Nettoyer les données scannées
+      const cleanedData = code.data.trim().replace(/[\r\n\t\s]/g, '');
+      console.log("Données nettoyées:", JSON.stringify(cleanedData));
+      
+      stopCamera();
+      handleScanResult(cleanedData);
     }
   };
 
@@ -160,23 +188,22 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   };
 
   const stopCamera = () => {
-    // Arrêter le scanner QR
-    if (qrScannerRef.current) {
-      console.log("Stopping QR Scanner");
-      qrScannerRef.current.stop();
-      qrScannerRef.current.destroy();
-      qrScannerRef.current = null;
+    console.log("Stopping camera and scanning");
+    
+    // Arrêter le scanning
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = undefined;
     }
     
     // Arrêter le stream de caméra
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-      streamRef.current = null;
-    }
-    
-    if (videoRef.current) {
+    if (videoRef.current?.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach(track => track.stop());
       videoRef.current.srcObject = null;
     }
+    
+    setIsScanning(false);
   };
 
   const handleManualSubmit = () => {
@@ -341,13 +368,16 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
         <div className="relative w-full h-full bg-black">
           {/* Video element for camera feed (web uniquement) */}
           {!Capacitor.isNativePlatform() && (
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              muted
-              className="absolute inset-0 w-full h-full object-cover z-0"
-            />
+            <div className="relative w-full h-full">
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                className="w-full h-full object-cover"
+              />
+              <canvas ref={canvasRef} className="hidden" />
+            </div>
           )}
           
           {/* Interface native - pas de vidéo en temps réel */}
@@ -371,12 +401,12 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
             </div>
           )}
           
-          {/* Overlay avec instructions (web uniquement) - semi-transparent pour voir la vidéo */}
+          {/* Overlay avec instructions (web uniquement) */}
           {!Capacitor.isNativePlatform() && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
-              <div className="relative mb-8 pointer-events-auto">
+            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <div className="relative mb-8">
                 {/* Zone de scan */}
-                <div className="w-64 h-64 border-4 border-white border-opacity-50 rounded-lg bg-transparent">
+                <div className="w-64 h-64 border-4 border-white border-opacity-30 rounded-lg bg-transparent">
                   {/* Coins du cadre */}
                   <div className="absolute -top-1 -left-1 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-lg"></div>
                   <div className="absolute -top-1 -right-1 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-lg"></div>
@@ -396,6 +426,12 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
                   <p className="text-white text-sm bg-black bg-opacity-70 px-4 py-2 rounded-lg">
                     Pointez la caméra vers le QR code du partenaire
                   </p>
+                  
+                  {isScanning && (
+                    <p className="text-primary text-xs bg-black bg-opacity-50 px-3 py-1 rounded">
+                      Scanner actif - Recherche de QR code...
+                    </p>
+                  )}
                   
                   <div className="bg-black bg-opacity-80 p-4 rounded-lg">
                     <p className="text-white text-xs mb-2">Ou saisissez le code manuellement :</p>
