@@ -297,76 +297,65 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
     }
   };
 
-  if (hasPermission === null) {
-    return (
-      <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-sm mx-auto">
-          <VisuallyHidden>
-            <DialogTitle>Initialisation du scanner QR</DialogTitle>
-          </VisuallyHidden>
-          <div className="text-center p-6">
-            <Camera className="w-12 h-12 mx-auto mb-4 text-muted-foreground animate-pulse" />
-            <h3 className="text-lg font-semibold mb-2">Initialisation de la caméra...</h3>
-            <p className="text-muted-foreground">
-              Veuillez patienter pendant que nous accédons à votre caméra.
-            </p>
-          </div>
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
-  if (hasPermission === false) {
-    return (
-      <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-sm mx-auto">
-          <VisuallyHidden>
-            <DialogTitle>Scanner QR indisponible</DialogTitle>
-          </VisuallyHidden>
-          <div className="text-center p-6">
-            <Camera className="w-12 h-12 mx-auto mb-4 text-destructive" />
-            <h3 className="text-lg font-semibold mb-2">Scanner temporairement indisponible</h3>
-            <p className="text-muted-foreground mb-4">
-              Vous pouvez saisir manuellement le code partenaire en attendant.
-            </p>
-            
-            <div className="space-y-4">
-              <div>
-                <input
-                  type="text"
-                  value={manualInput}
-                  onChange={(e) => setManualInput(e.target.value)}
-                  placeholder="PARTNER_XXXXX"
-                  className="w-full p-3 border rounded-lg text-center"
-                />
-              </div>
-              <div className="flex gap-2">
-                <Button 
-                  onClick={handleManualSubmit}
-                  disabled={!manualInput.trim()}
-                  className="flex-1"
-                >
-                  Valider
-                </Button>
-                <Button variant="outline" onClick={onClose}>
-                  Fermer
-                </Button>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-full max-h-full w-full h-full p-0 border-0">
         <VisuallyHidden>
           <DialogTitle>Scanner QR des partenaires</DialogTitle>
         </VisuallyHidden>
+        
+        {/* Loading state overlay */}
+        {hasPermission === null && (
+          <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+            <div className="text-center p-6 bg-card rounded-lg">
+              <Camera className="w-12 h-12 mx-auto mb-4 text-muted-foreground animate-pulse" />
+              <h3 className="text-lg font-semibold mb-2">Initialisation de la caméra...</h3>
+              <p className="text-muted-foreground">
+                Veuillez patienter pendant que nous accédons à votre caméra.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Error state overlay */}
+        {hasPermission === false && (
+          <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+            <div className="text-center p-6 bg-card rounded-lg max-w-sm mx-4">
+              <Camera className="w-12 h-12 mx-auto mb-4 text-destructive" />
+              <h3 className="text-lg font-semibold mb-2">Scanner temporairement indisponible</h3>
+              <p className="text-muted-foreground mb-4">
+                Vous pouvez saisir manuellement le code partenaire en attendant.
+              </p>
+              
+              <div className="space-y-4">
+                <div>
+                  <input
+                    type="text"
+                    value={manualInput}
+                    onChange={(e) => setManualInput(e.target.value)}
+                    placeholder="PARTNER_XXXXX"
+                    className="w-full p-3 border rounded-lg text-center"
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={handleManualSubmit}
+                    disabled={!manualInput.trim()}
+                    className="flex-1"
+                  >
+                    Valider
+                  </Button>
+                  <Button variant="outline" onClick={onClose}>
+                    Fermer
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="relative w-full h-full bg-black">
-          {/* Video element for camera feed (web uniquement) */}
+          {/* Video element - toujours présent pour que videoRef.current existe */}
           {!Capacitor.isNativePlatform() && (
             <div className="relative w-full h-full">
               <video
@@ -375,6 +364,7 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
                 playsInline
                 muted
                 className="w-full h-full object-cover"
+                style={{ visibility: hasPermission === true ? 'visible' : 'hidden' }}
               />
               <canvas ref={canvasRef} className="hidden" />
             </div>
@@ -401,8 +391,8 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
             </div>
           )}
           
-          {/* Overlay avec instructions (web uniquement) */}
-          {!Capacitor.isNativePlatform() && (
+          {/* Overlay avec instructions (web uniquement) - seulement si caméra active */}
+          {!Capacitor.isNativePlatform() && hasPermission === true && (
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
               <div className="relative mb-8">
                 {/* Zone de scan */}
