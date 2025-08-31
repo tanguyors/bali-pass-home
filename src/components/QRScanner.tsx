@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Capacitor } from "@capacitor/core";
+import { Camera as CapCamera, CameraResultType, CameraSource } from "@capacitor/camera";
 
 interface QRScannerProps {
   isOpen: boolean;
@@ -34,6 +36,14 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   }, [isOpen]);
 
   const startCamera = async () => {
+    // Vérifier si on est dans un environnement natif
+    if (Capacitor.isNativePlatform()) {
+      // Utiliser le plugin Capacitor Camera pour l'app native
+      setHasPermission(true);
+      return;
+    }
+
+    // Utiliser l'API web pour le navigateur
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
@@ -65,6 +75,35 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
       });
       
       setHasPermission(false);
+    }
+  };
+
+  const takeNativePhoto = async () => {
+    try {
+      if (!Capacitor.isNativePlatform()) return;
+
+      const image = await CapCamera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.DataUrl,
+        source: CameraSource.Camera,
+        saveToGallery: false
+      });
+
+      // Simuler un scan réussi - dans une vraie app, il faudrait analyser l'image
+      // Pour le moment, on demande la saisie manuelle
+      toast({
+        title: "Photo prise",
+        description: "Veuillez saisir le code manuellement pour le moment.",
+      });
+      
+    } catch (error) {
+      console.error("Erreur lors de la prise de photo:", error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de prendre la photo.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -229,60 +268,109 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-full max-h-full w-full h-full p-0 border-0">
         <div className="relative w-full h-full bg-black">
-          {/* Video element for camera feed */}
-          <video
-            ref={videoRef}
-            autoPlay
-            playsInline
-            muted
-            className="w-full h-full object-cover"
-          />
+          {/* Video element for camera feed (web uniquement) */}
+          {!Capacitor.isNativePlatform() && (
+            <video
+              ref={videoRef}
+              autoPlay
+              playsInline
+              muted
+              className="w-full h-full object-cover"
+            />
+          )}
           
-          {/* Overlay avec instructions */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="relative mb-8">
-              {/* Zone de scan */}
-              <div className="w-64 h-64 border-4 border-white border-opacity-50 rounded-lg">
-                {/* Coins du cadre */}
-                <div className="absolute -top-1 -left-1 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-lg"></div>
-                <div className="absolute -top-1 -right-1 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-lg"></div>
-                <div className="absolute -bottom-1 -left-1 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-lg"></div>
-                <div className="absolute -bottom-1 -right-1 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-lg"></div>
-                
-                {/* Ligne de scan animée */}
-                <div className="absolute inset-0 overflow-hidden rounded-lg">
-                  <div className="w-full h-1 bg-primary animate-scan-line"></div>
+          {/* Interface native - pas de vidéo en temps réel */}
+          {Capacitor.isNativePlatform() && (
+            <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+              <div className="text-center space-y-6">
+                <Camera className="w-24 h-24 mx-auto text-primary" />
+                <div>
+                  <h3 className="text-white text-xl font-semibold mb-2">Scanner QR Code</h3>
+                  <p className="text-white/80 mb-6">Appuyez sur le bouton pour prendre une photo du QR code</p>
+                  <Button 
+                    onClick={takeNativePhoto}
+                    size="lg"
+                    className="mb-4"
+                  >
+                    <Camera className="w-5 h-5 mr-2" />
+                    Prendre une photo
+                  </Button>
                 </div>
               </div>
             </div>
+          )}
+          
+          {/* Overlay avec instructions (web uniquement) */}
+          {!Capacitor.isNativePlatform() && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <div className="relative mb-8">
+                {/* Zone de scan */}
+                <div className="w-64 h-64 border-4 border-white border-opacity-50 rounded-lg">
+                  {/* Coins du cadre */}
+                  <div className="absolute -top-1 -left-1 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-lg"></div>
+                  <div className="absolute -top-1 -right-1 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-lg"></div>
+                  <div className="absolute -bottom-1 -left-1 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-lg"></div>
+                  <div className="absolute -bottom-1 -right-1 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-lg"></div>
+                  
+                  {/* Ligne de scan animée */}
+                  <div className="absolute inset-0 overflow-hidden rounded-lg">
+                    <div className="w-full h-1 bg-primary animate-scan-line"></div>
+                  </div>
+                </div>
+              </div>
 
-            {/* Instructions et saisie manuelle */}
-            <div className="text-center space-y-4 px-4">
-              <p className="text-white text-sm bg-black bg-opacity-50 px-4 py-2 rounded-lg">
-                Pointez la caméra vers le QR code du partenaire
-              </p>
-              
+              {/* Instructions et saisie manuelle pour web */}
+              <div className="text-center space-y-4 px-4">
+                <p className="text-white text-sm bg-black bg-opacity-50 px-4 py-2 rounded-lg">
+                  Pointez la caméra vers le QR code du partenaire
+                </p>
+                
+                <div className="bg-black bg-opacity-70 p-4 rounded-lg">
+                  <p className="text-white text-xs mb-2">Ou saisissez le code manuellement :</p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={manualInput}
+                      onChange={(e) => setManualInput(e.target.value)}
+                      placeholder="PARTNER_XXXXX"
+                      className="px-3 py-2 rounded text-sm flex-1"
+                    />
+                    <Button 
+                      size="sm"
+                      onClick={handleManualSubmit}
+                      disabled={!manualInput.trim()}
+                    >
+                      OK
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Saisie manuelle pour l'app native */}
+          {Capacitor.isNativePlatform() && (
+            <div className="absolute bottom-20 left-4 right-4">
               <div className="bg-black bg-opacity-70 p-4 rounded-lg">
-                <p className="text-white text-xs mb-2">Ou saisissez le code manuellement :</p>
+                <p className="text-white text-sm mb-2 text-center">Ou saisissez le code manuellement :</p>
                 <div className="flex gap-2">
                   <input
                     type="text"
                     value={manualInput}
                     onChange={(e) => setManualInput(e.target.value)}
                     placeholder="PARTNER_XXXXX"
-                    className="px-3 py-2 rounded text-sm flex-1"
+                    className="px-3 py-2 rounded flex-1"
                   />
                   <Button 
-                    size="sm"
                     onClick={handleManualSubmit}
                     disabled={!manualInput.trim()}
                   >
-                    OK
+                    Valider
                   </Button>
                 </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Contrôle de fermeture */}
           <div className="absolute top-4 right-4 z-10">
