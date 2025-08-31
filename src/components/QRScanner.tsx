@@ -51,12 +51,14 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
       return;
     }
 
-    // Utiliser l'API web pour le navigateur avec QR Scanner
+    // Utiliser l'API web pour le navigateur
     try {
       console.log("Requesting camera access...");
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
-          facingMode: 'environment'
+          facingMode: 'environment',
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
         }
       });
 
@@ -67,33 +69,26 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
         videoRef.current.srcObject = stream;
         streamRef.current = stream;
         
-        // Initialiser le scanner QR
-        console.log("Initializing QR Scanner");
-        qrScannerRef.current = new QrScanner(
-          videoRef.current,
-          (result) => {
-            console.log("QR Code detected:", result.data);
-            handleScanResult(result.data);
-          },
-          {
-            highlightScanRegion: true,
-            highlightCodeOutline: true,
-            preferredCamera: 'environment',
-            maxScansPerSecond: 5,
+        // Attendre que la métadata soit chargée avant de jouer
+        videoRef.current.onloadedmetadata = () => {
+          console.log("Video metadata loaded, starting playback");
+          if (videoRef.current) {
+            videoRef.current.play().then(() => {
+              console.log("Video is playing");
+              setHasPermission(true);
+            }).catch(error => {
+              console.error("Error playing video:", error);
+              setHasPermission(true); // On continue même si play échoue
+            });
           }
-        );
+        };
         
-        // Démarrer la vidéo d'abord
-        await videoRef.current.play();
-        
-        // Puis démarrer le scanner
-        await qrScannerRef.current.start();
-        console.log("QR Scanner started");
+        // Fallback si onloadedmetadata ne se déclenche pas
+        setTimeout(() => {
+          console.log("Fallback: setting permission to true");
+          setHasPermission(true);
+        }, 1000);
       }
-      
-      // Mettre hasPermission à true immédiatement après avoir obtenu le stream
-      console.log("Setting permission to true");
-      setHasPermission(true);
       
     } catch (error) {
       console.error("Erreur lors de l'accès à la caméra:", error);
