@@ -388,11 +388,11 @@ export default function OfferDetails() {
             <Button 
               variant="outline" 
               size="lg"
-              className="px-4"
+              className="px-4 bg-gradient-to-r from-primary/10 to-lagoon/10 border-primary/20 hover:from-primary/20 hover:to-lagoon/20 hover:border-primary/30 hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md"
               onClick={() => openNavigation(offer.partner.address!)}
               title="Navigation GPS"
             >
-              <Navigation className="w-5 h-5" />
+              <Navigation className="w-5 h-5 text-primary" />
             </Button>
           )}
         </div>

@@ -198,11 +198,11 @@ export function FeaturedOffers() {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="px-3"
+                      className="px-3 bg-gradient-to-r from-primary/10 to-lagoon/10 border-primary/20 hover:from-primary/20 hover:to-lagoon/20 hover:border-primary/30 hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md"
                       onClick={() => openNavigation(offer.partner.address!)}
                       title="Navigation GPS"
                     >
-                      <Navigation className="w-4 h-4" />
+                      <Navigation className="w-4 h-4 text-primary" />
                     </Button>
                   )}
                 </div>
