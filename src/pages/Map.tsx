@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 import { Search, Filter, MapPin, Star, Clock } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Input } from '@/components/ui/input';
@@ -9,6 +8,8 @@ import { Badge } from '@/components/ui/badge';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { FilterBottomSheet } from '@/components/FilterBottomSheet';
 import { BottomNavigation } from '@/components/BottomNavigation';
+import { useCapacitorMap } from '@/hooks/useCapacitorMap';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 interface Partner {
   id: string;
@@ -31,11 +32,6 @@ interface Partner {
   }>;
 }
 
-const mapContainerStyle = {
-  width: '100%',
-  height: '100vh',
-};
-
 const center = {
   lat: -8.409518, // Bali center
   lng: 115.188919,
@@ -47,11 +43,19 @@ const Map: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [markerIds, setMarkerIds] = useState<Record<string, string>>({});
 
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: 'AIzaSyBFw0Qbyq9zTFTd-tUY6dQTl0JiXk-JvJ0', // This should be replaced with your actual Google Maps API key
+  const {
+    mapRef,
+    map,
+    isLoaded,
+    addMarker,
+    clearMarkers,
+    panTo,
+    setOnMarkerClickListener,
+  } = useCapacitorMap({
+    center: userLocation || center,
+    zoom: 12,
   });
 
   const fetchPartners = useCallback(async () => {
@@ -129,28 +133,18 @@ const Map: React.FC = () => {
     );
   }, [partners, searchQuery]);
 
-  const onLoad = useCallback((map: google.maps.Map) => {
-    setMap(map);
-  }, []);
-
-  const onUnmount = useCallback(() => {
-    setMap(null);
-  }, []);
-
-  const centerOnUserLocation = () => {
-    if (userLocation && map) {
-      map.panTo(userLocation);
-      map.setZoom(15);
+  const centerOnUserLocation = useCallback(() => {
+    if (userLocation) {
+      panTo(userLocation, 15);
     }
-  };
+  }, [userLocation, panTo]);
 
-  const centerOnPartner = (partner: Partner) => {
-    if (partner.lat && partner.lng && map) {
-      map.panTo({ lat: partner.lat, lng: partner.lng });
-      map.setZoom(16);
+  const centerOnPartner = useCallback((partner: Partner) => {
+    if (partner.lat && partner.lng) {
+      panTo({ lat: partner.lat, lng: partner.lng }, 16);
       setSelectedPartner(partner);
     }
-  };
+  }, [panTo]);
 
   const getBestOffer = (partner: Partner) => {
     if (!partner.offers.length) return null;
@@ -164,27 +158,64 @@ const Map: React.FC = () => {
     }, partner.offers[0]);
   };
 
-  const getMarkerIcon = (partner: Partner) => {
-    const bestOffer = getBestOffer(partner);
-    const hasOffer = bestOffer && bestOffer.value_number;
-    
-    return {
-      url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-        <svg width="40" height="50" viewBox="0 0 40 50" xmlns="http://www.w3.org/2000/svg">
-          <path d="M20 0C8.95 0 0 8.95 0 20C0 35 20 50 20 50S40 35 40 20C40 8.95 31.05 0 20 0Z" fill="#059669"/>
-          <circle cx="20" cy="20" r="12" fill="white"/>
-          <text x="20" y="26" text-anchor="middle" fill="#059669" font-size="10" font-weight="bold">
-            ${hasOffer ? `-${bestOffer.value_number}%` : '★'}
-          </text>
-        </svg>
-      `)}`,
-      scaledSize: new google.maps.Size(40, 50),
-      anchor: new google.maps.Point(20, 50),
+  // Add markers when partners are loaded and map is ready
+  useEffect(() => {
+    if (!isLoaded || !map || !filteredPartners.length) return;
+
+    const addMarkersToMap = async () => {
+      // Clear existing markers
+      await clearMarkers();
+      const newMarkerIds: Record<string, string> = {};
+
+      // Add user location marker if available
+      if (userLocation) {
+        const userMarkerId = await addMarker({
+          coordinate: userLocation,
+          title: 'Ma position',
+        });
+        newMarkerIds['user-location'] = userMarkerId;
+      }
+
+      // Add partner markers
+      for (const partner of filteredPartners) {
+        if (partner.lat && partner.lng) {
+          const bestOffer = getBestOffer(partner);
+          const markerId = await addMarker({
+            coordinate: { lat: partner.lat, lng: partner.lng },
+            title: partner.name,
+            snippet: bestOffer ? `Offre: -${bestOffer.value_number}%` : 'Partenaire',
+          });
+          newMarkerIds[partner.id] = markerId;
+        }
+      }
+
+      setMarkerIds(newMarkerIds);
     };
-  };
+
+    addMarkersToMap();
+  }, [isLoaded, map, filteredPartners, userLocation, addMarker, clearMarkers]);
+
+  // Set marker click listener
+  useEffect(() => {
+    if (!isLoaded || !map) return;
+
+    setOnMarkerClickListener((markerId) => {
+      const partner = filteredPartners.find(p => markerIds[p.id] === markerId);
+      if (partner) {
+        setSelectedPartner(partner);
+      }
+    });
+  }, [isLoaded, map, filteredPartners, markerIds, setOnMarkerClickListener]);
 
   if (!isLoaded) {
-    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Chargement de la carte...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -218,106 +249,17 @@ const Map: React.FC = () => {
         </div>
       </div>
 
-      {/* Map */}
-      <GoogleMap
-        mapContainerStyle={mapContainerStyle}
-        center={userLocation || center}
-        zoom={12}
-        onLoad={onLoad}
-        onUnmount={onUnmount}
-        options={{
-          disableDefaultUI: true,
-          zoomControl: true,
-          gestureHandling: 'greedy',
-        }}
-      >
-        {/* User location marker */}
-        {userLocation && (
-          <Marker
-            position={userLocation}
-            icon={{
-              url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-                <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="10" cy="10" r="8" fill="#3B82F6" stroke="white" stroke-width="2"/>
-                  <circle cx="10" cy="10" r="3" fill="white"/>
-                </svg>
-              `)}`,
-              scaledSize: new google.maps.Size(20, 20),
-            }}
-          />
-        )}
-
-        {/* Partner markers */}
-        {filteredPartners.map((partner) => (
-          partner.lat && partner.lng && (
-            <Marker
-              key={partner.id}
-              position={{ lat: partner.lat, lng: partner.lng }}
-              icon={getMarkerIcon(partner)}
-              onClick={() => setSelectedPartner(partner)}
-            />
-          )
-        ))}
-
-        {/* Info window */}
-        {selectedPartner && 
-         selectedPartner.lat && 
-         selectedPartner.lng && 
-         typeof selectedPartner.lat === 'number' && 
-         typeof selectedPartner.lng === 'number' && (
-          <InfoWindow
-            position={{ 
-              lat: Number(selectedPartner.lat), 
-              lng: Number(selectedPartner.lng) 
-            }}
-            onCloseClick={() => setSelectedPartner(null)}
-          >
-            <div className="w-64">
-              <Card className="border-0 shadow-none">
-                <CardContent className="p-3">
-                  <div className="flex gap-3">
-                    {selectedPartner.logo_url && (
-                      <img
-                        src={selectedPartner.logo_url}
-                        alt={selectedPartner.name}
-                        className="w-12 h-12 rounded-lg object-cover"
-                      />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-sm truncate">
-                        {selectedPartner.name}
-                      </h3>
-                      <p className="text-xs text-muted-foreground truncate">
-                        {selectedPartner.city.name}
-                      </p>
-                      {selectedPartner.phone && (
-                        <p className="text-xs text-muted-foreground">
-                          📞 {selectedPartner.phone}
-                        </p>
-                      )}
-                      {getBestOffer(selectedPartner) && (
-                        <Badge variant="secondary" className="text-xs mt-1">
-                          -{getBestOffer(selectedPartner)?.value_number}%
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                  <Button 
-                    size="sm" 
-                    className="w-full mt-3"
-                    onClick={() => {
-                      // Navigate to partner detail page
-                      window.location.href = `/partner/${selectedPartner.slug}`;
-                    }}
-                  >
-                    Voir l'offre
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-          </InfoWindow>
-        )}
-      </GoogleMap>
+      {/* Map Container */}
+      <div className="w-full h-full pt-20 pb-20">
+        <div 
+          ref={mapRef}
+          style={{
+            display: 'inline-block',
+            width: '100%',
+            height: '100%',
+          }}
+        />
+      </div>
 
       {/* Partners list at bottom */}
       <div className="absolute bottom-20 left-0 right-0 z-10">
@@ -328,7 +270,7 @@ const Map: React.FC = () => {
               return (
                 <Card 
                   key={partner.id}
-                  className="min-w-[200px] cursor-pointer hover:shadow-lg transition-shadow"
+                  className="min-w-[200px] cursor-pointer hover:shadow-lg transition-shadow bg-card/95 backdrop-blur-sm"
                   onClick={() => centerOnPartner(partner)}
                 >
                   <CardContent className="p-3">
@@ -361,6 +303,63 @@ const Map: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Partner Details Dialog */}
+      <Dialog open={!!selectedPartner} onOpenChange={() => setSelectedPartner(null)}>
+        <DialogContent className="w-[90%] max-w-md">
+          {selectedPartner && (
+            <>
+              <DialogHeader>
+                <DialogTitle>{selectedPartner.name}</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="flex gap-3">
+                  {selectedPartner.logo_url && (
+                    <img
+                      src={selectedPartner.logo_url}
+                      alt={selectedPartner.name}
+                      className="w-16 h-16 rounded-lg object-cover"
+                    />
+                  )}
+                  <div className="flex-1">
+                    <p className="text-sm text-muted-foreground">
+                      📍 {selectedPartner.city.name}
+                    </p>
+                    {selectedPartner.address && (
+                      <p className="text-sm text-muted-foreground">
+                        {selectedPartner.address}
+                      </p>
+                    )}
+                    {selectedPartner.phone && (
+                      <p className="text-sm text-muted-foreground">
+                        📞 {selectedPartner.phone}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                
+                {getBestOffer(selectedPartner) && (
+                  <div className="p-3 bg-primary/10 rounded-lg">
+                    <p className="text-sm font-medium">Meilleure offre</p>
+                    <Badge variant="default" className="mt-1">
+                      -{getBestOffer(selectedPartner)?.value_number}%
+                    </Badge>
+                  </div>
+                )}
+                
+                <Button 
+                  className="w-full"
+                  onClick={() => {
+                    window.location.href = `/partner/${selectedPartner.slug}`;
+                  }}
+                >
+                  Voir l'offre
+                </Button>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Filter bottom sheet */}
       <FilterBottomSheet
