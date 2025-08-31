@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { BaliPassHeader } from "@/components/BaliPassHeader";
 import { FilterBottomSheet } from "@/components/FilterBottomSheet";
 import { HeroUnauthenticated } from "@/components/HeroUnauthenticated";
 import { HeroNoPass } from "@/components/HeroNoPass";
@@ -95,9 +94,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header - Sticky */}
-      <BaliPassHeader onFilterClick={() => setShowFilters(true)} />
-      
       {/* Main Content */}
       <main className="pb-20">
         {/* Conditional Hero Section */}
