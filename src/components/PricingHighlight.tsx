@@ -5,11 +5,24 @@ import { DollarSign, Gift } from "lucide-react";
 interface PricingData {
   price?: string;
   max_savings?: string;
+  currency?: string;
   availability_status?: string;
 }
 
 export function PricingHighlight() {
   const [pricingData, setPricingData] = useState<PricingData>({});
+
+  const formatPrice = (cents: string, currency: string = 'usd') => {
+    const value = parseInt(cents) / 100;
+    const currencySymbol = currency === 'usd' ? '$' : '€';
+    return `${currencySymbol}${value.toFixed(2)}`;
+  };
+
+  const formatSavings = (cents: string, currency: string = 'usd') => {
+    const value = parseInt(cents) / 100;
+    const currencySymbol = currency === 'usd' ? '$' : '€';
+    return `${currencySymbol}${value.toLocaleString()}`;
+  };
 
   useEffect(() => {
     fetchPricingData();
@@ -20,7 +33,7 @@ export function PricingHighlight() {
       const { data, error } = await supabase
         .from('pass_settings')
         .select('setting_key, setting_value')
-        .in('setting_key', ['pass_price', 'max_savings', 'availability_status']);
+        .in('setting_key', ['pass_price', 'savings_amount', 'pass_currency', 'availability_status']);
       
       if (error) {
         console.error('Error fetching pricing data:', error);
@@ -34,8 +47,11 @@ export function PricingHighlight() {
             case 'pass_price':
               pricing.price = setting.setting_value;
               break;
-            case 'max_savings':
+            case 'savings_amount':
               pricing.max_savings = setting.setting_value;
+              break;
+            case 'pass_currency':
+              pricing.currency = setting.setting_value;
               break;
             case 'availability_status':
               pricing.availability_status = setting.setting_value;
@@ -63,7 +79,7 @@ export function PricingHighlight() {
                 Vous payez
               </p>
               <p className="text-xl font-bold text-foreground">
-                {pricingData.price || "Prix à venir"}
+                {pricingData.price ? formatPrice(pricingData.price, pricingData.currency) : "Prix à venir"}
               </p>
             </div>
           </div>
@@ -83,7 +99,7 @@ export function PricingHighlight() {
                     Vous économisez
                   </p>
                   <p className="text-xl font-bold text-coral">
-                    {pricingData.max_savings}
+                    {pricingData.max_savings ? formatSavings(pricingData.max_savings, pricingData.currency) : "Économies à venir"}
                   </p>
                 </div>
               </div>
