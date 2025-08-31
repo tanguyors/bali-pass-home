@@ -56,7 +56,16 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         streamRef.current = stream;
-        setHasPermission(true);
+        
+        // Attendre que la vidéo soit prête avant de changer l'état
+        videoRef.current.onloadedmetadata = () => {
+          setHasPermission(true);
+        };
+        
+        // Fallback si onloadedmetadata ne se déclenche pas
+        setTimeout(() => {
+          setHasPermission(true);
+        }, 1000);
       }
     } catch (error) {
       console.error("Erreur lors de l'accès à la caméra:", error);
