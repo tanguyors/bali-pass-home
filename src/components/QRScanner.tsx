@@ -22,11 +22,15 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   const { toast } = useToast();
 
   useEffect(() => {
+    console.log("QRScanner useEffect triggered. isOpen:", isOpen);
+    
     if (isOpen) {
+      console.log("QRScanner is opening...");
       setScanned(false);
       setManualInput("");
       startCamera();
     } else {
+      console.log("QRScanner is closing...");
       stopCamera();
     }
 
