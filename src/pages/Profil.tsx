@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   User as UserIcon, 
   CreditCard,
@@ -34,6 +35,7 @@ import { EditProfileDialog } from '@/components/EditProfileDialog';
 import { ChangePasswordDialog } from '@/components/ChangePasswordDialog';
 import { SupportLink } from '@/components/SupportLink';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Profile {
   id: string;
@@ -68,12 +70,13 @@ const Profil: React.FC = () => {
   const [preferences, setPreferences] = useState<UserPreferences>({
     push_notifications: false,
     email_notifications: false,
-    language: 'fr'
+    language: 'en'
   });
   const [updating, setUpdating] = useState(false);
   
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t, language, setLanguage } = useTranslation();
 
   // Auth state management
   useEffect(() => {
@@ -134,7 +137,7 @@ const Profil: React.FC = () => {
         setPreferences({
           push_notifications: true,
           email_notifications: true,
-          language: profileData.locale || 'fr'
+          language: profileData.locale || 'en'
         });
       }
     } catch (error) {
@@ -146,14 +149,14 @@ const Profil: React.FC = () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
       toast({
-        title: "Erreur",
-        description: "Impossible de se déconnecter",
+        title: t('common.error'),
+        description: t('profile.logout_error'),
         variant: "destructive",
       });
     } else {
       toast({
-        title: "Déconnexion réussie",
-        description: "À bientôt sur Bali'Pass !",
+        title: t('profile.logout_success'),
+        description: t('profile.see_you_soon'),
       });
       navigate('/');
     }
@@ -170,16 +173,19 @@ const Profil: React.FC = () => {
           .from('profiles')
           .update({ locale: value as string })
           .eq('user_id', user.id);
+        
+        // Update the app language immediately
+        setLanguage(value as 'en' | 'fr');
       }
       
       toast({
-        title: "Préférences mises à jour",
-        description: "Vos préférences ont été sauvegardées",
+        title: t('profile.preferences_updated'),
+        description: t('profile.preferences_saved'),
       });
     } catch (error) {
       toast({
-        title: "Erreur",
-        description: "Impossible de sauvegarder les préférences",
+        title: t('common.error'),
+        description: t('profile.preferences_error'),
         variant: "destructive",
       });
     } finally {
@@ -207,7 +213,7 @@ const Profil: React.FC = () => {
     if (profile?.name) {
       return profile.name;
     }
-    return user?.email?.split('@')[0] || 'Utilisateur';
+    return user?.email?.split('@')[0] || t('common.name');
   };
 
   const formatDate = (dateString: string): string => {
@@ -219,17 +225,17 @@ const Profil: React.FC = () => {
   };
 
   const getPassStatusLabel = (): string => {
-    if (!pass) return 'Aucun pass';
+    if (!pass) return t('pass.no_pass');
     
     switch (pass.status) {
       case 'active':
-        return 'Pass actif';
+        return t('pass.active');
       case 'expired':
-        return 'Pass expiré';
+        return t('pass.expired');
       case 'pending':
-        return 'Pass en attente';
+        return t('pass.pending');
       default:
-        return 'Pass inactif';
+        return t('pass.inactive');
     }
   };
 
@@ -259,10 +265,10 @@ const Profil: React.FC = () => {
                   <UserIcon className="w-10 h-10 text-white" />
                 </div>
                 <h2 className="text-2xl font-bold mb-3 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                  Connecte-toi
+                  {t('profile.connect')}
                 </h2>
                 <p className="text-muted-foreground mb-8 leading-relaxed">
-                  Accède à ton profil et manage tes préférences Bali'Pass
+                  {t('profile.access_profile')}
                 </p>
                 
                 <div className="space-y-3">
@@ -270,21 +276,21 @@ const Profil: React.FC = () => {
                     className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg transition-all duration-300" 
                     onClick={() => navigate('/auth')}
                   >
-                    Se connecter
+                    {t('auth.sign_in')}
                   </Button>
                   <Button 
                     variant="outline" 
                     className="w-full border-primary/20 hover:bg-primary/5 transition-all duration-300" 
                     onClick={() => navigate('/auth')}
                   >
-                    Créer un compte
+                    {t('auth.create_account')}
                   </Button>
                   <Button 
                     variant="ghost" 
                     className="w-full text-muted-foreground hover:text-foreground transition-all duration-300" 
                     onClick={() => navigate('/')}
                   >
-                    Découvrir Bali'Pass
+                    {t('profile.discover_bali_pass')}
                   </Button>
                 </div>
               </CardContent>
@@ -338,7 +344,7 @@ const Profil: React.FC = () => {
           <CardContent className="p-6">
             <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
               <div className="w-2 h-6 bg-gradient-to-b from-primary to-primary/60 rounded-full"></div>
-              Actions rapides
+              {t('profile.quick_actions')}
             </h3>
             <div className="grid grid-cols-3 gap-4">
               <Button 
@@ -349,7 +355,7 @@ const Profil: React.FC = () => {
                 <div className="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <CreditCard className="w-6 h-6 text-primary" />
                 </div>
-                <span className="text-sm font-medium">Mon Pass</span>
+                <span className="text-sm font-medium">{t('nav.my_pass')}</span>
               </Button>
               
               <Button 
@@ -360,7 +366,7 @@ const Profil: React.FC = () => {
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500/10 to-blue-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <Search className="w-6 h-6 text-blue-600" />
                 </div>
-                <span className="text-sm font-medium">Explorer</span>
+                <span className="text-sm font-medium">{t('nav.explorer')}</span>
               </Button>
               
               <Button 
@@ -368,15 +374,15 @@ const Profil: React.FC = () => {
                 className="flex flex-col items-center gap-3 h-auto py-4 hover:bg-primary/5 transition-all duration-300 group"
                 onClick={() => {
                   toast({
-                    title: "Scanner QR",
-                    description: "Fonctionnalité de scan QR à venir",
+                    title: t('toast.scan_qr'),
+                    description: t('toast.qr_feature_coming'),
                   });
                 }}
               >
                 <div className="w-12 h-12 bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <QrCode className="w-6 h-6 text-emerald-600" />
                 </div>
-                <span className="text-sm font-medium">Scanner</span>
+                <span className="text-sm font-medium">{t('profile.scan_partner')}</span>
               </Button>
             </div>
           </CardContent>
@@ -387,31 +393,41 @@ const Profil: React.FC = () => {
           <CardContent className="p-6">
             <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
               <div className="w-2 h-6 bg-gradient-to-b from-blue-500 to-blue-400 rounded-full"></div>
-              Informations personnelles
+              {t('profile.personal_info')}
             </h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
                 <div className="flex items-center gap-3">
                   <UserIcon className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Nom complet</span>
+                  <span className="text-sm text-muted-foreground">{t('profile.full_name')}</span>
                 </div>
                 <span className="font-medium">{getDisplayName()}</span>
               </div>
               <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
                 <div className="flex items-center gap-3">
                   <Mail className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Email</span>
+                  <span className="text-sm text-muted-foreground">{t('common.email')}</span>
                 </div>
                 <span className="font-medium">{user.email}</span>
               </div>
               <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
                 <div className="flex items-center gap-3">
                   <Globe className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Langue</span>
+                  <span className="text-sm text-muted-foreground">{t('profile.language')}</span>
                 </div>
-                <Badge variant="outline">
-                  {preferences.language === 'fr' ? 'Français' : 'English'}
-                </Badge>
+                <Select 
+                  value={language} 
+                  onValueChange={(value) => updatePreference('language', value)}
+                  disabled={updating}
+                >
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="en">🇺🇸 English</SelectItem>
+                    <SelectItem value="fr">🇫🇷 Français</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </CardContent>
