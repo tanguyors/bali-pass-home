@@ -1,14 +1,76 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { QRScanner } from "@/components/QRScanner";
 import { PartnerOffersModal } from "@/components/PartnerOffersModal";
 import { useTranslation } from "@/hooks/useTranslation";
+import { supabase } from "@/integrations/supabase/client";
+import { User, Session } from "@supabase/supabase-js";
+
+interface UserPass {
+  id: string;
+  status: string;
+  expires_at: string;
+}
 
 export function FloatingActionButton() {
   const [showScanner, setShowScanner] = useState(false);
   const [scannedPartner, setScannedPartner] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [userPass, setUserPass] = useState<UserPass | null>(null);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          fetchUserPass(session.user.id);
+        } else {
+          setUserPass(null);
+        }
+      }
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchUserPass(session.user.id);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const fetchUserPass = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('passes')
+        .select('id, status, expires_at')
+        .eq('user_id', userId)
+        .eq('status', 'active')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching user pass:', error);
+        return;
+      }
+
+      setUserPass(data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  // Don't render if user is not authenticated or doesn't have active pass
+  const hasActivePass = !!userPass && new Date(userPass.expires_at) > new Date();
+  if (!user || !hasActivePass) {
+    return null;
+  }
 
   const handleQRScan = () => {
     setShowScanner(true);
