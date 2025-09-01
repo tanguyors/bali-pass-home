@@ -10,12 +10,14 @@ import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { useCommunity } from '@/hooks/useCommunity';
 import CreatePostDialog from '@/components/CreatePostDialog';
+import { useTranslation } from '@/hooks/useTranslation';
 
 
 const Community: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
   
   const { posts, topContributors, loading, createPost, toggleLike } = useCommunity();
 
@@ -37,13 +39,13 @@ const Community: React.FC = () => {
   };
 
   const getUserDisplayName = (profile: any) => {
-    if (!profile) return 'Utilisateur';
+    if (!profile) return t('common.name');
     if (profile.name) return profile.name;
     if (profile.first_name && profile.last_name) {
       return `${profile.first_name} ${profile.last_name}`;
     }
     if (profile.first_name) return profile.first_name;
-    return 'Utilisateur';
+    return t('common.name');
   };
 
   const renderStars = (rating?: number) => {
@@ -72,7 +74,7 @@ const Community: React.FC = () => {
       <div className="flex items-center justify-center h-screen bg-background">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Chargement de la communauté...</p>
+          <p className="text-muted-foreground">{t('community.loading')}</p>
         </div>
       </div>
     );
@@ -86,16 +88,16 @@ const Community: React.FC = () => {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent">
-                Communauté
+                {t('community.title')}
               </h1>
-              <p className="text-sm text-muted-foreground mt-1">Partagez vos expériences</p>
+              <p className="text-sm text-muted-foreground mt-1">{t('community.share_experiences')}</p>
             </div>
             <Button 
               onClick={() => setIsCreatePostOpen(true)}
               className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 gap-2"
             >
               <Plus className="w-4 h-4" />
-              Publier
+              {t('community.publish')}
             </Button>
           </div>
           
@@ -103,7 +105,7 @@ const Community: React.FC = () => {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Rechercher dans la communauté..."
+                placeholder={t('community.search_placeholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 bg-card/60 backdrop-blur-sm border-border/50 focus:bg-card/80 transition-all duration-300"
@@ -128,12 +130,12 @@ const Community: React.FC = () => {
                     <Award className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg">Top Contributeurs</h3>
-                    <p className="text-sm text-muted-foreground">Les plus actifs cette semaine</p>
+                    <h3 className="font-bold text-lg">{t('community.top_contributors')}</h3>
+                    <p className="text-sm text-muted-foreground">{t('community.most_active')}</p>
                   </div>
                 </div>
                 <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
-                  Cette semaine
+                  {t('community.this_week')}
                 </Badge>
               </div>
               
@@ -177,7 +179,7 @@ const Community: React.FC = () => {
                               contributor.count >= 5 ? 'bg-blue-500' : 'bg-green-500'
                             }`}></div>
                             <span className="text-sm text-muted-foreground">
-                              {contributor.count >= 10 ? 'Expert' : contributor.count >= 5 ? 'Aventurier' : 'Explorer'}
+                              {contributor.count >= 10 ? t('community.expert') : contributor.count >= 5 ? t('community.adventurer') : t('community.explorer')}
                             </span>
                           </div>
                         </div>
@@ -186,7 +188,7 @@ const Community: React.FC = () => {
                         <div className="flex items-center gap-2">
                           <div className="text-right">
                             <p className="font-bold text-lg">{contributor.count}</p>
-                            <p className="text-xs text-muted-foreground">posts</p>
+                            <p className="text-xs text-muted-foreground">{t('community.posts')}</p>
                           </div>
                           {isTop3 && (
                             <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
@@ -208,7 +210,7 @@ const Community: React.FC = () => {
                     <div className="w-16 h-16 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Users className="w-8 h-8 text-primary" />
                     </div>
-                    <p className="text-muted-foreground">Aucun contributeur pour le moment</p>
+                    <p className="text-muted-foreground">{t('community.no_contributors')}</p>
                   </div>
                 )}
               </div>
@@ -224,16 +226,16 @@ const Community: React.FC = () => {
                 <div className="w-20 h-20 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Users className="w-10 h-10 text-primary" />
                 </div>
-                <h3 className="font-bold text-xl mb-3">Aucun post pour le moment</h3>
+                <h3 className="font-bold text-xl mb-3">{t('community.no_posts')}</h3>
                 <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                  Soyez le premier à partager votre expérience et inspirez la communauté !
+                  {t('community.be_first')}
                 </p>
                 <Button 
                   onClick={() => setIsCreatePostOpen(true)}
                   className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  Créer un post
+                  {t('community.create_post')}
                 </Button>
               </CardContent>
             </Card>
@@ -251,7 +253,7 @@ const Community: React.FC = () => {
                       <div className="flex items-center gap-3 mb-2">
                         <p className="font-semibold">{getUserDisplayName(post.profiles)}</p>
                         <Badge variant="secondary" className="text-xs bg-primary/10 text-primary border-primary/20">
-                          Membre
+                          {t('community.member')}
                         </Badge>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -316,7 +318,7 @@ const Community: React.FC = () => {
                         onClick={() => navigate(`/partner/${post.partners.slug}`)}
                         className="text-xs bg-primary/10 text-primary hover:bg-primary/20 transition-all duration-300"
                       >
-                        Voir le partenaire
+                        {t('community.view_partner')}
                       </Button>
                     )}
                   </div>

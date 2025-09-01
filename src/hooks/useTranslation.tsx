@@ -31,7 +31,7 @@ const translations = {
     'common.password': 'Password',
     'common.phone': 'Phone',
     'common.name': 'Name',
-    'common.close': 'Close',
+    'common.learn_more': 'Learn more',
     
     // Auth
     'auth.sign_in': 'Sign In',
@@ -221,7 +221,7 @@ const translations = {
     'common.password': 'Mot de passe',
     'common.phone': 'Téléphone',
     'common.name': 'Nom',
-    'common.close': 'Fermer',
+    'common.learn_more': 'En savoir plus',
     
     // Auth
     'auth.sign_in': 'Se connecter',

@@ -25,6 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Pass {
   id: string;
@@ -61,6 +62,7 @@ interface Profile {
 const MonPass: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
@@ -203,7 +205,7 @@ const MonPass: React.FC = () => {
     if (profile?.name) {
       return profile.name;
     }
-    return user?.email?.split('@')[0] || 'Utilisateur';
+    return user?.email?.split('@')[0] || t('common.name');
   };
 
   const getDaysRemaining = (): number => {
@@ -216,8 +218,8 @@ const MonPass: React.FC = () => {
 
   const handleScanPartner = () => {
     toast({
-      title: "Scanner QR",
-      description: "Fonctionnalité de scan QR à venir",
+      title: t('toast.scan_qr'),
+      description: t('toast.qr_feature_coming'),
     });
   };
 
@@ -242,10 +244,10 @@ const MonPass: React.FC = () => {
                   <CreditCard className="w-10 h-10 text-white" />
                 </div>
                 <h2 className="text-2xl font-bold mb-3 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                  Ton Bali'Pass
+                  {t('pass.my_pass')}
                 </h2>
                 <p className="text-muted-foreground mb-8 leading-relaxed">
-                  Connecte-toi pour accéder à ton pass et découvrir tes économies
+                  {t('pass.connect_to_access')}
                 </p>
                 
                 <div className="space-y-3">
@@ -253,21 +255,21 @@ const MonPass: React.FC = () => {
                     className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg transition-all duration-300" 
                     onClick={() => navigate('/auth')}
                   >
-                    Se connecter
+                    {t('auth.sign_in')}
                   </Button>
                   <Button 
                     variant="outline" 
                     className="w-full border-primary/20 hover:bg-primary/5 transition-all duration-300" 
                     onClick={() => navigate('/auth')}
                   >
-                    Créer un compte
+                    {t('auth.create_account')}
                   </Button>
                   <Button 
                     variant="ghost" 
                     className="w-full text-muted-foreground hover:text-foreground transition-all duration-300" 
                     onClick={() => navigate('/')}
                   >
-                    En savoir plus
+                    {t('common.learn_more')}
                   </Button>
                 </div>
               </CardContent>
@@ -286,9 +288,9 @@ const MonPass: React.FC = () => {
         <div className="p-4 space-y-6">
           <div className="text-center">
             <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-              Obtiens ton Bali'Pass
+              {t('pass.get_pass')}
             </h1>
-            <p className="text-muted-foreground">Accède à des réductions exclusives partout à Bali</p>
+            <p className="text-muted-foreground">Access exclusive discounts everywhere in Bali</p>
           </div>
           
           <Card className="shadow-2xl border-0 bg-gradient-to-br from-primary via-primary/90 to-primary/70 text-white">
@@ -297,25 +299,25 @@ const MonPass: React.FC = () => {
                 <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Gift className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold mb-2">Avantages inclus</h3>
+                <h3 className="text-xl font-bold mb-2">{t('pass.benefits_included')}</h3>
               </div>
               
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <CheckCircle className="w-5 h-5 text-green-300 flex-shrink-0" />
-                  <span>Réductions exclusives chez +50 partenaires</span>
+                  <span>{t('pass.exclusive_discounts')}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="w-5 h-5 text-green-300 flex-shrink-0" />
-                  <span>Scan simple avec QR code</span>
+                  <span>{t('pass.simple_qr_scan')}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="w-5 h-5 text-green-300 flex-shrink-0" />
-                  <span>Valable 12 mois</span>
+                  <span>{t('pass.valid_12_months')}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="w-5 h-5 text-green-300 flex-shrink-0" />
-                  <span>Support client 24/7</span>
+                  <span>{t('pass.support_24_7')}</span>
                 </div>
               </div>
             </CardContent>
@@ -324,7 +326,7 @@ const MonPass: React.FC = () => {
           <div className="space-y-3">
             <Button className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg text-lg font-semibold">
               <CreditCard className="w-5 h-5 mr-2" />
-              Obtenir le Bali'Pass
+              {t('pass.get_pass')}
             </Button>
             <Button 
               variant="outline" 
@@ -332,7 +334,7 @@ const MonPass: React.FC = () => {
               onClick={() => navigate('/explorer')}
             >
               <Search className="w-5 h-5 mr-2" />
-              Découvrir les offres
+              {t('pass.discover_offers')}
             </Button>
           </div>
         </div>
@@ -351,26 +353,26 @@ const MonPass: React.FC = () => {
           <div className="relative p-6">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h1 className="text-2xl font-bold">Mon Bali'Pass</h1>
+                <h1 className="text-2xl font-bold">{t('pass.my_pass')}</h1>
                 <p className="text-white/80">{getDisplayName()}</p>
               </div>
               <Badge 
                 variant="secondary" 
                 className="bg-green-100 text-green-800 border-green-200"
               >
-                {pass.status === 'active' ? 'Actif' : 'Inactif'}
+                {pass.status === 'active' ? t('pass.active') : t('pass.inactive')}
               </Badge>
             </div>
             
             <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-white/80 text-sm">Expire le</span>
+                <span className="text-white/80 text-sm">{t('pass.expires_on')}</span>
                 <span className="font-semibold">{formatDate(pass.expires_at)}</span>
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-white/80">Validité</span>
-                  <span>{getDaysRemaining()} jours restants</span>
+                  <span className="text-white/80">{t('pass.validity')}</span>
+                  <span>{getDaysRemaining()} {t('pass.days_remaining')}</span>
                 </div>
                 <Progress 
                   value={100 - getPassProgress()} 
@@ -386,7 +388,7 @@ const MonPass: React.FC = () => {
           <CardContent className="p-6">
             <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
               <div className="w-2 h-6 bg-gradient-to-b from-primary to-primary/60 rounded-full"></div>
-              Actions rapides
+              {t('profile.quick_actions')}
             </h3>
             <div className="grid grid-cols-2 gap-4">
               <Button 
@@ -397,7 +399,7 @@ const MonPass: React.FC = () => {
                 <div className="w-12 h-12 bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <QrCode className="w-6 h-6 text-emerald-600" />
                 </div>
-                <span className="text-sm font-medium">Scanner partenaire</span>
+                <span className="text-sm font-medium">{t('profile.scan_partner')}</span>
               </Button>
               
               <Button 
@@ -408,7 +410,7 @@ const MonPass: React.FC = () => {
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500/10 to-blue-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <Search className="w-6 h-6 text-blue-600" />
                 </div>
-                <span className="text-sm font-medium">Voir les offres</span>
+                <span className="text-sm font-medium">{t('profile.view_offers')}</span>
               </Button>
             </div>
           </CardContent>
@@ -419,12 +421,12 @@ const MonPass: React.FC = () => {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-bold text-lg text-emerald-800 mb-1">Mes économies</h3>
+                <h3 className="font-bold text-lg text-emerald-800 mb-1">{t('profile.my_savings')}</h3>
                 <p className="text-3xl font-bold text-emerald-700">
                   {totalSavings > 0 ? `${totalSavings}%` : '0%'}
                 </p>
                 <p className="text-sm text-emerald-600">
-                  {redemptions.length} utilisation{redemptions.length > 1 ? 's' : ''}
+                  {redemptions.length} {t('profile.uses')}
                 </p>
               </div>
               <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-400 rounded-full flex items-center justify-center">
@@ -439,7 +441,7 @@ const MonPass: React.FC = () => {
           <CardContent className="p-6">
             <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
               <div className="w-2 h-6 bg-gradient-to-b from-orange-500 to-orange-400 rounded-full"></div>
-              Dernières utilisations
+              {t('profile.recent_activity')}
             </h3>
             
             {redemptions.length === 0 ? (
@@ -447,9 +449,9 @@ const MonPass: React.FC = () => {
                 <div className="w-16 h-16 bg-muted/30 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Clock className="w-8 h-8 text-muted-foreground" />
                 </div>
-                <p className="text-muted-foreground mb-2">Aucune utilisation</p>
+                <p className="text-muted-foreground mb-2">{t('profile.no_activity')}</p>
                 <p className="text-sm text-muted-foreground">
-                  Commence à utiliser ton pass pour voir tes économies ici
+                  {t('profile.start_using')}
                 </p>
               </div>
             ) : (
@@ -480,7 +482,7 @@ const MonPass: React.FC = () => {
                 
                 {redemptions.length > 3 && (
                   <Button variant="ghost" className="w-full mt-4">
-                    Voir tout l'historique
+                    View full history
                   </Button>
                 )}
               </div>

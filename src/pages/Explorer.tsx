@@ -9,6 +9,7 @@ import { PartnerCard } from '@/components/PartnerCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useOffers } from '@/hooks/useOffers';
 import { useGeolocation } from '@/hooks/useGeolocation';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Category {
   id: string;
@@ -42,6 +43,7 @@ const Explorer = () => {
   const [partners, setPartners] = useState<Partner[]>([]);
   const [partnersLoading, setPartnersLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('offers');
+  const { t } = useTranslation();
   
   const { latitude, longitude, error: locationError } = useGeolocation();
   
@@ -152,7 +154,7 @@ const Explorer = () => {
       {locationError && (
         <div className="px-4 py-2 bg-orange-50 border-b border-orange-200">
           <p className="text-xs text-orange-600">
-            📍 Géolocalisation non disponible. Les fonctionnalités de proximité sont désactivées.
+            📍 Location not available. Proximity features are disabled.
           </p>
         </div>
       )}
@@ -164,10 +166,10 @@ const Explorer = () => {
           <div className="px-4 mb-4">
             <TabsList className="grid w-full grid-cols-2 bg-card/60 backdrop-blur-sm">
               <TabsTrigger value="offers" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                Offres
+                {t('explorer.offers')}
               </TabsTrigger>
               <TabsTrigger value="partners" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                Partenaires
+                {t('explorer.partners')}
               </TabsTrigger>
             </TabsList>
           </div>
@@ -192,12 +194,12 @@ const Explorer = () => {
                 <div className="flex items-center justify-center py-12">
                   <div className="text-center">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                    <p className="text-sm text-muted-foreground">Chargement des partenaires...</p>
+                    <p className="text-sm text-muted-foreground">{t('explorer.loading_partners')}</p>
                   </div>
                 </div>
               ) : partners.length === 0 ? (
                 <div className="text-center py-12">
-                  <p className="text-muted-foreground mb-4">Aucun partenaire trouvé</p>
+                  <p className="text-muted-foreground mb-4">{t('explorer.no_partners')}</p>
                 </div>
               ) : (
                 <div className={viewMode === 'grid' 
