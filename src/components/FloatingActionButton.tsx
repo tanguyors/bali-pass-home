@@ -3,10 +3,12 @@ import { QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { QRScanner } from "@/components/QRScanner";
 import { PartnerOffersModal } from "@/components/PartnerOffersModal";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export function FloatingActionButton() {
   const [showScanner, setShowScanner] = useState(false);
   const [scannedPartner, setScannedPartner] = useState<any>(null);
+  const { t } = useTranslation();
 
   const handleQRScan = () => {
     setShowScanner(true);
@@ -23,7 +25,7 @@ export function FloatingActionButton() {
           variant="fab"
           onClick={handleQRScan}
           className="relative w-16 h-16 rounded-full shadow-bali-4"
-          aria-label="Scanner QR code partenaire"
+          aria-label={t('action.scan_qr')}
           style={{ position: 'static' }}
         >
           <QrCode className="w-7 h-7" />

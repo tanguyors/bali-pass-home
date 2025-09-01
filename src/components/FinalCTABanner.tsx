@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export function FinalCTABanner() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleGetPass = () => {
     navigate('/auth');
@@ -12,10 +14,10 @@ export function FinalCTABanner() {
     <div className="mt-8 mx-4 mb-8">
       <div className="gradient-tropical rounded-3xl p-6 text-center text-white shadow-bali-4">
         <h2 className="text-xl font-bold mb-2">
-          Prêt à profiter de Bali ?
+          {t('footer.ready_for_bali')}
         </h2>
         <p className="text-sm opacity-90 mb-4">
-          Découvre tous les avantages exclusifs dès maintenant
+          {t('footer.discover_exclusive')}
         </p>
         
         <Button 
@@ -23,7 +25,7 @@ export function FinalCTABanner() {
           className="w-full h-12"
           onClick={handleGetPass}
         >
-          Obtenir le Bali'Pass
+          {t('pass.get_pass')}
         </Button>
       </div>
     </div>

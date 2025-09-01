@@ -12,6 +12,7 @@ import { CalendarIcon, EyeIcon, EyeOffIcon, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const Auth: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -27,6 +28,7 @@ const Auth: React.FC = () => {
   const [activeTab, setActiveTab] = useState('signin');
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -52,28 +54,28 @@ const Auth: React.FC = () => {
       if (error) {
         if (error.message.includes('Invalid login credentials')) {
           toast({
-            title: "Erreur de connexion",
-            description: "Email ou mot de passe incorrect",
+            title: t('auth.login_error'),
+            description: t('auth.invalid_credentials'),
             variant: "destructive",
           });
         } else {
           toast({
-            title: "Erreur de connexion",
+            title: t('auth.login_error'),
             description: error.message,
             variant: "destructive",
           });
         }
       } else {
         toast({
-          title: "Connexion réussie",
-          description: "Bienvenue sur Bali'Pass !",
+          title: t('auth.login_success'),
+          description: t('auth.welcome'),
         });
         navigate('/');
       }
     } catch (error) {
       toast({
-        title: "Erreur",
-        description: "Une erreur inattendue s'est produite",
+        title: t('common.error'),
+        description: t('auth.unexpected_error'),
         variant: "destructive",
       });
     } finally {
@@ -86,8 +88,8 @@ const Auth: React.FC = () => {
     
     if (!acceptTerms) {
       toast({
-        title: "Erreur",
-        description: "Vous devez accepter les conditions d'utilisation",
+        title: t('common.error'),
+        description: t('auth.must_accept_terms'),
         variant: "destructive",
       });
       return;
@@ -95,8 +97,8 @@ const Auth: React.FC = () => {
 
     if (password.length < 6) {
       toast({
-        title: "Erreur",
-        description: "Le mot de passe doit contenir au moins 6 caractères",
+        title: t('common.error'),
+        description: t('auth.password_min'),
         variant: "destructive",
       });
       return;
@@ -125,28 +127,28 @@ const Auth: React.FC = () => {
       if (error) {
         if (error.message.includes('User already registered')) {
           toast({
-            title: "Compte existant",
-            description: "Un compte avec cet email existe déjà. Essayez de vous connecter.",
+            title: "Account exists",
+            description: t('auth.user_exists'),
             variant: "destructive",
           });
         } else {
           toast({
-            title: "Erreur d'inscription",
+            title: t('auth.signup_error'),
             description: error.message,
             variant: "destructive",
           });
         }
       } else {
         toast({
-          title: "Inscription réussie !",
-          description: "Vérifiez votre email pour confirmer votre compte.",
+          title: t('auth.signup_success'),
+          description: t('auth.verify_email'),
         });
         setActiveTab('signin');
       }
     } catch (error) {
       toast({
-        title: "Erreur",
-        description: "Une erreur inattendue s'est produite",
+        title: t('common.error'),
+        description: t('auth.unexpected_error'),
         variant: "destructive",
       });
     } finally {
@@ -172,20 +174,20 @@ const Auth: React.FC = () => {
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
               <span className="text-white text-2xl font-bold">🌴</span>
             </div>
-            <h1 className="text-2xl font-bold text-foreground mb-2">Bali'Pass</h1>
-            <p className="text-muted-foreground text-sm">Your privilege pass for Bali</p>
+            <h1 className="text-2xl font-bold text-foreground mb-2">Bali Pass</h1>
+            <p className="text-muted-foreground text-sm">{t('pass.your_privilege_pass')}</p>
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="signin" className="rounded-l-lg">Sign In</TabsTrigger>
-              <TabsTrigger value="signup" className="rounded-r-lg">Sign Up</TabsTrigger>
+              <TabsTrigger value="signin" className="rounded-l-lg">{t('auth.sign_in')}</TabsTrigger>
+              <TabsTrigger value="signup" className="rounded-r-lg">{t('auth.sign_up')}</TabsTrigger>
             </TabsList>
             
             <TabsContent value="signin" className="space-y-4">
               <form onSubmit={handleSignIn} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signin-email" className="text-sm font-medium">Email</Label>
+                  <Label htmlFor="signin-email" className="text-sm font-medium">{t('common.email')}</Label>
                   <Input
                     id="signin-email"
                     type="email"
@@ -197,7 +199,7 @@ const Auth: React.FC = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signin-password" className="text-sm font-medium">Password</Label>
+                  <Label htmlFor="signin-password" className="text-sm font-medium">{t('common.password')}</Label>
                   <div className="relative">
                     <Input
                       id="signin-password"
@@ -224,7 +226,7 @@ const Auth: React.FC = () => {
                   className="w-full h-12 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white font-medium"
                   disabled={isLoading}
                 >
-                  {isLoading ? "Signing In..." : "Sign In"}
+                  {isLoading ? t('auth.signing_in') : t('auth.sign_in')}
                 </Button>
               </form>
             </TabsContent>
@@ -233,10 +235,10 @@ const Auth: React.FC = () => {
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-2">
-                    <Label htmlFor="firstName" className="text-sm font-medium">First Name</Label>
+                    <Label htmlFor="firstName" className="text-sm font-medium">{t('auth.first_name')}</Label>
                     <Input
                       id="firstName"
-                      placeholder="First Name"
+                      placeholder={t('auth.first_name')}
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
                       className="h-12"
@@ -244,10 +246,10 @@ const Auth: React.FC = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="lastName" className="text-sm font-medium">Last Name</Label>
+                    <Label htmlFor="lastName" className="text-sm font-medium">{t('auth.last_name')}</Label>
                     <Input
                       id="lastName"
-                      placeholder="Last Name"
+                      placeholder={t('auth.last_name')}
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
                       className="h-12"
@@ -257,7 +259,7 @@ const Auth: React.FC = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="signup-email" className="text-sm font-medium">Email</Label>
+                  <Label htmlFor="signup-email" className="text-sm font-medium">{t('common.email')}</Label>
                   <Input
                     id="signup-email"
                     type="email"
@@ -270,7 +272,7 @@ const Auth: React.FC = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="phoneNumber" className="text-sm font-medium">Phone Number</Label>
+                  <Label htmlFor="phoneNumber" className="text-sm font-medium">{t('auth.phone_number')}</Label>
                   <div className="flex gap-2">
                     <Select value={countryCode} onValueChange={setCountryCode}>
                       <SelectTrigger className="w-20 h-12">
@@ -295,7 +297,7 @@ const Auth: React.FC = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="birthDate" className="text-sm font-medium">Birth Date</Label>
+                  <Label htmlFor="birthDate" className="text-sm font-medium">{t('auth.birth_date')}</Label>
                   <Input
                     id="birthDate"
                     type="date"
@@ -306,7 +308,7 @@ const Auth: React.FC = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="signup-password" className="text-sm font-medium">Password</Label>
+                  <Label htmlFor="signup-password" className="text-sm font-medium">{t('common.password')}</Label>
                   <div className="relative">
                     <Input
                       id="signup-password"
@@ -338,12 +340,13 @@ const Auth: React.FC = () => {
                   />
                   <div className="text-xs text-muted-foreground">
                     <label htmlFor="terms" className="cursor-pointer">
-                      I accept the terms{" "}
-                      <br />I have read and accept the{" "}
-                      <a href="#" className="text-primary hover:underline">Terms of Sale</a>,{" "}
-                      <a href="#" className="text-primary hover:underline">Terms of Use</a>,{" "}
-                      <a href="#" className="text-primary hover:underline">Privacy Policy</a> and{" "}
-                      <a href="#" className="text-primary hover:underline">Refund Policy</a>
+                      {t('auth.accept_terms')}{" "}
+                      <br />{t('auth.terms_full').split(',').map((part, index) => (
+                        <span key={index}>
+                          {index > 0 && ', '}
+                          <a href="#" className="text-primary hover:underline">{part.trim()}</a>
+                        </span>
+                      ))}
                     </label>
                   </div>
                 </div>
@@ -353,7 +356,7 @@ const Auth: React.FC = () => {
                   className="w-full h-12 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white font-medium"
                   disabled={isLoading || !acceptTerms}
                 >
-                  {isLoading ? "Creating Account..." : "Create Account Client"}
+                  {isLoading ? t('auth.creating_account') : t('auth.create_account')}
                 </Button>
               </form>
             </TabsContent>

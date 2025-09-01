@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export function AuthButtons() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleSignIn = () => {
     navigate('/auth');
@@ -20,7 +22,7 @@ export function AuthButtons() {
           onClick={handleSignIn}
           className="h-12"
         >
-          Se connecter
+          {t('auth.sign_in')}
         </Button>
         
         <Button 
@@ -28,7 +30,7 @@ export function AuthButtons() {
           onClick={handleSignUp}
           className="h-12"
         >
-          Créer un compte
+          {t('auth.create_account')}
         </Button>
       </div>
     </div>
