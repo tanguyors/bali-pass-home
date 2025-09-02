@@ -133,7 +133,10 @@ export default function OfferDetails() {
   const checkIfFavorite = async (offerId: string) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        setIsFavorite(false);
+        return;
+      }
 
       const { data } = await supabase
         .from('favorites')
@@ -145,6 +148,7 @@ export default function OfferDetails() {
       setIsFavorite(!!data);
     } catch (error) {
       // Not a favorite or not authenticated
+      setIsFavorite(false);
     }
   };
 
