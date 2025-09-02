@@ -41,8 +41,7 @@ export function HeroNoPass() {
   };
 
   const handleBuyPass = () => {
-    // TODO: Navigate to payment flow
-    console.log("Navigating to payment...");
+    window.open('https://passbali.com/', '_blank');
   };
 
   const handleViewOffers = () => {

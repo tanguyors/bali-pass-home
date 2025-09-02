@@ -48,7 +48,7 @@ export function HeroUnauthenticated() {
   };
 
   const handleGetPass = () => {
-    navigate('/auth');
+    window.open('https://passbali.com/', '_blank');
   };
 
   return (

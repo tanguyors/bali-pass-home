@@ -324,7 +324,10 @@ const MonPass: React.FC = () => {
           </Card>
 
           <div className="space-y-3">
-            <Button className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg text-lg font-semibold">
+            <Button 
+              className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg text-lg font-semibold"
+              onClick={() => window.open('https://passbali.com/', '_blank')}
+            >
               <CreditCard className="w-5 h-5 mr-2" />
               {t('pass.get_pass')}
             </Button>
