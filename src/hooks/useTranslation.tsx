@@ -169,6 +169,9 @@ const translations = {
     'offer.valid_until': 'Valid until',
     'offer.discount': 'discount',
     'offer.free': 'free',
+    'offer.used_successfully': 'Offer used successfully!',
+    'offer.enjoy_discount': 'Enjoy your discount at the partner',
+    'offer.use_error': 'Unable to use offer',
     
     // Actions
     'action.scan_qr': 'Scan QR code',
@@ -374,6 +377,9 @@ const translations = {
     'offer.valid_until': 'Valable jusqu\'au',
     'offer.discount': 'de réduction',
     'offer.free': 'gratuit',
+    'offer.used_successfully': 'Offre utilisée avec succès !',
+    'offer.enjoy_discount': 'Profitez de votre réduction chez le partenaire',
+    'offer.use_error': 'Impossible d\'utiliser l\'offre',
     
     // Actions
     'action.scan_qr': 'Scanner le QR code',
@@ -558,6 +564,9 @@ const translations = {
     'offer.valid_until': 'Berlaku hingga',
     'offer.discount': 'diskon',
     'offer.free': 'gratis',
+    'offer.used_successfully': 'Penawaran berhasil digunakan!',
+    'offer.enjoy_discount': 'Nikmati diskon Anda di mitra',
+    'offer.use_error': 'Tidak dapat menggunakan penawaran',
     
     // Actions
     'action.scan_qr': 'Scan kode QR',

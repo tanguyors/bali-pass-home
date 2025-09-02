@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MapPin, Star, Heart, Clock, Share2, Percent, Euro, Navigation } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface Offer {
   id: string;
@@ -18,6 +19,7 @@ interface Offer {
   start_date?: string;
   end_date?: string;
   partner: {
+    id: string;
     name: string;
     address?: string;
     phone?: string;
@@ -35,16 +37,42 @@ export default function OfferDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [offer, setOffer] = useState<Offer | null>(null);
   const [loading, setLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [userPass, setUserPass] = useState<any>(null);
+  const [isUsing, setIsUsing] = useState(false);
 
   useEffect(() => {
     if (id) {
       fetchOffer(id);
       checkIfFavorite(id);
+      checkUserPass();
     }
   }, [id]);
+
+  const checkUserPass = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data } = await supabase
+        .from('passes')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('status', 'active')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (data && new Date(data.expires_at) > new Date()) {
+        setUserPass(data);
+      }
+    } catch (error) {
+      console.error('Error checking user pass:', error);
+    }
+  };
 
   const fetchOffer = async (offerId: string) => {
     try {
@@ -62,7 +90,7 @@ export default function OfferDetails() {
           terms_url,
           start_date,
           end_date,
-          partner:partners(name, address, phone, website, instagram, photos),
+          partner:partners(id, name, address, phone, website, instagram, photos),
           category:categories(name, icon)
         `)
         .eq('id', offerId)
@@ -167,6 +195,73 @@ export default function OfferDetails() {
         title: "Lien copié",
         description: "Le lien a été copié dans le presse-papiers",
       });
+    }
+  };
+
+  const handleUseOffer = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast({
+          title: t('common.error'),
+          description: t('toast.must_be_logged_in'),
+          variant: "destructive",
+        });
+        navigate('/auth');
+        return;
+      }
+
+      if (!userPass) {
+        toast({
+          title: t('pass.no_pass'),
+          description: t('pass.connect_to_access'),
+          variant: "destructive",
+        });
+        navigate('/mon-pass');
+        return;
+      }
+
+      if (!offer) return;
+
+      setIsUsing(true);
+
+      // Create a redemption record
+      const { error } = await supabase
+        .from('redemptions')
+        .insert({
+          offer_id: offer.id,
+          pass_id: userPass.id,
+          partner_id: offer.partner.id,
+          status: 'approved'
+        });
+
+      if (error) {
+        console.error('Error using offer:', error);
+        toast({
+          title: t('common.error'),
+          description: t('offer.use_error'),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: t('offer.used_successfully'),
+        description: t('offer.enjoy_discount'),
+      });
+
+      // Optional: Navigate to a confirmation page or show more details
+      
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: t('common.error'),
+        description: t('auth.unexpected_error'),
+        variant: "destructive",
+      });
+    } finally {
+      setIsUsing(false);
     }
   };
 
@@ -386,8 +481,13 @@ export default function OfferDetails() {
       {/* Bottom Action */}
       <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4">
         <div className="flex gap-3">
-          <Button className="flex-1" size="lg">
-            Utiliser cette offre
+          <Button 
+            className="flex-1" 
+            size="lg"
+            onClick={handleUseOffer}
+            disabled={isUsing || !userPass}
+          >
+            {isUsing ? t('common.loading') : t('offer.use_offer')}
           </Button>
           {offer.partner.address && (
             <Button 
