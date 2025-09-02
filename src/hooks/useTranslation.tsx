@@ -170,6 +170,7 @@ const translations = {
     'offer.discount': 'discount',
     'offer.free': 'free',
     'offer.used_successfully': 'Offer used successfully!',
+    'offer.already_used': 'Offer already used',
     'offer.enjoy_discount': 'Enjoy your discount at the partner',
     'offer.use_error': 'Unable to use offer',
     
@@ -378,6 +379,7 @@ const translations = {
     'offer.discount': 'de réduction',
     'offer.free': 'gratuit',
     'offer.used_successfully': 'Offre utilisée avec succès !',
+    'offer.already_used': 'Offre déjà utilisée',
     'offer.enjoy_discount': 'Profitez de votre réduction chez le partenaire',
     'offer.use_error': 'Impossible d\'utiliser l\'offre',
     
@@ -565,6 +567,7 @@ const translations = {
     'offer.discount': 'diskon',
     'offer.free': 'gratis',
     'offer.used_successfully': 'Penawaran berhasil digunakan!',
+    'offer.already_used': 'Penawaran sudah digunakan',
     'offer.enjoy_discount': 'Nikmati diskon Anda di mitra',
     'offer.use_error': 'Tidak dapat menggunakan penawaran',
     

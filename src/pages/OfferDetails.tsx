@@ -45,6 +45,7 @@ export default function OfferDetails() {
   const [userPass, setUserPass] = useState<any>(null);
   const [isUsing, setIsUsing] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
+  const [isAlreadyUsed, setIsAlreadyUsed] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -53,6 +54,12 @@ export default function OfferDetails() {
       checkUserPass();
     }
   }, [id]);
+
+  useEffect(() => {
+    if (userPass && id) {
+      checkIfOfferAlreadyUsed(id);
+    }
+  }, [userPass, id]);
 
   const checkUserPass = async () => {
     try {
@@ -138,6 +145,24 @@ export default function OfferDetails() {
       setIsFavorite(!!data);
     } catch (error) {
       // Not a favorite or not authenticated
+    }
+  };
+
+  const checkIfOfferAlreadyUsed = async (offerId: string) => {
+    try {
+      if (!userPass) return;
+
+      const { data } = await supabase
+        .from('redemptions')
+        .select('id')
+        .eq('offer_id', offerId)
+        .eq('pass_id', userPass.id)
+        .single();
+
+      setIsAlreadyUsed(!!data);
+    } catch (error) {
+      // Not used yet or error
+      setIsAlreadyUsed(false);
     }
   };
 
@@ -270,6 +295,9 @@ export default function OfferDetails() {
         title: t('offer.used_successfully'),
         description: t('offer.enjoy_discount'),
       });
+
+      // Marquer l'offre comme utilisée
+      setIsAlreadyUsed(true);
 
     } catch (error) {
       console.error('Error:', error);
@@ -503,9 +531,12 @@ export default function OfferDetails() {
             className="flex-1" 
             size="lg"
             onClick={handleUseOffer}
-            disabled={isUsing || !userPass}
+            disabled={isUsing || !userPass || isAlreadyUsed}
+            variant={isAlreadyUsed ? "secondary" : "default"}
           >
-            {isUsing ? t('common.loading') : t('offer.use_offer')}
+            {isUsing ? t('common.loading') : 
+             isAlreadyUsed ? t('offer.already_used') : 
+             t('offer.use_offer')}
           </Button>
           {offer.partner.address && (
             <Button 
