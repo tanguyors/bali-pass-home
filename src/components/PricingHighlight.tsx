@@ -9,7 +9,10 @@ interface PricingData {
   availability_status?: string;
 }
 
+import { useTranslation } from "@/hooks/useTranslation";
+
 export function PricingHighlight() {
+  const { t } = useTranslation();
   const [pricingData, setPricingData] = useState<PricingData>({});
 
   const formatPrice = (cents: string, currency: string = 'usd') => {
@@ -76,7 +79,7 @@ export function PricingHighlight() {
             </div>
             <div>
               <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide mb-1">
-                Vous payez
+                {t('pricing.you_pay')}
               </p>
               <p className="text-xl font-bold text-foreground">
                 {pricingData.price ? formatPrice(pricingData.price, pricingData.currency) : "Prix à venir"}
@@ -96,7 +99,7 @@ export function PricingHighlight() {
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide mb-1">
-                    Vous économisez
+                    {t('pricing.you_save')}
                   </p>
                   <p className="text-xl font-bold text-coral">
                     {pricingData.max_savings ? formatSavings(pricingData.max_savings, pricingData.currency) : "Économies à venir"}

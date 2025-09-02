@@ -22,7 +22,10 @@ interface UserPass {
   purchased_at: string;
 }
 
+import { useTranslation } from "@/hooks/useTranslation";
+
 const Index = () => {
+  const { t } = useTranslation();
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [userPass, setUserPass] = useState<UserPass | null>(null);
@@ -82,7 +85,7 @@ const Index = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">Chargement...</div>
+        <div className="text-center">{t('common.loading')}</div>
       </div>
     );
   }

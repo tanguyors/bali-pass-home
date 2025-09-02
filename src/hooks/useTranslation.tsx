@@ -139,6 +139,8 @@ const translations = {
     'explorer.no_partners': 'No partners found',
     'explorer.loading_offers': 'Loading offers...',
     'explorer.loading_partners': 'Loading partners...',
+    'explorer.near_me': 'Near me',
+    'explorer.all_offers': 'All offers',
     
     // Favorites
     'favorites.title': 'My Favorites',
@@ -207,6 +209,10 @@ const translations = {
     // Error
     'error.page_not_found': 'Oops! Page not found',
     'error.return_home': 'Return to Home',
+    
+    // Pricing
+    'pricing.you_pay': 'You pay',
+    'pricing.you_save': 'You save',
   },
   fr: {
     // Navigation
@@ -338,6 +344,8 @@ const translations = {
     'explorer.no_partners': 'Aucun partenaire trouvé',
     'explorer.loading_offers': 'Chargement des offres...',
     'explorer.loading_partners': 'Chargement des partenaires...',
+    'explorer.near_me': 'Autour de moi',
+    'explorer.all_offers': 'Toutes les offres',
     
     // Favorites
     'favorites.title': 'Mes Favoris',
@@ -406,6 +414,10 @@ const translations = {
     // Error
     'error.page_not_found': 'Oups ! Page introuvable',
     'error.return_home': 'Retour à l\'accueil',
+    
+    // Pricing
+    'pricing.you_pay': 'Vous payez',
+    'pricing.you_save': 'Vous économisez',
   },
   id: {
     // Navigation
@@ -516,6 +528,8 @@ const translations = {
     'explorer.no_partners': 'Tidak ada mitra ditemukan',
     'explorer.loading_offers': 'Memuat penawaran...',
     'explorer.loading_partners': 'Memuat mitra...',
+    'explorer.near_me': 'Sekitar saya',
+    'explorer.all_offers': 'Semua penawaran',
     
     // Favorites
     'favorites.title': 'Favorit Saya',
@@ -584,6 +598,10 @@ const translations = {
     // Error
     'error.page_not_found': 'Ups! Halaman tidak ditemukan',
     'error.return_home': 'Kembali ke Beranda',
+    
+    // Pricing
+    'pricing.you_pay': 'Anda bayar',
+    'pricing.you_save': 'Anda hemat',
   }
 } as const;
 

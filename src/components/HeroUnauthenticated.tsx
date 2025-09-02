@@ -10,7 +10,10 @@ interface PassSettings {
   setting_value: string;
 }
 
+import { useTranslation } from "@/hooks/useTranslation";
+
 export function HeroUnauthenticated() {
+  const { t } = useTranslation();
   const [passSettings, setPassSettings] = useState<PassSettings[]>([]);
   const [ctaText, setCtaText] = useState("Obtenir le Bali'Pass");
   const navigate = useNavigate();
@@ -86,21 +89,21 @@ export function HeroUnauthenticated() {
         
         {/* Headlines with text shadow */}
         <h1 className="text-mobile-hero font-bold mb-3 text-shadow-strong">
-          Explore More. Spend Less.
+          {t('hero.welcome_to_bali')}
         </h1>
         <p className="text-mobile-subtitle mb-8 opacity-95 text-shadow">
-          Profite d'avantages exclusifs à Bali.
+          {t('hero.exclusive_discounts')}
         </p>
         
         {/* CTA Button */}
         <div className="w-full max-w-sm">
-          <Button 
+            <Button 
             variant="hero" 
             className="w-full flex items-center justify-center gap-3"
             onClick={handleGetPass}
           >
             <CreditCard className="w-5 h-5" />
-            {ctaText}
+            {t('hero.get_your_pass')}
           </Button>
         </div>
       </div>

@@ -6,12 +6,14 @@ import baliHeroImage from "@/assets/bali-hero.jpg";
 import { User } from "@supabase/supabase-js";
 import { QRScanner } from "@/components/QRScanner";
 import { PartnerOffersModal } from "@/components/PartnerOffersModal";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface HeroWithPassProps {
   user: User;
 }
 
 export function HeroWithPass({ user }: HeroWithPassProps) {
+  const { t } = useTranslation();
   const firstName = user.user_metadata?.first_name || user.email?.split('@')[0] || 'Utilisateur';
   const navigate = useNavigate();
   const [showScanner, setShowScanner] = useState(false);
@@ -52,16 +54,16 @@ export function HeroWithPass({ user }: HeroWithPassProps) {
           {/* Welcome badge */}
           <div className="flex flex-wrap gap-2 mb-8">
             <div className="bg-primary/90 backdrop-blur-sm rounded-full px-3 py-1.5 text-xs font-medium">
-              Pass Actif ✓
+              {t('pass.active')} ✓
             </div>
           </div>
           
           {/* Personalized headlines */}
           <h1 className="text-mobile-hero font-bold mb-3 text-shadow-strong">
-            Bienvenue {firstName} !
+            {t('hero.welcome_back')} {firstName} !
           </h1>
           <p className="text-mobile-subtitle mb-6 opacity-95 text-shadow">
-            Ton pass est actif. Découvre les offres autour de toi.
+            {t('hero.scan_and_save')}
           </p>
           
           {/* Action Buttons */}
@@ -72,7 +74,7 @@ export function HeroWithPass({ user }: HeroWithPassProps) {
               onClick={handleScanQR}
             >
               <QrCode className="w-5 h-5" />
-              Scanner un partenaire
+              {t('action.scan_qr')}
             </Button>
             
             <div className="grid grid-cols-2 gap-3">
@@ -82,7 +84,7 @@ export function HeroWithPass({ user }: HeroWithPassProps) {
                 onClick={handleNearMe}
               >
                 <MapPin className="w-4 h-4" />
-                Autour de moi
+                {t('explorer.near_me')}
               </Button>
               
               <Button 
@@ -91,7 +93,7 @@ export function HeroWithPass({ user }: HeroWithPassProps) {
                 onClick={handleAllOffers}
               >
                 <Compass className="w-4 h-4" />
-                Toutes les offres
+                {t('explorer.all_offers')}
               </Button>
             </div>
           </div>

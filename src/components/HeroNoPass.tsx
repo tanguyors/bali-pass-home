@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { CreditCard, ArrowRight } from "lucide-react";
 import baliHeroImage from "@/assets/bali-hero.jpg";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface PassSettings {
   setting_key: string;
@@ -10,6 +11,7 @@ interface PassSettings {
 }
 
 export function HeroNoPass() {
+  const { t } = useTranslation();
   const [passSettings, setPassSettings] = useState<PassSettings[]>([]);
 
   useEffect(() => {
@@ -84,10 +86,10 @@ export function HeroNoPass() {
         
         {/* Headlines with text shadow */}
         <h1 className="text-mobile-hero font-bold mb-3 text-shadow-strong">
-          Achète ton Bali'Pass
+          {t('pass.get_pass')}
         </h1>
         <p className="text-mobile-subtitle mb-6 opacity-95 text-shadow">
-          Accède à des centaines d'offres exclusives.
+          {t('pass.exclusive_discounts')}
         </p>
         
         {/* CTA Buttons */}
@@ -98,7 +100,7 @@ export function HeroNoPass() {
             onClick={handleBuyPass}
           >
             <CreditCard className="w-5 h-5" />
-            Acheter mon Bali'Pass
+            {t('pass.get_pass')}
           </Button>
           
           <Button 
@@ -106,7 +108,7 @@ export function HeroNoPass() {
             className="text-shadow"
             onClick={handleViewOffers}
           >
-            Aperçu des offres
+            {t('pass.discover_offers')}
             <ArrowRight className="w-4 h-4" />
           </Button>
         </div>

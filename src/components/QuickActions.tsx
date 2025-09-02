@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { QrCode, Heart, Grid3X3, Radar } from "lucide-react";
 import { QRScanner } from "@/components/QRScanner";
 import { PartnerOffersModal } from "@/components/PartnerOffersModal";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface QuickActionsProps {
   hasActivePass?: boolean;
 }
 
 export function QuickActions({ hasActivePass = false }: QuickActionsProps) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [showScanner, setShowScanner] = useState(false);
   const [scannedPartner, setScannedPartner] = useState<any>(null);
@@ -20,8 +22,8 @@ export function QuickActions({ hasActivePass = false }: QuickActionsProps) {
   const actions = [
     {
       icon: QrCode,
-      title: "Scanner un partenaire",
-      subtitle: "QR code",
+      title: t('action.scan_qr'),
+      subtitle: t('toast.scan_qr'),
       gradientClass: "gradient-turquoise",
       iconBgColor: "bg-lagoon",
       iconColor: "text-white",
@@ -32,8 +34,8 @@ export function QuickActions({ hasActivePass = false }: QuickActionsProps) {
     },
     {
       icon: Heart,
-      title: "Mes Favoris",
-      subtitle: "Partenaires sauvegardés",
+      title: t('nav.favorites'),
+      subtitle: t('favorites.no_favorites'),
       gradientClass: "gradient-coral-soft",
       iconBgColor: "bg-coral",
       iconColor: "text-white",
@@ -44,8 +46,8 @@ export function QuickActions({ hasActivePass = false }: QuickActionsProps) {
     },
     {
       icon: Grid3X3,
-      title: "Toutes les offres",
-      subtitle: "Explorer",
+      title: t('explorer.all_offers'),
+      subtitle: t('nav.explorer'),
       gradientClass: "gradient-gold-soft",
       iconBgColor: "bg-gold",
       iconColor: "text-foreground",

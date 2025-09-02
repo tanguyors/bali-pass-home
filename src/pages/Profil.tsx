@@ -175,7 +175,7 @@ const Profil: React.FC = () => {
           .eq('user_id', user.id);
         
         // Update the app language immediately
-        setLanguage(value as 'en' | 'fr');
+        setLanguage(value as 'en' | 'fr' | 'id');
       }
       
       toast({
@@ -426,6 +426,7 @@ const Profil: React.FC = () => {
                   <SelectContent>
                     <SelectItem value="en">🇺🇸 English</SelectItem>
                     <SelectItem value="fr">🇫🇷 Français</SelectItem>
+                    <SelectItem value="id">🇮🇩 Indonesia</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -439,17 +440,17 @@ const Profil: React.FC = () => {
             <CardContent className="p-6">
               <h3 className="font-bold text-lg mb-4 flex items-center gap-2 text-emerald-800">
                 <div className="w-2 h-6 bg-gradient-to-b from-emerald-500 to-emerald-400 rounded-full"></div>
-                Mon Bali'Pass
+                {t('pass.my_pass')}
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-emerald-700">Statut</span>
+                  <span className="text-emerald-700">{t('pass.active')}</span>
                   <Badge variant={getPassStatusVariant()}>
                     {getPassStatusLabel()}
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-emerald-700">Expire le</span>
+                  <span className="text-emerald-700">{t('pass.expires_on')}</span>
                   <span className="font-medium text-emerald-800">{formatDate(pass.expires_at)}</span>
                 </div>
                 <Button 
@@ -457,7 +458,7 @@ const Profil: React.FC = () => {
                   onClick={() => navigate('/mon-pass')}
                 >
                   <CreditCard className="w-4 h-4 mr-2" />
-                  Voir mon pass
+                  {t('nav.my_pass')}
                 </Button>
               </div>
             </CardContent>
