@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { MapPin, Navigation } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface Offer {
   id: string;
@@ -31,6 +32,7 @@ interface UserPass {
 
 export function FeaturedOffers() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [offers, setOffers] = useState<EnhancedOffer[]>([]);
   const [user, setUser] = useState<any>(null);
   const [userPass, setUserPass] = useState<UserPass | null>(null);
@@ -161,10 +163,10 @@ export function FeaturedOffers() {
       {/* Section Header */}
       <div className="px-4 mb-4">
         <h2 className="text-xl font-bold text-foreground">
-          Offres mises en avant
+          {t('featured_offers.title')}
         </h2>
         <p className="text-mobile-body text-muted-foreground">
-          Les meilleures opportunités du moment
+          {t('featured_offers.subtitle')}
         </p>
       </div>
 
@@ -181,17 +183,17 @@ export function FeaturedOffers() {
                 <div className="absolute inset-0 bg-black/20 z-10 flex items-center justify-center">
                   <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 mx-4 text-center">
                     <p className="text-sm font-medium text-gray-800 mb-2">
-                      Connectez-vous et obtenez votre Bali'Pass
+                      {t('offers.connect_message')}
                     </p>
                     <p className="text-xs text-gray-600 mb-3">
-                      Accédez aux détails complets des offres
+                      {t('offers.access_details')}
                     </p>
                     <Button
                       size="sm"
                       onClick={() => navigate('/auth')}
                       className="text-xs"
                     >
-                      Se connecter
+                      {t('offers.connect_button')}
                     </Button>
                   </div>
                 </div>
@@ -260,7 +262,7 @@ export function FeaturedOffers() {
                     onClick={() => navigate(`/offer/${offer.id}`)}
                     disabled={shouldBlur}
                   >
-                    Voir l'offre
+                    {t('offers.view_offer')}
                   </Button>
                   {offer.partner?.address && (
                     <Button 

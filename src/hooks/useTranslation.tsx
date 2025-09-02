@@ -217,6 +217,20 @@ const translations = {
     // Pricing
     'pricing.you_pay': 'You pay',
     'pricing.you_save': 'You save',
+    
+    // Categories
+    'categories.title': 'Categories',
+    'categories.subtitle': 'Find what interests you',
+    
+    // Featured Offers
+    'featured_offers.title': 'Featured Offers',
+    'featured_offers.subtitle': 'The best opportunities of the moment',
+    
+    // Offers
+    'offers.view_offer': 'View Offer',
+    'offers.connect_message': 'Connect and get your Bali\'Pass',
+    'offers.access_details': 'Access full offer details',
+    'offers.connect_button': 'Connect',
   },
   fr: {
     // Navigation
@@ -426,6 +440,20 @@ const translations = {
     // Pricing
     'pricing.you_pay': 'Vous payez',
     'pricing.you_save': 'Vous économisez',
+    
+    // Categories
+    'categories.title': 'Catégories',
+    'categories.subtitle': 'Trouve ce qui t\'intéresse',
+    
+    // Featured Offers
+    'featured_offers.title': 'Offres mises en avant',
+    'featured_offers.subtitle': 'Les meilleures opportunités du moment',
+    
+    // Offers
+    'offers.view_offer': 'Voir l\'offre',
+    'offers.connect_message': 'Connectez-vous et obtenez votre Bali\'Pass',
+    'offers.access_details': 'Accédez aux détails complets des offres',
+    'offers.connect_button': 'Se connecter',
   },
   id: {
     // Navigation
@@ -614,6 +642,20 @@ const translations = {
     // Pricing
     'pricing.you_pay': 'Anda bayar',
     'pricing.you_save': 'Anda hemat',
+    
+    // Categories
+    'categories.title': 'Kategori',
+    'categories.subtitle': 'Temukan yang menarik minat Anda',
+    
+    // Featured Offers
+    'featured_offers.title': 'Penawaran Unggulan',
+    'featured_offers.subtitle': 'Kesempatan terbaik saat ini',
+    
+    // Offers
+    'offers.view_offer': 'Lihat Penawaran',
+    'offers.connect_message': 'Masuk dan dapatkan Bali\'Pass Anda',
+    'offers.access_details': 'Akses detail penawaran lengkap',
+    'offers.connect_button': 'Masuk',
   }
 } as const;
 
