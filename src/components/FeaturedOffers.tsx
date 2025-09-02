@@ -23,13 +23,63 @@ interface EnhancedOffer extends Offer {
   badge_color: 'green' | 'red';
 }
 
+interface UserPass {
+  id: string;
+  status: string;
+  expires_at: string;
+}
+
 export function FeaturedOffers() {
   const navigate = useNavigate();
   const [offers, setOffers] = useState<EnhancedOffer[]>([]);
+  const [user, setUser] = useState<any>(null);
+  const [userPass, setUserPass] = useState<UserPass | null>(null);
 
   useEffect(() => {
     fetchFeaturedOffers();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          fetchUserPass(session.user.id);
+        } else {
+          setUserPass(null);
+        }
+      }
+    );
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchUserPass(session.user.id);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
+
+  const fetchUserPass = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('passes')
+        .select('id, status, expires_at')
+        .eq('user_id', userId)
+        .eq('status', 'active')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching user pass:', error);
+        return;
+      }
+
+      setUserPass(data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   const openNavigation = (address: string) => {
     if (!address) return;
@@ -99,6 +149,9 @@ export function FeaturedOffers() {
     }
   };
 
+  const hasActivePass = !!userPass && new Date(userPass.expires_at) > new Date();
+  const shouldBlur = !user || !hasActivePass;
+
   if (offers.length === 0) {
     return null;
   }
@@ -121,7 +174,7 @@ export function FeaturedOffers() {
           {offers.map((offer) => (
             <div
               key={offer.id}
-              className="flex-shrink-0 w-72 bg-card rounded-2xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-shadow duration-200 flex flex-col"
+              className={`flex-shrink-0 w-72 bg-card rounded-2xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-shadow duration-200 flex flex-col ${shouldBlur ? 'blur-sm' : ''}`}
               style={{ scrollSnapAlign: 'start' }}
             >
               {/* Large Image with Discount Badge */}
