@@ -1,25 +1,28 @@
 import { Shield, Clock, CheckCircle } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export function ReassuranceSection() {
+  const { t } = useTranslation();
+  
   const reassuranceItems = [
     {
       icon: Shield,
       emoji: "🔒",
-      title: "Paiement sécurisé",
+      title: t('reassurance.secure_payment'),
       bgColor: "bg-primary/10",
       iconColor: "text-primary"
     },
     {
       icon: Clock,
       emoji: "⏳",
-      title: "Valide 12 mois",
+      title: t('reassurance.valid_12_months'),
       bgColor: "bg-lagoon/10",
       iconColor: "text-lagoon"
     },
     {
       icon: CheckCircle,
       emoji: "✅",
-      title: "Partenaires vérifiés",
+      title: t('reassurance.verified_partners'),
       bgColor: "bg-coral/10",
       iconColor: "text-coral"
     }

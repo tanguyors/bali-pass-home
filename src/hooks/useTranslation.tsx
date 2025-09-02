@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
 interface TranslationContextType {
-  language: 'en' | 'fr';
-  setLanguage: (lang: 'en' | 'fr') => void;
+  language: 'en' | 'fr' | 'id';
+  setLanguage: (lang: 'en' | 'fr' | 'id') => void;
   t: (key: string) => string;
 }
 
@@ -198,6 +198,15 @@ const translations = {
     'hero.welcome_back': 'Welcome back',
     'hero.ready_to_save': 'Ready to save',
     'hero.scan_and_save': 'Scan and save at your favorite partners',
+    
+    // Reassurance
+    'reassurance.secure_payment': 'Secure payment',
+    'reassurance.valid_12_months': 'Valid 12 months',
+    'reassurance.verified_partners': 'Verified partners',
+    
+    // Error
+    'error.page_not_found': 'Oops! Page not found',
+    'error.return_home': 'Return to Home',
   },
   fr: {
     // Navigation
@@ -388,11 +397,198 @@ const translations = {
     'hero.welcome_back': 'Bon retour',
     'hero.ready_to_save': 'Prêt à économiser',
     'hero.scan_and_save': 'Scannez et économisez chez vos partenaires favoris',
+    
+    // Reassurance
+    'reassurance.secure_payment': 'Paiement sécurisé',
+    'reassurance.valid_12_months': 'Valide 12 mois',
+    'reassurance.verified_partners': 'Partenaires vérifiés',
+    
+    // Error
+    'error.page_not_found': 'Oups ! Page introuvable',
+    'error.return_home': 'Retour à l\'accueil',
+  },
+  id: {
+    // Navigation
+    'nav.home': 'Beranda',
+    'nav.explorer': 'Jelajahi',
+    'nav.my_pass': 'Pass Saya',
+    'nav.profile': 'Profil',
+    'nav.favorites': 'Favorit',
+    
+    // Common
+    'common.loading': 'Memuat...',
+    'common.search': 'Cari',
+    'common.filter': 'Filter',
+    'common.save': 'Simpan',
+    'common.cancel': 'Batal',
+    'common.confirm': 'Konfirmasi',
+    'common.error': 'Error',
+    'common.success': 'Berhasil',
+    'common.email': 'Email',
+    'common.password': 'Kata Sandi',
+    'common.phone': 'Telepon',
+    'common.name': 'Nama',
+    'common.learn_more': 'Pelajari lebih lanjut',
+    
+    // Auth
+    'auth.sign_in': 'Masuk',
+    'auth.sign_up': 'Daftar',
+    'auth.create_account': 'Buat Akun',
+    'auth.signing_in': 'Sedang Masuk...',
+    'auth.creating_account': 'Membuat Akun...',
+    'auth.first_name': 'Nama Depan',
+    'auth.last_name': 'Nama Belakang',
+    'auth.phone_number': 'Nomor Telepon',
+    'auth.birth_date': 'Tanggal Lahir',
+    'auth.accept_terms': 'Saya menerima syarat',
+    'auth.terms_full': 'Saya telah membaca dan menerima Syarat Penjualan, Syarat Penggunaan, Kebijakan Privasi dan Kebijakan Pengembalian',
+    'auth.password_min': 'Kata sandi minimal 6 karakter',
+    'auth.must_accept_terms': 'Anda harus menerima syarat penggunaan',
+    'auth.login_error': 'Error Login',
+    'auth.signup_error': 'Error Pendaftaran',
+    'auth.invalid_credentials': 'Email atau kata sandi salah',
+    'auth.user_exists': 'Akun dengan email ini sudah ada. Coba untuk masuk.',
+    'auth.signup_success': 'Pendaftaran berhasil!',
+    'auth.verify_email': 'Periksa email Anda untuk konfirmasi akun.',
+    'auth.login_success': 'Login berhasil',
+    'auth.welcome': 'Selamat datang di Bali Pass!',
+    'auth.unexpected_error': 'Terjadi kesalahan tak terduga',
+    
+    // Pass
+    'pass.my_pass': 'Bali Pass Saya',
+    'pass.get_pass': 'Dapatkan Bali Pass',
+    'pass.active': 'Aktif',
+    'pass.inactive': 'Tidak Aktif',
+    'pass.expired': 'Kadaluarsa',
+    'pass.pending': 'Tertunda',
+    'pass.no_pass': 'Tidak ada pass',
+    'pass.expires_on': 'Berakhir pada',
+    'pass.validity': 'Validitas',
+    'pass.days_remaining': 'hari tersisa',
+    'pass.your_privilege_pass': 'Pass istimewa Anda untuk Bali',
+    'pass.connect_to_access': 'Masuk untuk mengakses pass Anda dan temukan penghematan',
+    'pass.benefits_included': 'Manfaat yang termasuk',
+    'pass.exclusive_discounts': 'Diskon eksklusif di 50+ mitra',
+    'pass.simple_qr_scan': 'Scan QR code sederhana',
+    'pass.valid_12_months': 'Berlaku 12 bulan',
+    'pass.support_24_7': 'Dukungan pelanggan 24/7',
+    'pass.discover_offers': 'Temukan penawaran',
+    
+    // Profile
+    'profile.connect': 'Masuk',
+    'profile.create_account': 'Buat Akun',
+    'profile.sign_out': 'Keluar',
+    'profile.access_profile': 'Akses profil Anda dan kelola preferensi Bali Pass',
+    'profile.quick_actions': 'Aksi Cepat',
+    'profile.scan_partner': 'Scan Mitra',
+    'profile.view_offers': 'Lihat Penawaran',
+    'profile.my_savings': 'Penghematan Saya',
+    'profile.uses': 'penggunaan',
+    'profile.recent_activity': 'Aktivitas Terbaru',
+    'profile.no_activity': 'Tidak ada aktivitas',
+    'profile.start_using': 'Mulai gunakan pass Anda untuk melihat penghematan di sini',
+    'profile.personal_info': 'Informasi Pribadi',
+    'profile.full_name': 'Nama Lengkap',
+    'profile.language': 'Bahasa',
+    'profile.preferences': 'Preferensi',
+    'profile.push_notifications': 'Notifikasi push',
+    'profile.email_notifications': 'Notifikasi email',
+    'profile.security': 'Keamanan',
+    'profile.change_password': 'Ubah Kata Sandi',
+    'profile.support': 'Dukungan',
+    'profile.help_center': 'Pusat Bantuan',
+    'profile.contact_support': 'Hubungi Dukungan',
+    'profile.terms_privacy': 'Syarat & Privasi',
+    'profile.logout_success': 'Berhasil keluar',
+    'profile.see_you_soon': 'Sampai jumpa lagi di Bali Pass!',
+    'profile.logout_error': 'Tidak dapat keluar',
+    'profile.preferences_updated': 'Preferensi diperbarui',
+    'profile.preferences_saved': 'Preferensi Anda telah disimpan',
+    'profile.preferences_error': 'Tidak dapat menyimpan preferensi',
+    'profile.discover_bali_pass': 'Temukan Bali Pass',
+    
+    // Explorer
+    'explorer.offers': 'Penawaran',
+    'explorer.partners': 'Mitra',
+    'explorer.search_offers': 'Cari penawaran...',
+    'explorer.search_partners': 'Cari mitra...',
+    'explorer.no_offers': 'Tidak ada penawaran ditemukan',
+    'explorer.no_partners': 'Tidak ada mitra ditemukan',
+    'explorer.loading_offers': 'Memuat penawaran...',
+    'explorer.loading_partners': 'Memuat mitra...',
+    
+    // Favorites
+    'favorites.title': 'Favorit Saya',
+    'favorites.no_favorites': 'Belum ada favorit',
+    'favorites.explore_partners': 'Jelajahi Mitra',
+    'favorites.added_on': 'Ditambahkan pada',
+    'favorites.loading_error': 'Tidak dapat memuat favorit',
+    
+    // Partner
+    'partner.call': 'Telepon',
+    'partner.directions': 'Petunjuk Arah',
+    'partner.contact_info': 'Informasi Kontak',
+    'partner.address': 'Alamat',
+    'partner.website': 'Website',
+    'partner.offers': 'Penawaran',
+    'partner.no_offers': 'Tidak ada penawaran tersedia',
+    'partner.not_found': 'Mitra tidak ditemukan',
+    
+    // Offers
+    'offer.use_offer': 'Gunakan Penawaran',
+    'offer.share': 'Bagikan',
+    'offer.favorite': 'Favorit',
+    'offer.not_found': 'Penawaran tidak ditemukan',
+    'offer.description': 'Deskripsi',
+    'offer.conditions': 'Syarat',
+    'offer.valid_until': 'Berlaku hingga',
+    'offer.discount': 'diskon',
+    'offer.free': 'gratis',
+    
+    // Actions
+    'action.scan_qr': 'Scan kode QR',
+    'action.get_directions': 'Dapatkan petunjuk arah',
+    'action.call_partner': 'Telepon mitra',
+    'action.visit_website': 'Kunjungi website',
+    'action.share_offer': 'Bagikan penawaran',
+    'action.add_favorite': 'Tambah ke favorit',
+    'action.remove_favorite': 'Hapus dari favorit',
+    
+    // Toast messages
+    'toast.added_to_favorites': 'Ditambahkan ke favorit',
+    'toast.removed_from_favorites': 'Dihapus dari favorit',
+    'toast.must_be_logged_in': 'Anda harus login untuk menambah favorit',
+    'toast.link_copied': 'Link disalin ke clipboard',
+    'toast.share_error': 'Tidak dapat membagikan',
+    'toast.scan_qr': 'Scan QR',
+    'toast.qr_feature_coming': 'Fitur scan QR segera hadir',
+    
+    // Footer
+    'footer.ready_for_bali': 'Siap menikmati Bali?',
+    'footer.discover_exclusive': 'Temukan semua manfaat eksklusif sekarang',
+    
+    // Hero sections
+    'hero.welcome_to_bali': 'Selamat datang di Bali',
+    'hero.privilege_pass': 'Pass istimewa Anda',
+    'hero.exclusive_discounts': 'Diskon eksklusif di tempat-tempat terbaik di Bali',
+    'hero.get_your_pass': 'Dapatkan pass Anda',
+    'hero.welcome_back': 'Selamat datang kembali',
+    'hero.ready_to_save': 'Siap berhemat',
+    'hero.scan_and_save': 'Scan dan hemat di mitra favorit Anda',
+    
+    // Reassurance
+    'reassurance.secure_payment': 'Pembayaran aman',
+    'reassurance.valid_12_months': 'Berlaku 12 bulan',
+    'reassurance.verified_partners': 'Mitra terverifikasi',
+    
+    // Error
+    'error.page_not_found': 'Ups! Halaman tidak ditemukan',
+    'error.return_home': 'Kembali ke Beranda',
   }
 } as const;
 
 export function TranslationProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<'en' | 'fr'>('en');
+  const [language, setLanguage] = useState<'en' | 'fr' | 'id'>('en');
 
   const t = (key: string): string => {
     return translations[language][key as keyof typeof translations[typeof language]] || key;
