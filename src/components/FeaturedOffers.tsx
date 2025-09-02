@@ -174,9 +174,28 @@ export function FeaturedOffers() {
           {offers.map((offer) => (
             <div
               key={offer.id}
-              className={`flex-shrink-0 w-72 bg-card rounded-2xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-shadow duration-200 flex flex-col ${shouldBlur ? 'blur-sm' : ''}`}
+              className={`flex-shrink-0 w-72 bg-card rounded-2xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-shadow duration-200 flex flex-col relative ${shouldBlur ? 'blur-sm' : ''}`}
               style={{ scrollSnapAlign: 'start' }}
             >
+              {shouldBlur && (
+                <div className="absolute inset-0 bg-black/20 z-10 flex items-center justify-center">
+                  <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 mx-4 text-center">
+                    <p className="text-sm font-medium text-gray-800 mb-2">
+                      Connectez-vous et obtenez votre Bali'Pass
+                    </p>
+                    <p className="text-xs text-gray-600 mb-3">
+                      Accédez aux détails complets des offres
+                    </p>
+                    <Button
+                      size="sm"
+                      onClick={() => navigate('/auth')}
+                      className="text-xs"
+                    >
+                      Se connecter
+                    </Button>
+                  </div>
+                </div>
+              )}
               {/* Large Image with Discount Badge */}
               <div className="h-48 bg-gradient-card relative overflow-hidden">
                 {offer.partner?.photos && offer.partner.photos.length > 0 ? (
@@ -237,8 +256,9 @@ export function FeaturedOffers() {
                   <Button 
                     variant="pill" 
                     size="sm" 
-                    className="px-4 flex-1 h-9"
+                    className="px-4 flex-1 h-9 disabled:opacity-50"
                     onClick={() => navigate(`/offer/${offer.id}`)}
+                    disabled={shouldBlur}
                   >
                     Voir l'offre
                   </Button>
@@ -246,8 +266,9 @@ export function FeaturedOffers() {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="px-3 h-9 w-12 flex-shrink-0 bg-gradient-to-r from-primary/10 to-lagoon/10 border-primary/20 hover:from-primary/20 hover:to-lagoon/20 hover:border-primary/30 hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md"
+                      className="px-3 h-9 w-12 flex-shrink-0 bg-gradient-to-r from-primary/10 to-lagoon/10 border-primary/20 hover:from-primary/20 hover:to-lagoon/20 hover:border-primary/30 hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50"
                       onClick={() => openNavigation(offer.partner.address!)}
+                      disabled={shouldBlur}
                       title="Navigation GPS"
                     >
                       <Navigation className="w-4 h-4 text-primary" />

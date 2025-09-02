@@ -101,7 +101,26 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
 
   if (viewMode === 'list') {
     return (
-      <div className={`bg-card rounded-xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-all duration-200 ${shouldBlur ? 'blur-sm' : ''}`}>
+      <div className={`bg-card rounded-xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-all duration-200 relative ${shouldBlur ? 'blur-sm' : ''}`}>
+        {shouldBlur && (
+          <div className="absolute inset-0 bg-black/20 z-10 flex items-center justify-center">
+            <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 mx-4 text-center">
+              <p className="text-sm font-medium text-gray-800 mb-2">
+                Connectez-vous et obtenez votre Bali'Pass
+              </p>
+              <p className="text-xs text-gray-600 mb-3">
+                Accédez aux détails complets des offres
+              </p>
+              <Button
+                size="sm"
+                onClick={() => navigate('/auth')}
+                className="text-xs"
+              >
+                Se connecter
+              </Button>
+            </div>
+          </div>
+        )}
         <div className="flex">
           {/* Image */}
           <div className="w-32 h-24 flex-shrink-0 relative">
@@ -133,7 +152,8 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
                 e.stopPropagation();
                 onToggleFavorite(offer.id);
               }}
-              className="absolute top-1 right-1 w-6 h-6 p-0 bg-white/80 hover:bg-white"
+              disabled={shouldBlur}
+              className="absolute top-1 right-1 w-6 h-6 p-0 bg-white/80 hover:bg-white disabled:opacity-50"
             >
               <Heart className={`w-3 h-3 ${offer.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
             </Button>
@@ -182,7 +202,8 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
                 variant="default" 
                 size="sm" 
                 onClick={() => navigate(`/offer/${offer.id}`)}
-                className="text-xs px-3 h-7 flex-1"
+                disabled={shouldBlur}
+                className="text-xs px-3 h-7 flex-1 disabled:opacity-50"
               >
                 Voir l'offre
               </Button>
@@ -192,7 +213,8 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
                   variant="outline" 
                   size="sm"
                   onClick={handleCall}
-                  className="w-7 h-7 p-0"
+                  disabled={shouldBlur}
+                  className="w-7 h-7 p-0 disabled:opacity-50"
                   title="Appeler"
                 >
                   <Phone className="w-3 h-3" />
@@ -204,7 +226,8 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
                   variant="outline" 
                   size="sm"
                   onClick={handleNavigation}
-                  className="w-7 h-7 p-0"
+                  disabled={shouldBlur}
+                  className="w-7 h-7 p-0 disabled:opacity-50"
                   title="Navigation"
                 >
                   <Navigation className="w-3 h-3" />
@@ -219,7 +242,26 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
 
   // Grid view
   return (
-    <div className={`bg-card rounded-xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-all duration-200 ${shouldBlur ? 'blur-sm' : ''}`}>
+    <div className={`bg-card rounded-xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-all duration-200 relative ${shouldBlur ? 'blur-sm' : ''}`}>
+      {shouldBlur && (
+        <div className="absolute inset-0 bg-black/20 z-10 flex items-center justify-center">
+          <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 mx-4 text-center">
+            <p className="text-sm font-medium text-gray-800 mb-2">
+              Connectez-vous et obtenez votre Bali'Pass
+            </p>
+            <p className="text-xs text-gray-600 mb-3">
+              Accédez aux détails complets des offres
+            </p>
+            <Button
+              size="sm"
+              onClick={() => navigate('/auth')}
+              className="text-xs"
+            >
+              Se connecter
+            </Button>
+          </div>
+        </div>
+      )}
       {/* Image */}
       <div className="h-40 relative">
         {getImageUrl() && !imageError ? (
@@ -250,7 +292,8 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
             e.stopPropagation();
             onToggleFavorite(offer.id);
           }}
-          className="absolute top-2 right-2 w-8 h-8 p-0 bg-white/80 hover:bg-white"
+          disabled={shouldBlur}
+          className="absolute top-2 right-2 w-8 h-8 p-0 bg-white/80 hover:bg-white disabled:opacity-50"
         >
           <Heart className={`w-4 h-4 ${offer.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
         </Button>
@@ -308,7 +351,8 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
             variant="default" 
             size="sm" 
             onClick={() => navigate(`/offer/${offer.id}`)}
-            className="text-xs px-3 h-8 flex-1"
+            disabled={shouldBlur}
+            className="text-xs px-3 h-8 flex-1 disabled:opacity-50"
           >
             Voir l'offre
           </Button>
@@ -318,7 +362,8 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
               variant="outline" 
               size="sm"
               onClick={handleNavigation}
-              className="w-8 h-8 p-0"
+              disabled={shouldBlur}
+              className="w-8 h-8 p-0 disabled:opacity-50"
               title="Navigation"
             >
               <Navigation className="w-3 h-3" />
