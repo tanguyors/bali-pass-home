@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, MapPin, Star, Heart, Clock, Share2, Percent, Euro, Navigation } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "@/hooks/useTranslation";
+import { QRScanner } from "@/components/QRScanner";
 
 interface Offer {
   id: string;
@@ -43,6 +44,7 @@ export default function OfferDetails() {
   const [isFavorite, setIsFavorite] = useState(false);
   const [userPass, setUserPass] = useState<any>(null);
   const [isUsing, setIsUsing] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -222,11 +224,29 @@ export default function OfferDetails() {
         return;
       }
 
-      if (!offer) return;
+      // Ouvrir le scanner QR au lieu de créer directement la redemption
+      setShowScanner(true);
+      
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: t('common.error'),
+        description: t('auth.unexpected_error'),
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleScanSuccess = async (scannedData: any) => {
+    // Fermer le scanner
+    setShowScanner(false);
+    
+    try {
+      if (!offer || !userPass) return;
 
       setIsUsing(true);
 
-      // Create a redemption record
+      // Créer la redemption après scan réussi
       const { error } = await supabase
         .from('redemptions')
         .insert({
@@ -251,8 +271,6 @@ export default function OfferDetails() {
         description: t('offer.enjoy_discount'),
       });
 
-      // Optional: Navigate to a confirmation page or show more details
-      
     } catch (error) {
       console.error('Error:', error);
       toast({
@@ -502,6 +520,13 @@ export default function OfferDetails() {
           )}
         </div>
       </div>
+
+      {/* QR Scanner */}
+      <QRScanner
+        isOpen={showScanner}
+        onClose={() => setShowScanner(false)}
+        onScanSuccess={handleScanSuccess}
+      />
     </div>
   );
 }
