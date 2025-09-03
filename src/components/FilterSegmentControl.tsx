@@ -22,23 +22,23 @@ export const FilterSegmentControl: React.FC<FilterSegmentControlProps> = ({
 }) => {
   return (
     <div className={cn(
-      "inline-flex items-center bg-card/60 backdrop-blur-sm rounded-full p-1 border border-border/50",
+      "inline-flex items-center bg-card/60 backdrop-blur-sm rounded-full p-0.5 border border-border/50 w-full max-w-full overflow-hidden",
       className
     )}>
-      {options.map((option) => (
+      {options.map((option, index) => (
         <button
           key={option.id}
           onClick={() => onSelectionChange(option.id)}
           className={cn(
-            "inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
-            "relative overflow-hidden",
+            "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 flex-1 justify-center",
+            "relative overflow-hidden min-w-0",
             selectedId === option.id
-              ? "bg-primary text-primary-foreground shadow-sm scale-105"
+              ? "bg-primary text-primary-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground"
           )}
         >
-          {option.icon && <span className="text-xs">{option.icon}</span>}
-          <span>{option.label}</span>
+          {option.icon && <span className="text-xs flex-shrink-0">{option.icon}</span>}
+          <span className="truncate">{option.label}</span>
           
           {/* Ripple effect */}
           {selectedId === option.id && (

@@ -27,20 +27,20 @@ export const FilterChip: React.FC<FilterChipProps> = ({
   if (isRemovable) {
     return (
       <div className={cn(
-        "inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200",
+        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200",
         "bg-primary/10 text-primary border border-primary/20",
         "animate-fade-in",
         className
       )}>
         {icon && <span className="text-xs">{icon}</span>}
-        <span>{label}</span>
+        <span className="truncate">{label}</span>
         <Button
           variant="ghost"
           size="icon"
-          className="w-4 h-4 p-0 hover:bg-primary/20 rounded-full"
+          className="w-3 h-3 p-0 hover:bg-primary/20 rounded-full flex-shrink-0"
           onClick={onRemove}
         >
-          <X className="w-3 h-3" />
+          <X className="w-2 h-2" />
         </Button>
       </div>
     );
@@ -51,8 +51,8 @@ export const FilterChip: React.FC<FilterChipProps> = ({
       variant="ghost"
       onClick={onClick}
       className={cn(
-        "inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105",
-        variant === 'compact' ? 'px-3 py-1.5 text-xs' : 'px-4 py-2 text-sm',
+        "inline-flex items-center gap-1.5 rounded-full font-medium transition-all duration-200 hover:scale-105 flex-shrink-0",
+        variant === 'compact' ? 'px-2.5 py-1 text-xs h-7' : 'px-3 py-1.5 text-sm h-8',
         isSelected 
           ? "bg-primary text-primary-foreground shadow-md" 
           : "bg-card/60 text-foreground hover:bg-card border border-border/50",
@@ -60,8 +60,8 @@ export const FilterChip: React.FC<FilterChipProps> = ({
         className
       )}
     >
-      {icon && <span className="text-xs">{icon}</span>}
-      <span>{label}</span>
+      {icon && <span className="text-xs flex-shrink-0">{icon}</span>}
+      <span className="truncate">{label}</span>
     </Button>
   );
 };
