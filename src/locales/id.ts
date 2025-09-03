@@ -245,6 +245,7 @@ export const id = {
     view_offer: 'Lihat penawaran',
     call: 'Panggil',
     navigation: 'Navigasi',
+    already_used: 'SUDAH DIGUNAKAN',
   },
 
   // Offer Details

@@ -245,6 +245,7 @@ export const zh = {
     view_offer: '查看优惠',
     call: '拨打电话',
     navigation: '导航',
+    already_used: '已使用',
   },
 
   // Offer Details

@@ -248,6 +248,7 @@ export const fr = {
     view_offer: 'Voir l\'offre',
     call: 'Appeler',
     navigation: 'Navigation',
+    already_used: 'DÉJÀ UTILISÉ',
   },
 
   // Offer Details

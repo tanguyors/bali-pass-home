@@ -245,6 +245,7 @@ export const en = {
     view_offer: 'View offer',
     call: 'Call',
     navigation: 'Navigation',
+    already_used: 'ALREADY USED',
   },
 
   // Offer Details

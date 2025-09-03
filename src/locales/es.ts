@@ -245,6 +245,7 @@ export const es = {
     view_offer: 'Ver oferta',
     call: 'Llamar',
     navigation: 'Navegación',
+    already_used: 'YA UTILIZADO',
   },
 
   // Offer Details

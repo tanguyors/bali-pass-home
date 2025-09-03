@@ -144,7 +144,7 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
             <div className="flex gap-2">
               {offer.isUsed ? (
                 <div className="text-xs px-3 h-7 flex-1 flex items-center justify-center bg-gray-700 text-gray-300 rounded font-medium">
-                  DÉJÀ UTILISÉ
+                  {t('offer_card.already_used')}
                 </div>
               ) : (
                 <Button 
@@ -292,7 +292,7 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
         <div className="flex gap-2">
           {offer.isUsed ? (
             <div className="text-xs px-3 h-8 flex-1 flex items-center justify-center bg-gray-700 text-gray-300 rounded font-medium">
-              DÉJÀ UTILISÉ
+              {t('offer_card.already_used')}
             </div>
           ) : (
             <Button 
