@@ -441,15 +441,6 @@ export default function OfferDetails() {
             </div>
           )}
 
-          {/* Category Badge */}
-          <div className="absolute top-6 right-6 animate-fade-in">
-            <Badge className="px-4 py-2 bg-white/20 backdrop-blur-xl border border-white/30 text-white font-medium rounded-xl">
-              <div className="flex items-center gap-2">
-                {offer.category.icon && <span className="text-base">{offer.category.icon}</span>}
-                <span>{t(`category_names.${offer.category.name}`) || offer.category.name}</span>
-              </div>
-            </Badge>
-          </div>
         </div>
 
         {/* Main Content */}
