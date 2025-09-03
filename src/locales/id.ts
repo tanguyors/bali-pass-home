@@ -123,6 +123,8 @@ export const id = {
   favorites: {
     title: 'Favorit Saya',
     no_favorites: 'Belum ada favorit',
+    favorite_singular: 'favorit',
+    favorite_plural: 'favorit',
     explore_partners: 'Jelajahi Mitra',
     added_on: 'Ditambahkan pada',
     loading_error: 'Tidak dapat memuat favorit',

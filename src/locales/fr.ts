@@ -127,6 +127,8 @@ export const fr = {
   favorites: {
     title: 'Mes Favoris',
     no_favorites: 'Aucun favori pour le moment',
+    favorite_singular: 'favori',
+    favorite_plural: 'favoris',
     explore_partners: 'Découvrez nos offres et ajoutez-les à vos favoris pour les retrouver facilement !',
     added_on: 'Ajouté le',
     loading_error: 'Impossible de charger les favoris',

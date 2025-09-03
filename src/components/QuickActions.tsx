@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { QrCode, Heart, Grid3X3, Radar } from "lucide-react";
 import { QRScanner } from "@/components/QRScanner";
 import { PartnerOffersModal } from "@/components/PartnerOffersModal";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/integrations/supabase/client";
 
 interface QuickActionsProps {
   hasActivePass?: boolean;
@@ -14,6 +15,33 @@ export function QuickActions({ hasActivePass = false }: QuickActionsProps) {
   const navigate = useNavigate();
   const [showScanner, setShowScanner] = useState(false);
   const [scannedPartner, setScannedPartner] = useState<any>(null);
+  const [favoritesCount, setFavoritesCount] = useState(0);
+
+  // Récupérer le nombre de favoris
+  useEffect(() => {
+    const fetchFavoritesCount = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        const { data, error } = await supabase
+          .from('favorites')
+          .select('offer_id', { count: 'exact' })
+          .eq('user_id', user.id);
+
+        if (error) {
+          console.error('Error fetching favorites count:', error);
+          return;
+        }
+
+        setFavoritesCount(data?.length || 0);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchFavoritesCount();
+  }, []);
 
   const handleScanSuccess = (partnerData: any) => {
     setScannedPartner(partnerData);
@@ -36,7 +64,9 @@ export function QuickActions({ hasActivePass = false }: QuickActionsProps) {
     {
       icon: Heart,
       title: t('nav.favorites'),
-      subtitle: t('favorites.no_favorites'),
+      subtitle: favoritesCount > 0 
+        ? `${favoritesCount} ${favoritesCount === 1 ? t('favorites.favorite_singular') : t('favorites.favorite_plural')}`
+        : t('favorites.no_favorites'),
       gradientClass: "gradient-coral-soft",
       iconBgColor: "bg-coral",
       iconColor: "text-white",

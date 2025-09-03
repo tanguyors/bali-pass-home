@@ -123,6 +123,8 @@ export const en = {
   favorites: {
     title: 'My Favorites',
     no_favorites: 'No favorites yet',
+    favorite_singular: 'favorite',
+    favorite_plural: 'favorites',
     explore_partners: 'Explore Partners',
     added_on: 'Added on',
     loading_error: 'Unable to load favorites',

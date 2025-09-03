@@ -123,6 +123,8 @@ export const es = {
   favorites: {
     title: 'Mis Favoritos',
     no_favorites: 'Aún no tienes favoritos',
+    favorite_singular: 'favorito',
+    favorite_plural: 'favoritos',
     explore_partners: 'Explorar Socios',
     added_on: 'Agregado el',
     loading_error: 'No se pudieron cargar los favoritos',

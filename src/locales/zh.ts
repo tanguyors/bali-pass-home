@@ -123,6 +123,8 @@ export const zh = {
   favorites: {
     title: '我的收藏',
     no_favorites: '暂无收藏',
+    favorite_singular: '个收藏',
+    favorite_plural: '个收藏',
     explore_partners: '探索合作伙伴',
     added_on: '添加于',
     loading_error: '无法加载收藏',
