@@ -104,8 +104,8 @@ const Index = () => {
         {/* Pricing Highlight - only show for unauthenticated or users without pass */}
         {(!isAuthenticated || !hasActivePass) && <PricingHighlight />}
         
-        {/* Quick Actions - different for users with pass */}
-        <QuickActions hasActivePass={hasActivePass} />
+        {/* Quick Actions - only for authenticated users */}
+        {isAuthenticated && <QuickActions hasActivePass={hasActivePass} />}
         
         {/* Pass Summary - only for users with active pass */}
         {isAuthenticated && hasActivePass && userPass && <PassSummarySection pass={userPass} />}
