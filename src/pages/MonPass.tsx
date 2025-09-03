@@ -503,32 +503,32 @@ const MonPass: React.FC = () => {
             ) : (
               <div className="space-y-4">
                 {redemptions.slice(0, 4).map((redemption) => (
-                  <div key={redemption.id} className="border border-green-200 bg-green-50/50 rounded-xl p-4 relative">
+                  <div key={redemption.id} className="border border-gray-700 bg-gray-800/90 rounded-xl p-4 relative">
                     {/* Badge UTILISÉE */}
                     <div className="absolute top-3 right-3">
-                      <Badge className="bg-green-600 text-white text-xs font-semibold px-2 py-1">
+                      <Badge className="bg-gray-700 text-gray-300 text-xs font-semibold px-2 py-1">
                         ✓ UTILISÉE
                       </Badge>
                     </div>
                     
                     <div className="flex items-start gap-3 pr-20">
-                      <div className="w-12 h-12 bg-gradient-to-br from-green-500/20 to-green-400/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <CheckCircle className="w-6 h-6 text-green-600" />
+                      <div className="w-12 h-12 bg-gradient-to-br from-gray-600/40 to-gray-700/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-6 h-6 text-gray-400" />
                       </div>
                       
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-semibold text-sm text-green-800">{redemption.offer.title}</h4>
+                          <h4 className="font-semibold text-sm text-gray-200">{redemption.offer.title}</h4>
                           {redemption.offer.value_number && (
-                            <Badge variant="secondary" className="bg-green-100 text-green-700 text-xs">
+                            <Badge variant="secondary" className="bg-gray-700 text-gray-300 text-xs">
                               -{redemption.offer.value_number}%
                             </Badge>
                           )}
                         </div>
                         
-                        <p className="font-medium text-sm text-gray-700 mb-1">{redemption.partner.name}</p>
+                        <p className="font-medium text-sm text-gray-300 mb-1">{redemption.partner.name}</p>
                         
-                        <div className="flex items-center gap-4 text-xs text-gray-600">
+                        <div className="flex items-center gap-4 text-xs text-gray-400">
                           <div className="flex items-center gap-1">
                             <MapPin className="w-3 h-3" />
                             <span>{redemption.partner.city.name}</span>
@@ -546,7 +546,7 @@ const MonPass: React.FC = () => {
                 {redemptions.length > 4 && (
                   <Button 
                     variant="outline" 
-                    className="w-full mt-4 border-green-200 text-green-700 hover:bg-green-50"
+                    className="w-full mt-4 border-gray-600 text-gray-400 hover:bg-gray-700/50"
                     onClick={() => navigate('/pass-history')}
                   >
                     Voir toutes les offres utilisées ({redemptions.length})
