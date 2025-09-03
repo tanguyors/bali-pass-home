@@ -29,6 +29,7 @@ export interface Offer {
   };
   distance?: number;
   isFavorite?: boolean;
+  isUsed?: boolean;
 }
 
 export interface FiltersType {
@@ -54,14 +55,20 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
   });
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const favoritesRef = useRef<Set<string>>(new Set());
+  const [usedOffers, setUsedOffers] = useState<Set<string>>(new Set());
+  const usedOffersRef = useRef<Set<string>>(new Set());
   
   const { calculateDistance } = useGeolocation();
   const pageSize = 20;
 
-  // Update ref when favorites change
+  // Update refs when favorites and used offers change
   useEffect(() => {
     favoritesRef.current = favorites;
   }, [favorites]);
+
+  useEffect(() => {
+    usedOffersRef.current = usedOffers;
+  }, [usedOffers]);
 
   // Fetch user favorites
   const fetchFavorites = useCallback(async () => {
@@ -83,6 +90,27 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
       logger.error('Error fetching favorites', error);
     }
   }, [user]); // Fixed dependencies
+
+  // Fetch user used offers
+  const fetchUsedOffers = useCallback(async () => {
+    try {
+      if (!user) {
+        setUsedOffers(new Set());
+        return;
+      }
+
+      const { data } = await supabase
+        .from('redemptions')
+        .select('offer_id, passes!inner(user_id)')
+        .eq('passes.user_id', user.id);
+
+      if (data) {
+        setUsedOffers(new Set(data.map(redemption => redemption.offer_id)));
+      }
+    } catch (error) {
+      logger.error('Error fetching used offers', error);
+    }
+  }, [user]);
 
   const fetchOffers = useCallback(async (reset = false) => {
     try {
@@ -160,12 +188,14 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
         
         const offersWithDistance = filteredData.map(offer => {
           const currentFavorites = favoritesRef.current; // Use ref to avoid dependency cycle
+          const currentUsedOffers = usedOffersRef.current; // Use ref to avoid dependency cycle
           return {
             ...offer,
             distance: (currentLat && currentLng && offer.partner?.lat && offer.partner?.lng)
               ? calculateDistance(currentLat, currentLng, offer.partner.lat, offer.partner.lng)
               : undefined,
             isFavorite: currentFavorites.has(offer.id),
+            isUsed: currentUsedOffers.has(offer.id),
           };
         });
 
@@ -280,6 +310,7 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
   // Effects
   useEffect(() => {
     fetchFavorites();
+    fetchUsedOffers();
   }, [user]); // Only depend on user changes
 
   useEffect(() => {

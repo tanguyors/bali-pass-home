@@ -52,7 +52,7 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
 
   if (viewMode === 'list') {
     return (
-      <div className={`bg-card rounded-xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-all duration-200 relative ${shouldBlur ? 'blur-sm' : ''}`}>
+      <div className={`${offer.isUsed ? 'bg-gray-800 border border-gray-700' : 'bg-card'} rounded-xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-all duration-200 relative ${shouldBlur ? 'blur-sm' : ''} ${offer.isUsed ? 'opacity-75' : ''}`}>
         {shouldBlur && (
           <div className="absolute inset-0 bg-black/20 z-10 flex items-center justify-center">
             <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 mx-4 text-center">
@@ -107,16 +107,16 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
           <div className="flex-1 p-3">
             <div className="flex justify-between items-start mb-2">
               <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-sm text-foreground line-clamp-1 mb-1">
+                <h3 className={`font-semibold text-sm ${offer.isUsed ? 'text-gray-300' : 'text-foreground'} line-clamp-1 mb-1`}>
                   {offer.title}
                 </h3>
-                <p className="text-xs text-primary font-medium mb-1">
+                <p className={`text-xs ${offer.isUsed ? 'text-gray-400' : 'text-primary'} font-medium mb-1`}>
                   {offer.partner.name}
                 </p>
               </div>
               
               {offer.category && (
-                <Badge variant="secondary" className="text-xs ml-2 flex-shrink-0">
+                <Badge variant="secondary" className={`text-xs ml-2 flex-shrink-0 ${offer.isUsed ? 'bg-gray-700 text-gray-300 border-gray-600' : ''}`}>
                   {offer.category.icon} {t(`category_names.${offer.category.name}`) || offer.category.name}
                 </Badge>
               )}
@@ -126,15 +126,15 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
             <div className="flex items-center gap-2 mb-2">
               {offer.partner.address && (
                 <div className="flex items-center gap-1 min-w-0">
-                  <MapPin className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                  <span className="text-xs text-muted-foreground truncate">
+                  <MapPin className={`w-3 h-3 ${offer.isUsed ? 'text-gray-500' : 'text-muted-foreground'} flex-shrink-0`} />
+                  <span className={`text-xs ${offer.isUsed ? 'text-gray-400' : 'text-muted-foreground'} truncate`}>
                     {offer.partner.address}
                   </span>
                 </div>
               )}
               
               {offer.distance && (
-                <span className="text-xs text-primary font-medium flex-shrink-0">
+                <span className={`text-xs ${offer.isUsed ? 'text-gray-400' : 'text-primary'} font-medium flex-shrink-0`}>
                   {offer.distance.toFixed(1)} km
                 </span>
               )}
@@ -186,7 +186,7 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
 
   // Grid view
   return (
-    <div className={`bg-card rounded-xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-all duration-200 relative ${shouldBlur ? 'blur-sm' : ''}`}>
+    <div className={`${offer.isUsed ? 'bg-gray-800 border border-gray-700' : 'bg-card'} rounded-xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-all duration-200 relative ${shouldBlur ? 'blur-sm' : ''} ${offer.isUsed ? 'opacity-75' : ''}`}>
       {shouldBlur && (
         <div className="absolute inset-0 bg-black/20 z-10 flex items-center justify-center">
           <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 mx-4 text-center">
@@ -247,16 +247,16 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
       <div className="p-3">
         <div className="flex items-start justify-between mb-2">
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-sm text-foreground line-clamp-2 mb-1">
+            <h3 className={`font-semibold text-sm ${offer.isUsed ? 'text-gray-300' : 'text-foreground'} line-clamp-2 mb-1`}>
               {offer.title}
             </h3>
-            <p className="text-xs text-primary font-medium">
+            <p className={`text-xs ${offer.isUsed ? 'text-gray-400' : 'text-primary'} font-medium`}>
               {offer.partner.name}
             </p>
           </div>
           
           {offer.category && (
-            <Badge variant="secondary" className="text-xs ml-2 flex-shrink-0">
+            <Badge variant="secondary" className={`text-xs ml-2 flex-shrink-0 ${offer.isUsed ? 'bg-gray-700 text-gray-300 border-gray-600' : ''}`}>
               {offer.category.icon}
             </Badge>
           )}
@@ -265,8 +265,8 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
         {/* Location */}
         {offer.partner.address && (
           <div className="flex items-center gap-1 mb-3">
-            <MapPin className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-            <span className="text-xs text-muted-foreground line-clamp-1">
+            <MapPin className={`w-3 h-3 ${offer.isUsed ? 'text-gray-500' : 'text-muted-foreground'} flex-shrink-0`} />
+            <span className={`text-xs ${offer.isUsed ? 'text-gray-400' : 'text-muted-foreground'} line-clamp-1`}>
               {offer.partner.address}
             </span>
           </div>
@@ -275,8 +275,8 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
         {/* Phone */}
         {offer.partner.phone && (
           <div className="flex items-center gap-1 mb-3">
-            <Phone className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-            <span className="text-xs text-muted-foreground">
+            <Phone className={`w-3 h-3 ${offer.isUsed ? 'text-gray-500' : 'text-muted-foreground'} flex-shrink-0`} />
+            <span className={`text-xs ${offer.isUsed ? 'text-gray-400' : 'text-muted-foreground'}`}>
               {offer.partner.phone}
             </span>
           </div>
