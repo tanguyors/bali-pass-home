@@ -251,6 +251,19 @@ export const fr = {
     already_used: 'DÉJÀ UTILISÉ',
   },
 
+  // Mon Pass
+  mon_pass: {
+    unknown_partner: 'Partenaire inconnu',
+    offer: 'Offre',
+    access_exclusive_discounts: 'Accédez à des réductions exclusives partout à Bali',
+    see_all_favorites: 'Voir tous les favoris',
+    used_offers: 'Offres utilisées',
+    no_used_offers: 'Aucune offre utilisée',
+    scan_qr_to_start: 'Scannez le code QR des partenaires pour commencer',
+    used_badge: '✓ UTILISÉE',
+    see_all_used_offers: 'Voir toutes les offres utilisées',
+  },
+
   // Offer Details
   offer_details: {
     loading: 'Chargement...',

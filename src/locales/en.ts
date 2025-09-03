@@ -248,6 +248,19 @@ export const en = {
     already_used: 'ALREADY USED',
   },
 
+  // Mon Pass
+  mon_pass: {
+    unknown_partner: 'Unknown partner',
+    offer: 'Offer',
+    access_exclusive_discounts: 'Access exclusive discounts everywhere in Bali',
+    see_all_favorites: 'See all favorites',
+    used_offers: 'Used offers',
+    no_used_offers: 'No offers used',
+    scan_qr_to_start: 'Scan partner QR codes to get started',
+    used_badge: '✓ USED',
+    see_all_used_offers: 'See all used offers',
+  },
+
   // Offer Details
   offer_details: {
     loading: 'Loading...',

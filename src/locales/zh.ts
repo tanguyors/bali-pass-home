@@ -248,6 +248,19 @@ export const zh = {
     already_used: '已使用',
   },
 
+  // Mon Pass
+  mon_pass: {
+    unknown_partner: '未知合作伙伴',
+    offer: '优惠',
+    access_exclusive_discounts: '在巴厘岛各地享受独家折扣',
+    see_all_favorites: '查看所有收藏',
+    used_offers: '已使用优惠',
+    no_used_offers: '暂无已使用优惠',
+    scan_qr_to_start: '扫描合作伙伴二维码开始使用',
+    used_badge: '✓ 已使用',
+    see_all_used_offers: '查看所有已使用优惠',
+  },
+
   // Offer Details
   offer_details: {
     loading: '加载中...',

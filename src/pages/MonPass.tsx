@@ -116,13 +116,13 @@ const MonPass: React.FC = () => {
           redeemed_at: item.redeemed_at,
           status: item.status,
           partner: {
-            name: item.partners?.name || 'Partenaire inconnu',
+            name: item.partners?.name || t('mon_pass.unknown_partner'),
             city: {
               name: item.partners?.cities?.name || 'Bali'
             }
           },
           offer: {
-            title: item.offers?.title || 'Offre',
+            title: item.offers?.title || t('mon_pass.offer'),
             value_number: item.offers?.value_number,
             promo_type: item.offers?.promo_type || 'discount'
           }
@@ -261,7 +261,7 @@ const MonPass: React.FC = () => {
             <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
               {t('pass.get_pass')}
             </h1>
-            <p className="text-muted-foreground">Access exclusive discounts everywhere in Bali</p>
+            <p className="text-muted-foreground">{t('mon_pass.access_exclusive_discounts')}</p>
           </div>
           
           <Card className="shadow-2xl border-0 bg-gradient-to-br from-primary via-primary/90 to-primary/70 text-white">
@@ -433,7 +433,7 @@ const MonPass: React.FC = () => {
                       {favorite.offer?.partner?.photos && favorite.offer.partner.photos.length > 0 ? (
                         <img
                           src={favorite.offer.partner.photos[0]}
-                          alt={favorite.offer?.title || 'Offre'}
+                          alt={favorite.offer?.title || t('mon_pass.offer')}
                           className="w-full h-full object-cover"
                         />
                       ) : (
@@ -474,7 +474,7 @@ const MonPass: React.FC = () => {
                     className="w-full mt-3 text-sm"
                     onClick={() => navigate('/favorites')}
                   >
-                    Voir tous les favoris ({favorites.length})
+                    {t('mon_pass.see_all_favorites')} ({favorites.length})
                   </Button>
                 )}
               </div>
@@ -487,7 +487,7 @@ const MonPass: React.FC = () => {
           <CardContent className="p-6">
             <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
               <div className="w-2 h-6 bg-gradient-to-b from-green-500 to-green-400 rounded-full"></div>
-              Offres utilisées
+              {t('mon_pass.used_offers')}
             </h3>
             
             {redemptions.length === 0 ? (
@@ -495,9 +495,9 @@ const MonPass: React.FC = () => {
                 <div className="w-16 h-16 bg-muted/30 rounded-full flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-8 h-8 text-muted-foreground" />
                 </div>
-                <p className="text-muted-foreground mb-2">Aucune offre utilisée</p>
+                <p className="text-muted-foreground mb-2">{t('mon_pass.no_used_offers')}</p>
                 <p className="text-sm text-muted-foreground">
-                  Scannez le code QR des partenaires pour commencer
+                  {t('mon_pass.scan_qr_to_start')}
                 </p>
               </div>
             ) : (
@@ -507,7 +507,7 @@ const MonPass: React.FC = () => {
                     {/* Badge UTILISÉE */}
                     <div className="absolute top-3 right-3">
                       <Badge className="bg-green-600 text-white text-xs font-semibold px-2 py-1">
-                        ✓ UTILISÉE
+                        {t('mon_pass.used_badge')}
                       </Badge>
                     </div>
                     
@@ -549,7 +549,7 @@ const MonPass: React.FC = () => {
                     className="w-full mt-4 border-green-200 text-green-700 hover:bg-green-50"
                     onClick={() => navigate('/pass-history')}
                   >
-                    Voir toutes les offres utilisées ({redemptions.length})
+                    {t('mon_pass.see_all_used_offers')} ({redemptions.length})
                   </Button>
                 )}
               </div>

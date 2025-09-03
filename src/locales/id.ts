@@ -248,6 +248,19 @@ export const id = {
     already_used: 'SUDAH DIGUNAKAN',
   },
 
+  // Mon Pass
+  mon_pass: {
+    unknown_partner: 'Mitra tidak dikenal',
+    offer: 'Penawaran',
+    access_exclusive_discounts: 'Akses diskon eksklusif di seluruh Bali',
+    see_all_favorites: 'Lihat semua favorit',
+    used_offers: 'Penawaran yang digunakan',
+    no_used_offers: 'Tidak ada penawaran yang digunakan',
+    scan_qr_to_start: 'Pindai kode QR mitra untuk memulai',
+    used_badge: '✓ DIGUNAKAN',
+    see_all_used_offers: 'Lihat semua penawaran yang digunakan',
+  },
+
   // Offer Details
   offer_details: {
     loading: 'Memuat...',
