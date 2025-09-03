@@ -1,14 +1,10 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { SearchHeader } from '@/components/SearchHeader';
 import { OffersList } from '@/components/OffersList';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { FilterSheet, FilterState } from '@/components/FilterSheet';
 import { SimpleFilter } from '@/components/SimpleFilter';
-import { SimpleSearch } from '@/components/SimpleSearch';
-import { PartnerCard } from '@/components/PartnerCard';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Grid3X3, List } from 'lucide-react';
 import { useOffers } from '@/hooks/useOffers';
@@ -21,32 +17,9 @@ interface Category {
   icon: string;
 }
 
-interface Partner {
-  id: string;
-  name: string;
-  slug: string;
-  description?: string;
-  logo_url?: string;
-  cover_url?: string;
-  address?: string;
-  cities?: {
-    name: string;
-  };
-  offers?: Array<{
-    id: string;
-    title: string;
-    value_text?: string;
-    is_active: boolean;
-  }>;
-}
-
 const Explorer = () => {
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [categories, setCategories] = useState<Category[]>([]);
-  const [partners, setPartners] = useState<Partner[]>([]);
-  const [partnersLoading, setPartnersLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('offers');
   const [currentFilters, setCurrentFilters] = useState<FilterState>({
     city: '',
     category: '',
@@ -62,8 +35,6 @@ const Explorer = () => {
     loading,
     error,
     hasMore,
-    searchQuery,
-    setSearchQuery,
     filters,
     setFilters,
     toggleFavorite,
@@ -98,51 +69,6 @@ const Explorer = () => {
     fetchCategories();
   }, []);
 
-  // Fetch partners
-  const fetchPartners = async () => {
-    setPartnersLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from('partners')
-        .select(`
-          id,
-          name,
-          slug,
-          description,
-          logo_url,
-          cover_url,
-          address,
-          cities (
-            name
-          ),
-          offers (
-            id,
-            title,
-            value_text,
-            is_active
-          )
-        `)
-        .eq('status', 'approved')
-        .order('name');
-
-      if (error) {
-        console.error('Error fetching partners:', error);
-        return;
-      }
-
-      setPartners(data || []);
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
-      setPartnersLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (activeTab === 'partners') {
-      fetchPartners();
-    }
-  }, [activeTab]);
 
   const handleApplyFilters = (newFilters: FilterState) => {
     setCurrentFilters(newFilters);
@@ -168,113 +94,63 @@ const Explorer = () => {
       
       {/* Main Content */}
       <main className="pb-20">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          {/* Tabs Header */}
-          <div className="px-4 pt-4 pb-2 bg-background border-b border-border">
-            <TabsList className="grid w-full grid-cols-2 h-12 bg-muted rounded-xl">
-              <TabsTrigger 
-                value="offers" 
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-lg font-semibold"
+        {/* Header Section */}
+        <div className="px-4 pt-6 pb-4 bg-background">
+          <h1 className="text-2xl font-bold text-center text-foreground mb-2">
+            {t('explorer.discover_offers')}
+          </h1>
+          <p className="text-center text-muted-foreground text-sm">
+            {t('explorer.discover_subtitle')}
+          </p>
+        </div>
+        
+        {/* Simple Category Filter */}
+        <SimpleFilter
+          categories={categories}
+          selectedCategory={currentFilters.category}
+          onCategoryChange={(categoryId) => {
+            const newFilters = { ...currentFilters, category: categoryId || '' };
+            handleApplyFilters(newFilters);
+          }}
+          offersCount={offers.length}
+        />
+        
+        {/* View Mode Toggle */}
+        <div className="px-4 py-3 bg-muted/30 border-b border-border">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-foreground">
+              {t('simple_filter.results')}
+            </h3>
+            <div className="flex bg-background rounded-lg border border-border overflow-hidden">
+              <Button
+                variant={viewMode === 'grid' ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewMode('grid')}
+                className="rounded-none border-r border-border"
               >
-                {t('explorer.offers')}
-              </TabsTrigger>
-              <TabsTrigger 
-                value="partners" 
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-lg font-semibold"
+                <Grid3X3 className="w-4 h-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'list' ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewMode('list')}
+                className="rounded-none"
               >
-                {t('explorer.partners')}
-              </TabsTrigger>
-            </TabsList>
+                <List className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
-
-          {/* Offers Tab */}
-          <TabsContent value="offers" className="mt-0">
-            {/* Simple Search */}
-            <SimpleSearch
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-            />
-            
-            {/* Simple Category Filter */}
-            <SimpleFilter
-              categories={categories}
-              selectedCategory={currentFilters.category}
-              onCategoryChange={(categoryId) => {
-                const newFilters = { ...currentFilters, category: categoryId || '' };
-                handleApplyFilters(newFilters);
-              }}
-              offersCount={offers.length}
-            />
-            
-            {/* View Mode Toggle */}
-            <div className="px-4 py-3 bg-muted/30 border-b border-border">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-foreground">
-                  {t('simple_filter.results')}
-                </h3>
-                <div className="flex bg-background rounded-lg border border-border overflow-hidden">
-                  <Button
-                    variant={viewMode === 'grid' ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => setViewMode('grid')}
-                    className="rounded-none border-r border-border"
-                  >
-                    <Grid3X3 className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant={viewMode === 'list' ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => setViewMode('list')}
-                    className="rounded-none"
-                  >
-                    <List className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-            
-            <OffersList
-              offers={offers}
-              loading={loading}
-              hasMore={hasMore}
-              onLoadMore={loadMore}
-              onToggleFavorite={toggleFavorite}
-              viewMode={viewMode}
-              error={error}
-            />
-          </TabsContent>
-
-          {/* Partners Tab */}
-          <TabsContent value="partners" className="mt-0">
-            <div className="px-4 pt-4">
-              {partnersLoading ? (
-                <div className="flex items-center justify-center py-12">
-                  <div className="text-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                    <p className="text-sm text-muted-foreground">{t('explorer.loading_partners')}</p>
-                  </div>
-                </div>
-              ) : partners.length === 0 ? (
-                <div className="text-center py-12">
-                  <p className="text-muted-foreground mb-4">{t('explorer.no_partners')}</p>
-                </div>
-              ) : (
-                <div className={viewMode === 'grid' 
-                  ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4' 
-                  : 'space-y-4'
-                }>
-                  {partners.map((partner) => (
-                    <PartnerCard
-                      key={partner.id}
-                      partner={partner}
-                      viewMode={viewMode}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          </TabsContent>
-        </Tabs>
+        </div>
+        
+        <OffersList
+          offers={offers}
+          loading={loading}
+          hasMore={hasMore}
+          onLoadMore={loadMore}
+          onToggleFavorite={toggleFavorite}
+          viewMode={viewMode}
+          error={error}
+        />
       </main>
       
       {/* Floating Action Button */}
