@@ -59,7 +59,6 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
             pass_id: userPass.id,
             partner_id: partner.id,
             offer_id: offerId,
-            redeemed_at: new Date().toISOString(),
             status: 'approved'
           }
         ]);
