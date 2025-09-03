@@ -135,6 +135,13 @@ export const id = {
     discover_subtitle: 'Temukan penawaran terbaik di dekat Anda dengan peta interaktif kami',
     no_offers_found: 'Tidak ada penawaran ditemukan',
     try_different_filters: 'Coba ubah kriteria pencarian atau filter untuk menemukan lebih banyak penawaran.',
+    all_offers: 'Semua Penawaran',
+    all_offers_viewed: 'Anda telah melihat semua penawaran yang tersedia',
+    nearby_offers: 'Penawaran Terdekat',
+    offer_found: 'penawaran ditemukan',
+    offers_found: 'penawaran ditemukan',
+    loading_offers_text: 'Memuat lebih banyak penawaran...',
+    near_me: 'Dekat saya',
   },
   
   // Profile

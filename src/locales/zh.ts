@@ -135,6 +135,13 @@ export const zh = {
     discover_subtitle: '通过我们的互动地图找到您附近的最佳优惠',
     no_offers_found: '未找到优惠',
     try_different_filters: '尝试更改您的搜索条件或过滤器以找到更多优惠。',
+    all_offers: '所有优惠',
+    all_offers_viewed: '您已查看所有可用优惠',
+    nearby_offers: '附近优惠',
+    offer_found: '个优惠',
+    offers_found: '个优惠',
+    loading_offers_text: '加载更多优惠中...',
+    near_me: '我附近',
   },
   
   // Profile

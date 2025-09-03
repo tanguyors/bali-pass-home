@@ -135,6 +135,13 @@ export const en = {
     discover_subtitle: 'Find the best offers near you with our interactive map',
     no_offers_found: 'No offers found',
     try_different_filters: 'Try changing your search criteria or filters to find more offers.',
+    all_offers: 'All Offers',
+    all_offers_viewed: 'You have viewed all available offers',
+    nearby_offers: 'Nearby Offers',
+    offer_found: 'offer found',
+    offers_found: 'offers found',
+    loading_offers_text: 'Loading more offers...',
+    near_me: 'Near me',
   },
   
   // Profile
