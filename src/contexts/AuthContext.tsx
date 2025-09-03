@@ -50,39 +50,67 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       console.log('AuthContext: Starting fetchUserData for:', userId);
       
-      // Fetch profile
+      // Set a timeout for database queries
+      const fetchWithTimeout = async (query: any, label: string) => {
+        return Promise.race([
+          query,
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error(`${label} timeout`)), 10000)
+          )
+        ]);
+      };
+      
+      // Fetch profile with timeout
       console.log('AuthContext: Fetching profile...');
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', userId)
-        .maybeSingle();
+      try {
+        const { data: profileData, error: profileError } = await fetchWithTimeout(
+          supabase
+            .from('profiles')
+            .select('*')
+            .eq('user_id', userId)
+            .maybeSingle(),
+          'Profile fetch'
+        );
 
-      console.log('AuthContext: Profile result:', { profileData, profileError });
+        console.log('AuthContext: Profile result:', { profileData, profileError });
 
-      if (profileError) {
-        logger.error('Error fetching profile', profileError);
-      } else {
-        setProfile(profileData);
+        if (profileError) {
+          console.error('AuthContext: Profile error:', profileError);
+          logger.error('Error fetching profile', profileError);
+        } else {
+          setProfile(profileData);
+        }
+      } catch (profileTimeout) {
+        console.error('AuthContext: Profile fetch timeout');
+        setProfile(null);
       }
 
-      // Fetch active pass
+      // Fetch active pass with timeout
       console.log('AuthContext: Fetching pass...');
-      const { data: passData, error: passError } = await supabase
-        .from('passes')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('status', 'active')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
+      try {
+        const { data: passData, error: passError } = await fetchWithTimeout(
+          supabase
+            .from('passes')
+            .select('*')
+            .eq('user_id', userId)
+            .eq('status', 'active')
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle(),
+          'Pass fetch'
+        );
 
-      console.log('AuthContext: Pass result:', { passData, passError });
+        console.log('AuthContext: Pass result:', { passData, passError });
 
-      if (passError) {
-        logger.error('Error fetching pass', passError);
-      } else {
-        setUserPass(passData);
+        if (passError) {
+          console.error('AuthContext: Pass error:', passError);
+          logger.error('Error fetching pass', passError);
+        } else {
+          setUserPass(passData);
+        }
+      } catch (passTimeout) {
+        console.error('AuthContext: Pass fetch timeout');
+        setUserPass(null);
       }
       
       console.log('AuthContext: fetchUserData completed successfully');
