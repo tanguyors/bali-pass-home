@@ -39,10 +39,13 @@ const Explorer = () => {
   
   const { latitude, longitude, error: locationError, loading: locationLoading } = useGeolocation();
   
-  // En mode nearby, attendre que la géolocalisation soit disponible
-  const shouldWaitForLocation = isNearbyMode && locationLoading;
-  const effectiveLatitude = shouldWaitForLocation ? null : latitude;
-  const effectiveLongitude = shouldWaitForLocation ? null : longitude;
+  console.log('🌍 Explorer Debug:', {
+    isNearbyMode,
+    latitude,
+    longitude,
+    locationLoading,
+    locationError
+  });
   
   const {
     offers,
@@ -53,7 +56,7 @@ const Explorer = () => {
     setFilters,
     toggleFavorite,
     loadMore,
-  } = useOffers(effectiveLatitude, effectiveLongitude);
+  } = useOffers(latitude, longitude);
 
   // Fetch categories and cities
   useEffect(() => {
