@@ -10,6 +10,7 @@ export interface Offer {
   value_text: string | null;
   promo_type: string;
   value_number: number | null;
+  is_featured: boolean;
   partner: {
     id: string;
     name: string;
@@ -88,6 +89,7 @@ export function useOffers() {
           value_text,
           promo_type,
           value_number,
+          is_featured,
           partner:partners(id, name, address, phone, photos, lat, lng, city_id),
           category:categories(id, name, icon)
         `)
@@ -152,8 +154,18 @@ export function useOffers() {
           );
         }
 
-        // Apply sorting
+        // Apply sorting with VIP priority by default
         filteredOffers.sort((a, b) => {
+          // If no filters are applied (default state), prioritize featured offers
+          const isDefaultState = !filters.category && !searchQuery && filters.sortBy === 'relevance';
+          
+          if (isDefaultState) {
+            // Featured offers first
+            if (a.is_featured && !b.is_featured) return -1;
+            if (!a.is_featured && b.is_featured) return 1;
+          }
+          
+          // Then apply the selected sorting
           switch (filters.sortBy) {
             case 'distance':
               if (a.distance === undefined) return 1;
