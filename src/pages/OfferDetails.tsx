@@ -109,8 +109,8 @@ export default function OfferDetails() {
       if (error) {
         console.error('Error fetching offer:', error);
         toast({
-          title: "Erreur",
-          description: "Impossible de charger les détails de l'offre",
+          title: t('common.error'),
+          description: t('offer_details.error_loading'),
           variant: "destructive",
         });
         navigate('/');
@@ -121,8 +121,8 @@ export default function OfferDetails() {
     } catch (error) {
       console.error('Error:', error);
       toast({
-        title: "Erreur",
-        description: "Une erreur s'est produite",
+        title: t('common.error'),
+        description: t('offer_details.error_occurred'),
         variant: "destructive",
       });
     } finally {
@@ -175,8 +175,8 @@ export default function OfferDetails() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         toast({
-          title: "Connexion requise",
-          description: "Connectez-vous pour ajouter aux favoris",
+          title: t('offer_details.login_required'),
+          description: t('offer_details.login_to_favorite'),
           variant: "destructive",
         });
         return;
@@ -190,8 +190,8 @@ export default function OfferDetails() {
           .eq('offer_id', id);
         setIsFavorite(false);
         toast({
-          title: "Retiré des favoris",
-          description: "L'offre a été retirée de vos favoris",
+          title: t('offer_details.removed_from_favorites'),
+          description: t('offer_details.removed_from_favorites_desc'),
         });
       } else {
         await supabase
@@ -199,15 +199,15 @@ export default function OfferDetails() {
           .insert({ user_id: user.id, offer_id: id });
         setIsFavorite(true);
         toast({
-          title: "Ajouté aux favoris",
-          description: "L'offre a été ajoutée à vos favoris",
+          title: t('offer_details.added_to_favorites'),
+          description: t('offer_details.added_to_favorites_desc'),
         });
       }
     } catch (error) {
       console.error('Error toggling favorite:', error);
       toast({
-        title: "Erreur",
-        description: "Impossible de modifier les favoris",
+        title: t('common.error'),
+        description: t('offer_details.error_favorites'),
         variant: "destructive",
       });
     }
@@ -223,8 +223,8 @@ export default function OfferDetails() {
     } else {
       navigator.clipboard.writeText(window.location.href);
       toast({
-        title: "Lien copié",
-        description: "Le lien a été copié dans le presse-papiers",
+        title: t('offer_details.link_copied'),
+        description: t('offer_details.link_copied_desc'),
       });
     }
   };
@@ -350,7 +350,7 @@ export default function OfferDetails() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">Chargement...</div>
+        <div className="text-center">{t('offer_details.loading')}</div>
       </div>
     );
   }
@@ -359,8 +359,8 @@ export default function OfferDetails() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <p className="text-muted-foreground mb-4">Offre non trouvée</p>
-          <Button onClick={() => navigate('/')}>Retour à l'accueil</Button>
+          <p className="text-muted-foreground mb-4">{t('offer_details.offer_not_found')}</p>
+          <Button onClick={() => navigate('/')}>{t('offer_details.back_to_home')}</Button>
         </div>
       </div>
     );
@@ -412,7 +412,7 @@ export default function OfferDetails() {
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-primary/20 to-lagoon/20 flex items-center justify-center">
-              <p className="text-muted-foreground">Image à venir</p>
+              <p className="text-muted-foreground">{t('offer_card.image_coming_soon')}</p>
             </div>
           )}
           
@@ -460,7 +460,7 @@ export default function OfferDetails() {
                 {(Math.random() * 1.5 + 3.5).toFixed(1)}
               </span>
               <span className="text-sm text-muted-foreground">
-                ({Math.floor(Math.random() * 200) + 50} avis)
+                ({Math.floor(Math.random() * 200) + 50} {t('offer_details.reviews')})
               </span>
             </div>
           </div>
@@ -468,7 +468,7 @@ export default function OfferDetails() {
           {/* Description */}
           {offer.short_desc && (
             <div>
-              <h3 className="font-semibold text-foreground mb-2">Description</h3>
+              <h3 className="font-semibold text-foreground mb-2">{t('offer_details.description')}</h3>
               <p className="text-muted-foreground leading-relaxed">
                 {offer.short_desc}
               </p>
@@ -478,7 +478,7 @@ export default function OfferDetails() {
           {/* Long Description */}
           {offer.long_desc && (
             <div>
-              <h3 className="font-semibold text-foreground mb-2">Détails</h3>
+              <h3 className="font-semibold text-foreground mb-2">{t('offer_details.details')}</h3>
               <p className="text-muted-foreground leading-relaxed">
                 {offer.long_desc}
               </p>
@@ -487,7 +487,7 @@ export default function OfferDetails() {
 
           {/* Offer Details */}
           <div className="bg-card rounded-lg p-4">
-            <h3 className="font-semibold text-foreground mb-3">Détails de l'offre</h3>
+            <h3 className="font-semibold text-foreground mb-3">{t('offer_details.offer_details')}</h3>
             <div className="space-y-3">
               {offer.promo_type && (
                 <div className="flex items-center gap-3">
@@ -499,7 +499,7 @@ export default function OfferDetails() {
                     )}
                   </div>
                   <span className="text-sm">
-                    Type: {offer.promo_type === 'percent' ? 'Pourcentage' : 'Montant fixe'}
+                    {t('offer_details.type')}: {offer.promo_type === 'percent' ? t('offer_details.percentage') : t('offer_details.fixed_amount')}
                   </span>
                 </div>
               )}
@@ -509,7 +509,7 @@ export default function OfferDetails() {
                     <Clock className="w-4 h-4 text-orange" />
                   </div>
                   <span className="text-sm">
-                    Valide jusqu'au {new Date(offer.end_date).toLocaleDateString('fr-FR')}
+                    {t('offer_details.valid_until')} {new Date(offer.end_date).toLocaleDateString()}
                   </span>
                 </div>
               )}
@@ -519,7 +519,7 @@ export default function OfferDetails() {
           {/* Conditions */}
           {offer.conditions_text && (
             <div>
-              <h3 className="font-semibold text-foreground mb-2">Conditions</h3>
+              <h3 className="font-semibold text-foreground mb-2">{t('offer_details.conditions')}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 {offer.conditions_text}
               </p>
@@ -548,7 +548,7 @@ export default function OfferDetails() {
               size="lg"
               className="px-4 bg-gradient-to-r from-primary/10 to-lagoon/10 border-primary/20 hover:from-primary/20 hover:to-lagoon/20 hover:border-primary/30 hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md"
               onClick={() => openNavigation(offer.partner.address!)}
-              title="Navigation GPS"
+              title={t('offer_card.navigation')}
             >
               <Navigation className="w-5 h-5 text-primary" />
             </Button>

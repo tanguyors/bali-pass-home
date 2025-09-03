@@ -198,6 +198,34 @@ export const zh = {
     navigation: '导航',
   },
 
+  // Offer Details
+  offer_details: {
+    loading: '加载中...',
+    offer_not_found: '未找到优惠',
+    back_to_home: '返回主页',
+    description: '描述',
+    details: '详情',
+    offer_details: '优惠详情',
+    type: '类型',
+    percentage: '百分比',
+    fixed_amount: '固定金额',
+    valid_until: '有效期至',
+    conditions: '条件',
+    terms: '查看使用条款',
+    error_loading: '无法加载优惠详情',
+    error_occurred: '发生错误',
+    login_required: '需要登录',
+    login_to_favorite: '登录以添加到收藏',
+    removed_from_favorites: '已从收藏中移除',
+    removed_from_favorites_desc: '优惠已从您的收藏中移除',
+    added_to_favorites: '已添加到收藏',
+    added_to_favorites_desc: '优惠已添加到您的收藏',
+    error_favorites: '无法修改收藏',
+    link_copied: '链接已复制',
+    link_copied_desc: '链接已复制到剪贴板',
+    reviews: '评价',
+  },
+
   // Languages
   languages: {
     fr: 'Français',

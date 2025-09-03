@@ -198,6 +198,34 @@ export const es = {
     navigation: 'Navegación',
   },
 
+  // Offer Details
+  offer_details: {
+    loading: 'Cargando...',
+    offer_not_found: 'Oferta no encontrada',
+    back_to_home: 'Volver al inicio',
+    description: 'Descripción',
+    details: 'Detalles',
+    offer_details: 'Detalles de la oferta',
+    type: 'Tipo',
+    percentage: 'Porcentaje',
+    fixed_amount: 'Cantidad fija',
+    valid_until: 'Válido hasta',
+    conditions: 'Condiciones',
+    terms: 'Ver términos de uso',
+    error_loading: 'No se pudieron cargar los detalles de la oferta',
+    error_occurred: 'Ocurrió un error',
+    login_required: 'Inicio de sesión requerido',
+    login_to_favorite: 'Inicia sesión para añadir a favoritos',
+    removed_from_favorites: 'Eliminado de favoritos',
+    removed_from_favorites_desc: 'La oferta ha sido eliminada de tus favoritos',
+    added_to_favorites: 'Añadido a favoritos',
+    added_to_favorites_desc: 'La oferta ha sido añadida a tus favoritos',
+    error_favorites: 'No se pudieron modificar los favoritos',
+    link_copied: 'Enlace copiado',
+    link_copied_desc: 'El enlace ha sido copiado al portapapeles',
+    reviews: 'reseñas',
+  },
+
   // Languages
   languages: {
     fr: 'Français',

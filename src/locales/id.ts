@@ -198,6 +198,34 @@ export const id = {
     navigation: 'Navigasi',
   },
 
+  // Offer Details
+  offer_details: {
+    loading: 'Memuat...',
+    offer_not_found: 'Penawaran tidak ditemukan',
+    back_to_home: 'Kembali ke beranda',
+    description: 'Deskripsi',
+    details: 'Detail',
+    offer_details: 'Detail penawaran',
+    type: 'Tipe',
+    percentage: 'Persentase',
+    fixed_amount: 'Jumlah tetap',
+    valid_until: 'Berlaku hingga',
+    conditions: 'Syarat & Ketentuan',
+    terms: 'Lihat syarat penggunaan',
+    error_loading: 'Tidak dapat memuat detail penawaran',
+    error_occurred: 'Terjadi kesalahan',
+    login_required: 'Masuk diperlukan',
+    login_to_favorite: 'Masuk untuk menambah ke favorit',
+    removed_from_favorites: 'Dihapus dari favorit',
+    removed_from_favorites_desc: 'Penawaran telah dihapus dari favorit Anda',
+    added_to_favorites: 'Ditambahkan ke favorit',
+    added_to_favorites_desc: 'Penawaran telah ditambahkan ke favorit Anda',
+    error_favorites: 'Tidak dapat mengubah favorit',
+    link_copied: 'Tautan disalin',
+    link_copied_desc: 'Tautan telah disalin ke clipboard',
+    reviews: 'ulasan',
+  },
+
   // Languages
   languages: {
     fr: 'Français',

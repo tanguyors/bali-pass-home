@@ -198,6 +198,34 @@ export const fr = {
     navigation: 'Navigation',
   },
 
+  // Offer Details
+  offer_details: {
+    loading: 'Chargement...',
+    offer_not_found: 'Offre non trouvée',
+    back_to_home: 'Retour à l\'accueil',
+    description: 'Description',
+    details: 'Détails',
+    offer_details: 'Détails de l\'offre',
+    type: 'Type',
+    percentage: 'Pourcentage',
+    fixed_amount: 'Montant fixe',
+    valid_until: 'Valide jusqu\'au',
+    conditions: 'Conditions',
+    terms: 'Voir les conditions d\'utilisation',
+    error_loading: 'Impossible de charger les détails de l\'offre',
+    error_occurred: 'Une erreur s\'est produite',
+    login_required: 'Connexion requise',
+    login_to_favorite: 'Connectez-vous pour ajouter aux favoris',
+    removed_from_favorites: 'Retiré des favoris',
+    removed_from_favorites_desc: 'L\'offre a été retirée de vos favoris',
+    added_to_favorites: 'Ajouté aux favoris',
+    added_to_favorites_desc: 'L\'offre a été ajoutée à vos favoris',
+    error_favorites: 'Impossible de modifier les favoris',
+    link_copied: 'Lien copié',
+    link_copied_desc: 'Le lien a été copié dans le presse-papiers',
+    reviews: 'avis',
+  },
+
   // Languages
   languages: {
     fr: 'Français',
