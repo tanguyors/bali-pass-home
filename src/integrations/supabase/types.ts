@@ -1235,7 +1235,14 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      quick_stats: {
+        Row: {
+          active_count: number | null
+          table_name: string | null
+          total_count: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       cleanup_expired_passes: {
@@ -1245,6 +1252,10 @@ export type Database = {
       create_partner_pass: {
         Args: { partner_user_id: string }
         Returns: string
+      }
+      daily_maintenance: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
       generate_partner_qr_code: {
         Args: Record<PropertyKey, never>
@@ -1299,6 +1310,21 @@ export type Database = {
           partner_name: string
           short_desc: string
           title: string
+        }[]
+      }
+      search_offers_optimized: {
+        Args: {
+          category_uuid?: string
+          city_uuid?: string
+          limit_count?: number
+          search_text?: string
+        }
+        Returns: {
+          category_name: string
+          city_name: string
+          offer_id: string
+          offer_title: string
+          partner_name: string
         }[]
       }
     }
