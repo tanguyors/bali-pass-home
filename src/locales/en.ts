@@ -23,6 +23,9 @@ export const en = {
     password: 'Password',
     phone: 'Phone',
     name: 'Name',
+    login_required: 'Login required',
+    must_be_logged_in: 'You must be logged in to use an offer.',
+    at: 'at',
     learn_more: 'Learn more',
   },
   
@@ -102,7 +105,12 @@ export const en = {
     subtitle: 'The best opportunities of the moment',
   },
   
-  // Offers
+    used_successfully: 'Offer used successfully!',
+    enjoy_discount: 'Enjoy your discount!',
+    use_error: 'An error occurred while using the offer.',
+    use_offer: 'Use offer',
+    already_used: 'Already used',
+    used_offer: 'You have used the offer',
   offers: {
     view_offer: 'View Offer',
     connect_message: 'Connect and get your Bali\'Pass',

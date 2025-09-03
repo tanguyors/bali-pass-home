@@ -23,6 +23,10 @@ export const fr = {
     password: 'Mot de passe',
     phone: 'Téléphone',
     name: 'Nom',
+    login_required: 'Connexion requise',
+    must_be_logged_in: 'Vous devez être connecté pour utiliser une offre.',
+    at: 'chez',
+    photos: 'Photos',
     learn_more: 'En savoir plus',
   },
   
@@ -72,6 +76,7 @@ export const fr = {
     valid_12_months: 'Valable 12 mois',
     support_24_7: 'Support client 24/7',
     discover_offers: 'Découvrir les offres',
+    available_offers: 'Offres disponibles',
   },
   
   // Hero
@@ -102,12 +107,19 @@ export const fr = {
     subtitle: 'Les meilleures opportunités du moment',
   },
   
+  
   // Offers
   offers: {
     view_offer: 'Voir l\'offre',
     connect_message: 'Connectez-vous et obtenez votre Bali\'Pass',
     access_details: 'Accédez aux détails complets des offres',
     connect_button: 'Se connecter',
+    used_successfully: 'Offre utilisée !',
+    enjoy_discount: 'Profitez de votre réduction !',
+    use_error: 'Une erreur s\'est produite lors de l\'utilisation de l\'offre.',
+    use_offer: 'Utiliser l\'offre',
+    already_used: 'Déjà utilisée',
+    used_offer: 'Vous avez utilisé l\'offre',
   },
   
   // Favorites

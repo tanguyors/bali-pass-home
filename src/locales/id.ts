@@ -23,6 +23,9 @@ export const id = {
     password: 'Password',
     phone: 'Telepon',
     name: 'Nama',
+    login_required: 'Masuk diperlukan',
+    must_be_logged_in: 'Anda harus masuk untuk menggunakan penawaran.',
+    at: 'di',
     learn_more: 'Pelajari lebih lanjut',
   },
   
@@ -102,7 +105,12 @@ export const id = {
     subtitle: 'Peluang terbaik saat ini',
   },
   
-  // Offers
+    used_successfully: 'Penawaran berhasil digunakan!',
+    enjoy_discount: 'Nikmati diskon Anda!',
+    use_error: 'Terjadi kesalahan saat menggunakan penawaran.',
+    use_offer: 'Gunakan penawaran',
+    already_used: 'Sudah digunakan',
+    used_offer: 'Anda telah menggunakan penawaran',
   offers: {
     view_offer: 'Lihat Penawaran',
     connect_message: 'Terhubung dan dapatkan Bali\'Pass Anda',

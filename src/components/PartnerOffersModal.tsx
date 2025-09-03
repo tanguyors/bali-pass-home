@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 
 interface PartnerOffersModalProps {
@@ -16,6 +17,7 @@ interface PartnerOffersModalProps {
 export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersModalProps) {
   const [isRedeeming, setIsRedeeming] = useState<string | null>(null);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleRedeemOffer = async (offerId: string, offerTitle: string) => {
     setIsRedeeming(offerId);
@@ -25,8 +27,8 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
       
       if (!user) {
         toast({
-          title: "Connexion requise",
-          description: "Vous devez être connecté pour utiliser une offre.",
+          title: t('offer_details.login_required'),
+          description: t('offer_details.login_to_favorite'),
           variant: "destructive",
         });
         return;
@@ -42,8 +44,8 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
 
       if (!userPass || new Date(userPass.expires_at) < new Date()) {
         toast({
-          title: "Pass requis",
-          description: "Vous devez avoir un Bali'Pass actif pour utiliser cette offre.",
+          title: t('pass.no_pass'),
+          description: t('pass.connect_to_access'),
           variant: "destructive",
         });
         return;
@@ -65,16 +67,16 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
       if (error) {
         console.error('Erreur lors de la rédemption:', error);
         toast({
-          title: "Erreur",
-          description: "Une erreur s'est produite lors de l'utilisation de l'offre.",
+          title: t('common.error'),
+          description: t('auth.unexpected_error'),
           variant: "destructive",
         });
         return;
       }
 
       toast({
-        title: "Offre utilisée !",
-        description: `Vous avez utilisé l'offre "${offerTitle}" chez ${partner.name}.`,
+        title: t('pass.success'),
+        description: `${t('offers.view_offer')} "${offerTitle}" ${t('common.name')} ${partner.name}.`,
       });
 
       onClose();
@@ -82,8 +84,8 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
     } catch (error) {
       console.error('Erreur lors de la rédemption:', error);
       toast({
-        title: "Erreur",
-        description: "Une erreur s'est produite lors de l'utilisation de l'offre.",
+        title: t('common.error'),
+        description: t('auth.unexpected_error'),
         variant: "destructive",
       });
     } finally {
@@ -141,7 +143,7 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
           <div className="space-y-3">
             <h3 className="font-semibold flex items-center gap-2">
               <Star className="w-5 h-5 text-primary" />
-              Offres disponibles
+              {t('pass.available_offers')}
             </h3>
             
             {partner.activeOffers?.map((offer: any) => (
@@ -170,7 +172,7 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
                       className="w-full"
                       size="sm"
                     >
-                      {isRedeeming === offer.id ? "Utilisation..." : "Utiliser cette offre"}
+                      {isRedeeming === offer.id ? t('common.loading') : t('offers.view_offer')}
                     </Button>
                   </div>
                 </CardContent>
@@ -181,7 +183,7 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
           {/* Photos du partenaire */}
           {partner.photos && partner.photos.length > 0 && (
             <div className="space-y-2">
-              <h4 className="font-medium">Photos</h4>
+              <h4 className="font-medium">{t('common.photos')}</h4>
               <div className="grid grid-cols-2 gap-2">
                 {partner.photos.slice(0, 4).map((photo: string, index: number) => (
                   <img

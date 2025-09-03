@@ -23,6 +23,9 @@ export const es = {
     password: 'Contraseña',
     phone: 'Teléfono',
     name: 'Nombre',
+    login_required: 'Inicio de sesión requerido',
+    must_be_logged_in: 'Debes estar conectado para usar una oferta.',
+    at: 'en',
     learn_more: 'Saber más',
   },
   
@@ -102,7 +105,12 @@ export const es = {
     subtitle: 'Las mejores oportunidades del momento',
   },
   
-  // Offers
+    used_successfully: '¡Oferta utilizada exitosamente!',
+    enjoy_discount: '¡Disfruta de tu descuento!',
+    use_error: 'Ocurrió un error al usar la oferta.',
+    use_offer: 'Usar oferta',
+    already_used: 'Ya utilizada',
+    used_offer: 'Has usado la oferta',
   offers: {
     view_offer: 'Ver Oferta',
     connect_message: 'Conéctate y obtén tu Bali\'Pass',

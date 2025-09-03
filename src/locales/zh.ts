@@ -23,6 +23,9 @@ export const zh = {
     password: '密码',
     phone: '电话',
     name: '姓名',
+    login_required: '需要登录',
+    must_be_logged_in: '您必须登录才能使用优惠。',
+    at: '在',
     learn_more: '了解更多',
   },
   
@@ -102,7 +105,12 @@ export const zh = {
     subtitle: '当前最佳机会',
   },
   
-  // Offers
+    used_successfully: '优惠使用成功！',
+    enjoy_discount: '享受您的折扣！',
+    use_error: '使用优惠时发生错误。',
+    use_offer: '使用优惠',
+    already_used: '已使用',
+    used_offer: '您已使用优惠',
   offers: {
     view_offer: '查看优惠',
     connect_message: '连接并获取您的巴厘岛通行证',
