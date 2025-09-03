@@ -33,19 +33,11 @@ const Explorer = () => {
     city: '',
     category: '',
     sortBy: isNearbyMode ? 'distance' : 'relevance',
-    distance: isNearbyMode ? 2000 : undefined  // 2000km pour test depuis Bangkok
+    distance: isNearbyMode ? 10 : undefined
   });
   const { t } = useLanguage();
   
   const { latitude, longitude, error: locationError, loading: locationLoading } = useGeolocation();
-  
-  console.log('🌍 Explorer Debug:', {
-    isNearbyMode,
-    latitude,
-    longitude,
-    locationLoading,
-    locationError
-  });
   
   const {
     offers,
@@ -114,7 +106,7 @@ const Explorer = () => {
         category: null,
         city: null,
         sortBy: 'distance',
-        maxDistance: 2000,  // 2000km pour test depuis Bangkok
+        maxDistance: 10,
       });
     }
   }, [isNearbyMode, setFilters]);
@@ -152,7 +144,7 @@ const Explorer = () => {
             {isNearbyMode && (
               <div className="inline-flex items-center gap-2 mb-2">
                 <div className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-medium">
-                  📍 {t('explorer.nearby_mode')} (2000km - TEST)
+                  📍 {t('explorer.nearby_mode')} (10km)
                 </div>
               </div>
             )}

@@ -16,10 +16,7 @@ export function useGeolocation() {
   });
 
   useEffect(() => {
-    console.log('🗺️ Géolocalisation: Initialisation...');
-    
     if (!navigator.geolocation) {
-      console.error('🗺️ Géolocalisation non supportée');
       setState(prev => ({
         ...prev,
         error: 'Géolocalisation non supportée par ce navigateur',
@@ -29,11 +26,6 @@ export function useGeolocation() {
     }
 
     const handleSuccess = (position: GeolocationPosition) => {
-      console.log('🗺️ Géolocalisation: Succès!', {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-        accuracy: position.coords.accuracy
-      });
       setState({
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
@@ -45,23 +37,15 @@ export function useGeolocation() {
     const handleError = (error: GeolocationPositionError) => {
       let errorMessage = 'Erreur de géolocalisation';
       
-      console.error('🗺️ Géolocalisation: Erreur!', {
-        code: error.code,
-        message: error.message
-      });
-      
       switch (error.code) {
         case error.PERMISSION_DENIED:
           errorMessage = 'Permission de géolocalisation refusée';
-          console.error('🗺️ Permission refusée par l\'utilisateur');
           break;
         case error.POSITION_UNAVAILABLE:
           errorMessage = 'Position non disponible';
-          console.error('🗺️ Position non disponible');
           break;
         case error.TIMEOUT:
           errorMessage = 'Délai de géolocalisation dépassé';
-          console.error('🗺️ Timeout dépassé');
           break;
       }
 

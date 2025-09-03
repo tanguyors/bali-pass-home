@@ -148,14 +148,6 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
         const currentLat = userLatitude;
         const currentLng = userLongitude;
         
-        console.log('🗺️ Calcul des distances', { 
-          userLat: currentLat, 
-          userLng: currentLng, 
-          paramLat: userLatitude,
-          paramLng: userLongitude,
-          offersCount: filteredData.length 
-        });
-        
         const offersWithDistance = filteredData.map(offer => ({
           ...offer,
           distance: (currentLat && currentLng && offer.partner?.lat && offer.partner?.lng)
@@ -164,32 +156,12 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
           isFavorite: favorites.has(offer.id),
         }));
 
-        console.log('🗺️ Distances calculées', {
-          offersWithDistance: offersWithDistance.map(o => ({
-            title: o.title,
-            distance: o.distance,
-            partnerLat: o.partner?.lat,
-            partnerLng: o.partner?.lng
-          }))
-        });
-
         // Apply distance filter
         let filteredOffers = offersWithDistance;
         if (filters.maxDistance && currentLat && currentLng) {
-          console.log('🗺️ Application du filtre de distance', {
-            maxDistance: filters.maxDistance,
-            beforeFilter: offersWithDistance.length,
-            userLocation: { latitude: currentLat, longitude: currentLng }
-          });
-          
           filteredOffers = offersWithDistance.filter(offer => 
             offer.distance !== undefined && offer.distance <= filters.maxDistance!
           );
-          
-          console.log('🗺️ Après filtre de distance', {
-            afterFilter: filteredOffers.length,
-            filtered: filteredOffers.map(o => ({ title: o.title, distance: o.distance }))
-          });
         }
 
         // Apply sorting with VIP priority by default
@@ -299,13 +271,6 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
   }, [fetchFavorites]);
 
   useEffect(() => {
-    console.log('🔄 useOffers useEffect triggered:', {
-      userLatitude,
-      userLongitude,
-      searchQuery,
-      filters
-    });
-    
     const timeoutId = setTimeout(() => {
       setPage(0);
       fetchOffers(true);
