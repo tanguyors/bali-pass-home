@@ -125,21 +125,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(initialSession?.user ?? null);
         
         if (initialSession?.user) {
-          await fetchUserData(initialSession.user.id);
+          // Utiliser setTimeout pour éviter de bloquer le loading
+          setTimeout(() => {
+            if (mounted) {
+              fetchUserData(initialSession.user.id);
+            }
+          }, 0);
         }
+        
+        // Toujours définir loading à false après l'authentification
+        setLoading(false);
       } catch (error) {
         logger.error('Error initializing auth', error);
-      } finally {
-        if (mounted) {
-          setLoading(false);
-        }
+        setLoading(false);
       }
     };
 
     initAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         if (!mounted) return;
 
         logger.debug('Auth state changed', { event });
@@ -148,7 +153,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          await fetchUserData(session.user.id);
+          // Utiliser setTimeout pour éviter de bloquer
+          setTimeout(() => {
+            if (mounted) {
+              fetchUserData(session.user.id);
+            }
+          }, 0);
         } else {
           setProfile(null);
           setUserPass(null);
