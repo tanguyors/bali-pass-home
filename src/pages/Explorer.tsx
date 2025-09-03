@@ -5,10 +5,12 @@ import { OffersList } from '@/components/OffersList';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { FilterSheet, FilterState } from '@/components/FilterSheet';
-import { CategoryFilter } from '@/components/CategoryFilter';
-import { OffersProximityHeader } from '@/components/OffersProximityHeader';
+import { SimpleFilter } from '@/components/SimpleFilter';
+import { SimpleSearch } from '@/components/SimpleSearch';
 import { PartnerCard } from '@/components/PartnerCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Grid3X3, List } from 'lucide-react';
 import { useOffers } from '@/hooks/useOffers';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -155,20 +157,6 @@ const Explorer = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Search Header */}
-      <SearchHeader
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        filters={filters}
-        onFiltersChange={setFilters}
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
-        onFilterClick={() => setIsFilterOpen(true)}
-        categories={categories}
-        resultsCount={offers.length}
-        userLocation={latitude && longitude ? { latitude, longitude } : null}
-      />
-
       {/* Location error message */}
       {locationError && (
         <div className="px-4 py-2 bg-orange-50 border-b border-orange-200">
@@ -182,12 +170,18 @@ const Explorer = () => {
       <main className="pb-20">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           {/* Tabs Header */}
-          <div className="px-4 pt-4 mb-0">
-            <TabsList className="grid w-full grid-cols-2 bg-card/60 backdrop-blur-sm">
-              <TabsTrigger value="offers" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+          <div className="px-4 pt-4 pb-2 bg-background border-b border-border">
+            <TabsList className="grid w-full grid-cols-2 h-12 bg-muted rounded-xl">
+              <TabsTrigger 
+                value="offers" 
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-lg font-semibold"
+              >
                 {t('explorer.offers')}
               </TabsTrigger>
-              <TabsTrigger value="partners" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <TabsTrigger 
+                value="partners" 
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-lg font-semibold"
+              >
                 {t('explorer.partners')}
               </TabsTrigger>
             </TabsList>
@@ -195,22 +189,49 @@ const Explorer = () => {
 
           {/* Offers Tab */}
           <TabsContent value="offers" className="mt-0">
-            {/* Category Filter */}
-            <CategoryFilter
+            {/* Simple Search */}
+            <SimpleSearch
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+            />
+            
+            {/* Simple Category Filter */}
+            <SimpleFilter
               categories={categories}
               selectedCategory={currentFilters.category}
               onCategoryChange={(categoryId) => {
                 const newFilters = { ...currentFilters, category: categoryId || '' };
                 handleApplyFilters(newFilters);
               }}
-              className="mt-4"
+              offersCount={offers.length}
             />
             
-            {/* Offers Proximity Header */}
-            <OffersProximityHeader
-              offersCount={offers.length}
-              userLocation={latitude && longitude ? { latitude, longitude } : null}
-            />
+            {/* View Mode Toggle */}
+            <div className="px-4 py-3 bg-muted/30 border-b border-border">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-foreground">
+                  {t('simple_filter.results')}
+                </h3>
+                <div className="flex bg-background rounded-lg border border-border overflow-hidden">
+                  <Button
+                    variant={viewMode === 'grid' ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setViewMode('grid')}
+                    className="rounded-none border-r border-border"
+                  >
+                    <Grid3X3 className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant={viewMode === 'list' ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setViewMode('list')}
+                    className="rounded-none"
+                  >
+                    <List className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
             
             <OffersList
               offers={offers}
@@ -225,7 +246,7 @@ const Explorer = () => {
 
           {/* Partners Tab */}
           <TabsContent value="partners" className="mt-0">
-            <div className="px-4">
+            <div className="px-4 pt-4">
               {partnersLoading ? (
                 <div className="flex items-center justify-center py-12">
                   <div className="text-center">
@@ -255,14 +276,6 @@ const Explorer = () => {
           </TabsContent>
         </Tabs>
       </main>
-      
-      {/* Filter Sheet */}
-      <FilterSheet 
-        isOpen={isFilterOpen}
-        onClose={() => setIsFilterOpen(false)}
-        onApplyFilters={handleApplyFilters}
-        currentFilters={currentFilters}
-      />
       
       {/* Floating Action Button */}
       <FloatingActionButton />

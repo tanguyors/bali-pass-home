@@ -308,6 +308,25 @@ export const es = {
     nearby_offers: 'Ofertas cercanas',
   },
 
+  // Simple Filter (for seniors)
+  simple_filter: {
+    what_are_you_looking_for: '¿Qué estás buscando?',
+    offer_available: 'oferta disponible',
+    offers_available: 'ofertas disponibles',
+    all_offers: 'Todas las ofertas',
+    see_everything: 'Ver todo lo disponible',
+    discover: 'Descubre las ofertas de',
+    clear_selection: 'Limpiar selección',
+    results: 'Resultados',
+  },
+
+  // Simple Search (for seniors)
+  simple_search: {
+    search_title: 'Buscar una oferta',
+    placeholder: 'Escribe lo que buscas...',
+    hint: 'Por ejemplo: restaurante, spa, actividad...',
+  },
+
   // Languages
   languages: {
     fr: 'Français',

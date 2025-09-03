@@ -308,6 +308,25 @@ export const id = {
     nearby_offers: 'Penawaran terdekat',
   },
 
+  // Simple Filter (for seniors)
+  simple_filter: {
+    what_are_you_looking_for: 'Apa yang Anda cari?',
+    offer_available: 'penawaran tersedia',
+    offers_available: 'penawaran tersedia',
+    all_offers: 'Semua penawaran',
+    see_everything: 'Lihat semua yang tersedia',
+    discover: 'Temukan penawaran',
+    clear_selection: 'Hapus pilihan',
+    results: 'Hasil',
+  },
+
+  // Simple Search (for seniors)
+  simple_search: {
+    search_title: 'Cari penawaran',
+    placeholder: 'Ketik apa yang Anda cari...',
+    hint: 'Contoh: restoran, spa, aktivitas...',
+  },
+
   // Languages
   languages: {
     fr: 'Français',

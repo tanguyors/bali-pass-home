@@ -308,6 +308,25 @@ export const zh = {
     nearby_offers: '附近优惠',
   },
 
+  // Simple Filter (for seniors)
+  simple_filter: {
+    what_are_you_looking_for: '您在寻找什么？',
+    offer_available: '个可用优惠',
+    offers_available: '个可用优惠',
+    all_offers: '所有优惠',
+    see_everything: '查看所有可用内容',
+    discover: '发现',
+    clear_selection: '清除选择',
+    results: '结果',
+  },
+
+  // Simple Search (for seniors)
+  simple_search: {
+    search_title: '搜索优惠',
+    placeholder: '输入您要查找的内容...',
+    hint: '例如：餐厅、水疗、活动...',
+  },
+
   // Languages
   languages: {
     fr: 'Français',
