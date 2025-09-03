@@ -280,6 +280,7 @@ export const es = {
     clear_all: 'Limpiar todo',
     apply_filters: 'Aplicar filtros',
     active_filters: 'filtro(s) activo(s)',
+    clear: 'Limpiar',
     filter_by_category: 'Filtrar por categoría',
     nearby_offers: 'Ofertas cercanas',
   },

@@ -280,6 +280,7 @@ export const en = {
     clear_all: 'Clear all',
     apply_filters: 'Apply filters',
     active_filters: 'active filter(s)',
+    clear: 'Clear',
     filter_by_category: 'Filter by category',
     nearby_offers: 'Nearby offers',
   },

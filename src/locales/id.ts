@@ -280,6 +280,7 @@ export const id = {
     clear_all: 'Hapus semua',
     apply_filters: 'Terapkan filter',
     active_filters: 'filter aktif',
+    clear: 'Hapus',
     filter_by_category: 'Filter berdasarkan kategori',
     nearby_offers: 'Penawaran terdekat',
   },

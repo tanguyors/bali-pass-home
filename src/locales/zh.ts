@@ -280,6 +280,7 @@ export const zh = {
     clear_all: '清除所有',
     apply_filters: '应用筛选',
     active_filters: '个活跃筛选',
+    clear: '清除',
     filter_by_category: '按分类筛选',
     nearby_offers: '附近优惠',
   },
