@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MapPin, Phone, Instagram, Star } from "lucide-react";
+import { MapPin, Phone, Instagram, Star, CheckCircle, Calendar, Clock } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,8 +14,17 @@ interface PartnerOffersModalProps {
   partner: any;
 }
 
+interface RedemptionSuccess {
+  offerTitle: string;
+  userEmail: string;
+  partnerName: string;
+  partnerAddress: string;
+  redeemedAt: string;
+}
+
 export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersModalProps) {
   const [isRedeeming, setIsRedeeming] = useState<string | null>(null);
+  const [redemptionSuccess, setRedemptionSuccess] = useState<RedemptionSuccess | null>(null);
   const { toast } = useToast();
   const { t } = useLanguage();
 
@@ -74,12 +83,14 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
         return;
       }
 
-      toast({
-        title: t('pass.success'),
-        description: `${t('offers.view_offer')} "${offerTitle}" ${t('common.name')} ${partner.name}.`,
+      // Afficher l'écran de confirmation
+      setRedemptionSuccess({
+        offerTitle,
+        userEmail: user.email || '',
+        partnerName: partner.name,
+        partnerAddress: partner.address || '',
+        redeemedAt: new Date().toISOString()
       });
-
-      onClose();
       
     } catch (error) {
       console.error('Erreur lors de la rédemption:', error);
@@ -94,6 +105,87 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
   };
 
   if (!partner) return null;
+
+  // Écran de confirmation après rédemption réussie
+  if (redemptionSuccess) {
+    const redemptionDate = new Date(redemptionSuccess.redeemedAt);
+    const formatDate = redemptionDate.toLocaleDateString('fr-FR');
+    const formatTime = redemptionDate.toLocaleTimeString('fr-FR', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      second: '2-digit'
+    });
+
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="max-w-md mx-auto">
+          <div className="text-center space-y-6 py-6">
+            {/* Icône de succès */}
+            <div className="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+              <CheckCircle className="w-12 h-12 text-green-600" />
+            </div>
+
+            {/* Titre de confirmation */}
+            <h2 className="text-xl font-bold text-green-600">
+              {t('offers.offer_used_success')}
+            </h2>
+
+            <p className="text-muted-foreground">
+              {t('offers.show_merchant')}
+            </p>
+
+            {/* Détails de la rédemption */}
+            <div className="bg-green-50 rounded-lg p-4 space-y-3 text-left">
+              {/* Email utilisateur */}
+              <div className="flex items-center gap-3">
+                <div className="w-6 h-6 bg-green-200 rounded-full flex items-center justify-center">
+                  <span className="text-green-700 text-sm font-medium">@</span>
+                </div>
+                <span className="font-medium">{redemptionSuccess.userEmail}</span>
+              </div>
+
+              {/* Titre de l'offre */}
+              <div className="text-center bg-white rounded-lg p-3">
+                <p className="font-medium text-lg">{redemptionSuccess.offerTitle}</p>
+                <p className="text-sm text-muted-foreground font-medium">{redemptionSuccess.partnerName}</p>
+                {redemptionSuccess.partnerAddress && (
+                  <p className="text-xs text-muted-foreground">{redemptionSuccess.partnerAddress}</p>
+                )}
+              </div>
+
+              {/* Date et heure */}
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-green-600" />
+                  <span className="text-sm">{formatDate}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-green-600" />
+                  <span className="text-sm">{formatTime}</span>
+                </div>
+              </div>
+
+              {/* Badge de validation */}
+              <div className="text-center pt-2">
+                <Badge className="bg-green-600 hover:bg-green-700 text-white px-6 py-2">
+                  ✓ {t('offers.offer_validated')}
+                </Badge>
+              </div>
+            </div>
+
+            {/* Bouton fermer */}
+            <Button 
+              onClick={onClose} 
+              className="w-full bg-green-600 hover:bg-green-700"
+              size="lg"
+            >
+              {t('common.close')}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

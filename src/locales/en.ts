@@ -27,6 +27,7 @@ export const en = {
     must_be_logged_in: 'You must be logged in to use an offer.',
     at: 'at',
     learn_more: 'Learn more',
+    close: 'Close',
   },
   
   // Auth
@@ -118,6 +119,9 @@ export const en = {
     already_used: 'Already used',
     used_offer: 'You have used the offer',
     processing: 'Processing...',
+    offer_used_success: 'Offer used successfully!',
+    show_merchant: 'Show this screen to the merchant',
+    offer_validated: 'OFFER VALIDATED',
   },
   
   // Favorites

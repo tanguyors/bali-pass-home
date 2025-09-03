@@ -28,6 +28,7 @@ export const fr = {
     at: 'chez',
     photos: 'Photos',
     learn_more: 'En savoir plus',
+    close: 'Fermer',
   },
   
   // Auth
@@ -122,6 +123,9 @@ export const fr = {
     already_used: 'Déjà utilisée',
     used_offer: 'Vous avez utilisé l\'offre',
     processing: 'En cours...',
+    offer_used_success: 'Offre utilisée avec succès !',
+    show_merchant: 'Montrez cet écran au commerçant',
+    offer_validated: 'OFFRE VALIDÉE',
   },
   
   // Favorites

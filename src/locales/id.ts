@@ -27,6 +27,7 @@ export const id = {
     must_be_logged_in: 'Anda harus masuk untuk menggunakan penawaran.',
     at: 'di',
     learn_more: 'Pelajari lebih lanjut',
+    close: 'Tutup',
   },
   
   // Auth
@@ -118,6 +119,9 @@ export const id = {
     already_used: 'Sudah digunakan',
     used_offer: 'Anda telah menggunakan penawaran',
     processing: 'Memproses...',
+    offer_used_success: 'Penawaran berhasil digunakan!',
+    show_merchant: 'Tunjukkan layar ini kepada pedagang',
+    offer_validated: 'PENAWARAN DIVALIDASI',
   },
   
   // Favorites

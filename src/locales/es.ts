@@ -27,6 +27,7 @@ export const es = {
     must_be_logged_in: 'Debes estar conectado para usar una oferta.',
     at: 'en',
     learn_more: 'Saber más',
+    close: 'Cerrar',
   },
   
   // Auth
@@ -118,6 +119,9 @@ export const es = {
     already_used: 'Ya utilizada',
     used_offer: 'Has usado la oferta',
     processing: 'Procesando...',
+    offer_used_success: '¡Oferta utilizada con éxito!',
+    show_merchant: 'Muestra esta pantalla al comerciante',
+    offer_validated: 'OFERTA VALIDADA',
   },
   
   // Favorites

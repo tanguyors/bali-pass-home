@@ -27,6 +27,7 @@ export const zh = {
     must_be_logged_in: '您必须登录才能使用优惠。',
     at: '在',
     learn_more: '了解更多',
+    close: '关闭',
   },
   
   // Auth
@@ -118,6 +119,9 @@ export const zh = {
     already_used: '已使用',
     used_offer: '您已使用优惠',
     processing: '处理中...',
+    offer_used_success: '优惠使用成功！',
+    show_merchant: '向商家展示此屏幕',
+    offer_validated: '优惠已验证',
   },
   
   // Favorites
