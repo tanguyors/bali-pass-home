@@ -56,11 +56,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .from('profiles')
         .select('*')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
 
       console.log('AuthContext: Profile result:', { profileData, profileError });
 
-      if (profileError && profileError.code !== 'PGRST116') {
+      if (profileError) {
         logger.error('Error fetching profile', profileError);
       } else {
         setProfile(profileData);
@@ -75,11 +75,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .eq('status', 'active')
         .order('created_at', { ascending: false })
         .limit(1)
-        .single();
+        .maybeSingle();
 
       console.log('AuthContext: Pass result:', { passData, passError });
 
-      if (passError && passError.code !== 'PGRST116') {
+      if (passError) {
         logger.error('Error fetching pass', passError);
       } else {
         setUserPass(passData);
