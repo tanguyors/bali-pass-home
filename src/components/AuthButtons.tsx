@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function AuthButtons() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t } = useLanguage();
 
   const handleSignIn = () => {
     navigate('/auth');

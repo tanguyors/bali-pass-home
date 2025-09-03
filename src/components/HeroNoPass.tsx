@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { CreditCard, ArrowRight } from "lucide-react";
 import baliHeroImage from "@/assets/bali-hero.jpg";
-import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface PassSettings {
   setting_key: string;
@@ -11,7 +11,7 @@ interface PassSettings {
 }
 
 export function HeroNoPass() {
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   const [passSettings, setPassSettings] = useState<PassSettings[]>([]);
 
   useEffect(() => {

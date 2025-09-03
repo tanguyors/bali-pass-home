@@ -3,14 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { QrCode, Heart, Grid3X3, Radar } from "lucide-react";
 import { QRScanner } from "@/components/QRScanner";
 import { PartnerOffersModal } from "@/components/PartnerOffersModal";
-import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface QuickActionsProps {
   hasActivePass?: boolean;
 }
 
 export function QuickActions({ hasActivePass = false }: QuickActionsProps) {
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [showScanner, setShowScanner] = useState(false);
   const [scannedPartner, setScannedPartner] = useState<any>(null);

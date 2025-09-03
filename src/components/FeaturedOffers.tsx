@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { MapPin, Navigation } from "lucide-react";
-import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Offer {
   id: string;
@@ -32,7 +32,7 @@ interface UserPass {
 
 export function FeaturedOffers() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   const [offers, setOffers] = useState<EnhancedOffer[]>([]);
   const [user, setUser] = useState<any>(null);
   const [userPass, setUserPass] = useState<UserPass | null>(null);

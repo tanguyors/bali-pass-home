@@ -12,7 +12,7 @@ import { CalendarIcon, EyeIcon, EyeOffIcon, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Auth: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +28,7 @@ const Auth: React.FC = () => {
   const [activeTab, setActiveTab] = useState('signin');
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t } = useLanguage();
 
   // Redirect if already authenticated
   useEffect(() => {

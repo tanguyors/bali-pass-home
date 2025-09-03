@@ -1,11 +1,11 @@
 import { Home, Search, CreditCard, User } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function BottomNavigation() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   
   const navItems = [
     { icon: Home, label: t('nav.home'), path: "/", active: location.pathname === "/" },

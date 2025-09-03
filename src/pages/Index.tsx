@@ -22,10 +22,10 @@ interface UserPass {
   purchased_at: string;
 }
 
-import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Index = () => {
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [userPass, setUserPass] = useState<UserPass | null>(null);

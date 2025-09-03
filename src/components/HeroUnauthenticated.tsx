@@ -10,10 +10,10 @@ interface PassSettings {
   setting_value: string;
 }
 
-import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function HeroUnauthenticated() {
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   const [passSettings, setPassSettings] = useState<PassSettings[]>([]);
   const [ctaText, setCtaText] = useState("Obtenir le Bali'Pass");
   const navigate = useNavigate();

@@ -9,10 +9,10 @@ interface PricingData {
   availability_status?: string;
 }
 
-import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function PricingHighlight() {
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   const [pricingData, setPricingData] = useState<PricingData>({});
 
   const formatPrice = (cents: string, currency: string = 'usd') => {

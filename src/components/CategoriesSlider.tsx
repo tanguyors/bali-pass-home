@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Category {
   id: string;
@@ -17,7 +17,7 @@ interface CategoryWithOffers extends Category {
 
 export function CategoriesSlider() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   const [categories, setCategories] = useState<CategoryWithOffers[]>([]);
 
   // Gradient palette for categories

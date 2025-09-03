@@ -1,8 +1,8 @@
 import { Shield, Clock, CheckCircle } from "lucide-react";
-import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function ReassuranceSection() {
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   
   const reassuranceItems = [
     {

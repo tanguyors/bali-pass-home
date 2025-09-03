@@ -6,14 +6,14 @@ import baliHeroImage from "@/assets/bali-hero.jpg";
 import { User } from "@supabase/supabase-js";
 import { QRScanner } from "@/components/QRScanner";
 import { PartnerOffersModal } from "@/components/PartnerOffersModal";
-import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface HeroWithPassProps {
   user: User;
 }
 
 export function HeroWithPass({ user }: HeroWithPassProps) {
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   const firstName = user.user_metadata?.first_name || user.email?.split('@')[0] || 'Utilisateur';
   const navigate = useNavigate();
   const [showScanner, setShowScanner] = useState(false);

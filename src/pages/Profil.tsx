@@ -35,7 +35,7 @@ import { EditProfileDialog } from '@/components/EditProfileDialog';
 import { ChangePasswordDialog } from '@/components/ChangePasswordDialog';
 import { SupportLink } from '@/components/SupportLink';
 import { useToast } from '@/hooks/use-toast';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Profile {
   id: string;
@@ -76,7 +76,7 @@ const Profil: React.FC = () => {
   
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { t, language, setLanguage } = useTranslation();
+  const { t, language, setLanguage } = useLanguage();
 
   // Auth state management
   useEffect(() => {

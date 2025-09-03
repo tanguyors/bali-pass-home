@@ -3,7 +3,7 @@ import { QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { QRScanner } from "@/components/QRScanner";
 import { PartnerOffersModal } from "@/components/PartnerOffersModal";
-import { useTranslation } from "@/hooks/useTranslation";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { User, Session } from "@supabase/supabase-js";
 
@@ -18,7 +18,7 @@ export function FloatingActionButton() {
   const [scannedPartner, setScannedPartner] = useState<any>(null);
   const [user, setUser] = useState<User | null>(null);
   const [userPass, setUserPass] = useState<UserPass | null>(null);
-  const { t } = useTranslation();
+  const { t } = useLanguage();
 
   useEffect(() => {
     // Set up auth state listener
