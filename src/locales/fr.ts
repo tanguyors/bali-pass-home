@@ -171,6 +171,7 @@ export const fr = {
     no_redemptions: 'Aucun rachat pour le moment',
     start_using_pass: 'Commencez à utiliser votre pass pour voir vos économies ici !',
     explore_offers: 'Découvrir les offres',
+    view_full_history: 'Voir l\'historique complet',
     recent_activity: 'Dernières utilisations',
     no_activity: 'Aucune utilisation',
     start_using: 'Commence à utiliser ton pass pour voir tes économies ici',

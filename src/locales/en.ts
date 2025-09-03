@@ -167,6 +167,7 @@ export const en = {
     no_redemptions: 'No redemptions yet',
     start_using_pass: 'Start using your pass to see your savings here!',
     explore_offers: 'Explore offers',
+    view_full_history: 'View full history',
     recent_activity: 'Recent Activity',
     no_activity: 'No activity',
     start_using: 'Start using your pass to see your savings here',

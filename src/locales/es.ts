@@ -167,6 +167,7 @@ export const es = {
     no_redemptions: 'Aún no hay canjes',
     start_using_pass: '¡Comienza a usar tu pase para ver tus ahorros aquí!',
     explore_offers: 'Explorar ofertas',
+    view_full_history: 'Ver historial completo',
     recent_activity: 'Actividad Reciente',
     no_activity: 'Sin actividad',
     start_using: 'Comienza a usar tu pase para ver tus ahorros aquí',

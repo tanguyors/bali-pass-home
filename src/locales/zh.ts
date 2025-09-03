@@ -167,6 +167,7 @@ export const zh = {
     no_redemptions: '暂无兑换记录',
     start_using_pass: '开始使用您的通行证，在这里查看您的节省！',
     explore_offers: '探索优惠',
+    view_full_history: '查看完整历史记录',
     recent_activity: '最近活动',
     no_activity: '无活动',
     start_using: '开始使用您的通行证查看您的节省',

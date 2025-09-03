@@ -167,6 +167,7 @@ export const id = {
     no_redemptions: 'Belum ada penukaran',
     start_using_pass: 'Mulai gunakan pas Anda untuk melihat penghematan di sini!',
     explore_offers: 'Jelajahi penawaran',
+    view_full_history: 'Lihat riwayat lengkap',
     recent_activity: 'Aktivitas Terbaru',
     no_activity: 'Tidak ada aktivitas',
     start_using: 'Mulai gunakan pass Anda untuk melihat penghematan di sini',
