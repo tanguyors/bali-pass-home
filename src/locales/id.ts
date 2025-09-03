@@ -128,6 +128,7 @@ export const id = {
     explore_partners: 'Jelajahi Mitra',
     added_on: 'Ditambahkan pada',
     loading_error: 'Tidak dapat memuat favorit',
+    view_all: 'Lihat semua favorit saya',
   },
   
   // Explorer

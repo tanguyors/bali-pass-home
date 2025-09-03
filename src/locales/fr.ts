@@ -132,6 +132,7 @@ export const fr = {
     explore_partners: 'Découvrez nos offres et ajoutez-les à vos favoris pour les retrouver facilement !',
     added_on: 'Ajouté le',
     loading_error: 'Impossible de charger les favoris',
+    view_all: 'Voir tous mes favoris',
   },
   
   // Explorer

@@ -128,6 +128,7 @@ export const en = {
     explore_partners: 'Explore Partners',
     added_on: 'Added on',
     loading_error: 'Unable to load favorites',
+    view_all: 'View all my favorites',
   },
   
   // Explorer

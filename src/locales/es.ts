@@ -128,6 +128,7 @@ export const es = {
     explore_partners: 'Explorar Socios',
     added_on: 'Agregado el',
     loading_error: 'No se pudieron cargar los favoritos',
+    view_all: 'Ver todos mis favoritos',
   },
   
   // Explorer

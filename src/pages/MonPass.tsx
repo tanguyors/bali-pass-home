@@ -429,54 +429,59 @@ const MonPass: React.FC = () => {
         </Card>
 
         {/* My Favorites */}
-        <Card className="shadow-lg border-0 bg-gradient-to-br from-red-50/50 to-red-100/30 border-red-200/50">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="font-bold text-lg text-red-800 mb-1">{t('favorites.title')}</h3>
-                <p className="text-sm text-red-600">
-                  {favorites.length} {favorites.length === 1 ? t('simple_filter.offer_available') : t('simple_filter.offers_available')}
-                </p>
-              </div>
-              <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-400 rounded-full flex items-center justify-center">
-                <Heart className="w-8 h-8 text-white fill-current" />
+        <Card className="shadow-lg border-0 bg-gradient-to-br from-pink-50/80 to-rose-100/40 border-pink-200/30 animate-fade-in">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-rose-400 rounded-xl flex items-center justify-center shadow-lg">
+                  <Heart className="w-5 h-5 text-white fill-current" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg text-rose-800">{t('favorites.title')}</h3>
+                  <p className="text-xs text-rose-600/80">
+                    {favorites.length} {favorites.length === 1 ? t('simple_filter.offer_available') : t('simple_filter.offers_available')}
+                  </p>
+                </div>
               </div>
             </div>
             
             {favorites.length === 0 ? (
-              <div className="text-center py-4">
-                <p className="text-sm text-red-600 mb-3">{t('favorites.no_favorites')}</p>
+              <div className="text-center py-6">
+                <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Heart className="w-6 h-6 text-pink-400" />
+                </div>
+                <p className="text-sm text-rose-700 mb-3 font-medium">{t('favorites.no_favorites')}</p>
                 <Button 
                   variant="outline"
                   size="sm"
                   onClick={() => navigate('/explorer')}
-                  className="border-red-200 text-red-700 hover:bg-red-50"
+                  className="border-pink-200 text-rose-700 hover:bg-pink-50 hover:border-pink-300 transition-all duration-300 text-xs px-4 py-2 h-8"
                 >
                   {t('explorer.discover_offers')}
                 </Button>
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {favorites.slice(0, 2).map((favorite) => (
                   <div 
                     key={favorite.id} 
-                    className="flex items-center justify-between p-3 rounded-lg bg-white/50 cursor-pointer hover:bg-white/70 transition-colors"
+                    className="flex items-center justify-between p-3 rounded-xl bg-white/70 backdrop-blur-sm cursor-pointer hover:bg-white/90 hover:shadow-md transition-all duration-300 group border border-pink-100/50"
                     onClick={() => navigate(`/offer/${favorite.offer_id}`)}
                   >
                     <div className="flex items-center gap-3 flex-1">
-                      <div className="w-10 h-10 bg-gradient-to-br from-red-500/10 to-red-500/5 rounded-full flex items-center justify-center">
-                        <Heart className="w-5 h-5 text-red-500 fill-current" />
+                      <div className="w-8 h-8 bg-gradient-to-br from-pink-400/20 to-rose-400/10 rounded-lg flex items-center justify-center">
+                        <Heart className="w-4 h-4 text-pink-500 fill-current" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm text-red-800 truncate">
+                        <p className="font-semibold text-sm text-rose-900 truncate group-hover:text-rose-800 transition-colors">
                           {favorite.offer?.title || 'Offre'}
                         </p>
-                        <p className="text-xs text-red-600 truncate">
+                        <p className="text-xs text-rose-600/70 truncate">
                           {favorite.offer?.partner?.name || 'Partenaire'}
                         </p>
                       </div>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-red-400 flex-shrink-0" />
+                    <ChevronRight className="w-4 h-4 text-pink-400 flex-shrink-0 group-hover:text-pink-600 group-hover:translate-x-0.5 transition-all duration-300" />
                   </div>
                 ))}
                 
@@ -484,7 +489,7 @@ const MonPass: React.FC = () => {
                   <Button 
                     variant="ghost" 
                     size="sm"
-                    className="w-full mt-3 text-red-700 hover:bg-red-50"
+                    className="w-full mt-3 text-rose-700 hover:bg-pink-50 hover:text-rose-800 transition-all duration-300 h-8 text-xs font-medium"
                     onClick={() => navigate('/favorites')}
                   >
                     {t('favorites.view_all')} ({favorites.length})

@@ -128,6 +128,7 @@ export const zh = {
     explore_partners: '探索合作伙伴',
     added_on: '添加于',
     loading_error: '无法加载收藏',
+    view_all: '查看所有收藏',
   },
   
   // Explorer
