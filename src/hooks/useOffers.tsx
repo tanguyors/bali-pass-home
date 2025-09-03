@@ -307,11 +307,12 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
     });
     
     const timeoutId = setTimeout(() => {
-      refreshOffers();
+      setPage(0);
+      fetchOffers(true);
     }, 300); // Debounce search
 
     return () => clearTimeout(timeoutId);
-  }, [searchQuery, filters, userLatitude, userLongitude, refreshOffers]);
+  }, [searchQuery, filters, userLatitude, userLongitude]);
 
   // Update favorites in offers when favorites change
   useEffect(() => {
