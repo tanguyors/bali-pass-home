@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Category {
@@ -6,17 +8,80 @@ interface Category {
   name: string;
   slug: string;
   icon?: string;
+}
+
+interface CategoryWithOffers extends Category {
   offers_count: number;
   gradient: string;
 }
 
-interface CategoriesSliderProps {
-  categories: Category[];
-}
-
-export function CategoriesSlider({ categories }: CategoriesSliderProps) {
+export function CategoriesSlider() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const [categories, setCategories] = useState<CategoryWithOffers[]>([]);
+
+  // Gradient palette for categories
+  const gradientPalette = [
+    "bg-gradient-to-br from-primary/80 to-lagoon/60",
+    "bg-gradient-to-br from-coral/80 to-orange/60", 
+    "bg-gradient-to-br from-gold/80 to-orange/60",
+    "bg-gradient-to-br from-lagoon/80 to-primary/60",
+    "bg-gradient-to-br from-orange/80 to-coral/60",
+    "bg-gradient-to-br from-primary/80 to-gold/60",
+  ];
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .select(`
+          id, 
+          name, 
+          slug, 
+          icon,
+          offers!inner(
+            id,
+            is_active,
+            partners!inner(
+              status
+            )
+          )
+        `)
+        .order('name', { ascending: true });
+      
+      if (error) {
+        console.error('Error fetching categories:', error);
+        return;
+      }
+      
+      if (data) {
+        // Enhance categories with real offers count and gradients
+        const categoriesWithExtras: CategoryWithOffers[] = data.map((category, index) => {
+          // Count only active offers from approved partners
+          const activeOffers = category.offers?.filter(offer => 
+            offer.is_active && offer.partners?.status === 'approved'
+          ) || [];
+          
+          return {
+            id: category.id,
+            name: category.name,
+            slug: category.slug,
+            icon: category.icon,
+            offers_count: activeOffers.length,
+            gradient: gradientPalette[index % gradientPalette.length]
+          };
+        }).filter(category => category.offers_count > 0); // Only show categories with offers
+        
+        setCategories(categoriesWithExtras);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   if (categories.length === 0) {
     return null;

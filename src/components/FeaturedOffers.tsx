@@ -1,9 +1,10 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { MapPin, Navigation } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { logger } from "@/lib/logger";
-import { User } from "@supabase/supabase-js";
 
 interface Offer {
   id: string;
@@ -12,13 +13,15 @@ interface Offer {
   value_text?: string;
   promo_type?: string;
   value_number?: number;
-  partner?: {
-    id: string;
+  partner: {
     name: string;
     address?: string;
     phone?: string;
     photos?: string[];
   };
+}
+
+interface EnhancedOffer extends Offer {
   badge_color: 'green' | 'red';
 }
 
@@ -28,15 +31,58 @@ interface UserPass {
   expires_at: string;
 }
 
-interface FeaturedOffersProps {
-  offers: Offer[];
-  user: User | null;
-  userPass: UserPass | null;
-}
-
-export function FeaturedOffers({ offers, user, userPass }: FeaturedOffersProps) {
+export function FeaturedOffers() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const [offers, setOffers] = useState<EnhancedOffer[]>([]);
+  const [user, setUser] = useState<any>(null);
+  const [userPass, setUserPass] = useState<UserPass | null>(null);
+
+  useEffect(() => {
+    fetchFeaturedOffers();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          fetchUserPass(session.user.id);
+        } else {
+          setUserPass(null);
+        }
+      }
+    );
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchUserPass(session.user.id);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const fetchUserPass = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('passes')
+        .select('id, status, expires_at')
+        .eq('user_id', userId)
+        .eq('status', 'active')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        logger.error('Error fetching user pass', error);
+        return;
+      }
+
+      setUserPass(data);
+    } catch (error) {
+      logger.error('Error in fetchUserPass', error);
+    }
+  };
 
   const openNavigation = (address: string) => {
     if (!address) return;
@@ -69,6 +115,41 @@ export function FeaturedOffers({ offers, user, userPass }: FeaturedOffersProps) 
     }
   };
 
+  const fetchFeaturedOffers = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('offers')
+        .select(`
+          id,
+          title,
+          short_desc,
+          value_text,
+          promo_type,
+          value_number,
+          partner:partners(name, address, phone, photos)
+        `)
+        .eq('is_featured', true)
+        .eq('is_active', true)
+        .limit(5);
+      
+      if (error) {
+        logger.error('Error fetching featured offers', error);
+        return;
+      }
+      
+      if (data) {
+        // Enhance offers with badge color
+        const enhancedOffers: EnhancedOffer[] = data.map(offer => ({
+          ...offer,
+          badge_color: offer.promo_type === 'percent' ? 'red' : 'green'
+        }));
+        
+        setOffers(enhancedOffers);
+      }
+    } catch (error) {
+      logger.error('Error in fetchFeaturedOffers', error);
+    }
+  };
 
   const hasActivePass = !!userPass && new Date(userPass.expires_at) > new Date();
   const shouldBlur = !user || !hasActivePass;

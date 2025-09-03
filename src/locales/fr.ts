@@ -28,7 +28,6 @@ export const fr = {
     at: 'chez',
     photos: 'Photos',
     learn_more: 'En savoir plus',
-    close: 'Fermer',
   },
   
   // Auth
@@ -122,10 +121,6 @@ export const fr = {
     use_offer: 'Utiliser l\'offre',
     already_used: 'Déjà utilisée',
     used_offer: 'Vous avez utilisé l\'offre',
-    processing: 'En cours...',
-    offer_used_success: 'Offre utilisée avec succès !',
-    show_merchant: 'Montrez cet écran au commerçant',
-    offer_validated: 'OFFRE VALIDÉE',
   },
   
   // Favorites
@@ -137,7 +132,6 @@ export const fr = {
     explore_partners: 'Découvrez nos offres et ajoutez-les à vos favoris pour les retrouver facilement !',
     added_on: 'Ajouté le',
     loading_error: 'Impossible de charger les favoris',
-    view_all: 'Voir tous mes favoris',
   },
   
   // Explorer
@@ -281,8 +275,6 @@ export const fr = {
     link_copied: 'Lien copié',
     link_copied_desc: 'Le lien a été copié dans le presse-papiers',
     reviews: 'avis',
-    show_merchant: 'Montrez cet écran au commerçant',
-    validated: 'OFFRE VALIDÉE',
   },
 
   // Partner Details

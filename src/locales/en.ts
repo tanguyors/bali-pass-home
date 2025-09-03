@@ -27,7 +27,6 @@ export const en = {
     must_be_logged_in: 'You must be logged in to use an offer.',
     at: 'at',
     learn_more: 'Learn more',
-    close: 'Close',
   },
   
   // Auth
@@ -118,10 +117,6 @@ export const en = {
     use_offer: 'Use offer',
     already_used: 'Already used',
     used_offer: 'You have used the offer',
-    processing: 'Processing...',
-    offer_used_success: 'Offer used successfully!',
-    show_merchant: 'Show this screen to the merchant',
-    offer_validated: 'OFFER VALIDATED',
   },
   
   // Favorites
@@ -133,7 +128,6 @@ export const en = {
     explore_partners: 'Explore Partners',
     added_on: 'Added on',
     loading_error: 'Unable to load favorites',
-    view_all: 'View all my favorites',
   },
   
   // Explorer
@@ -276,8 +270,6 @@ export const en = {
     link_copied: 'Link copied',
     link_copied_desc: 'The link has been copied to clipboard',
     reviews: 'reviews',
-    show_merchant: 'Show this screen to the merchant',
-    validated: 'OFFER VALIDATED',
   },
 
   // Partner Details

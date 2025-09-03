@@ -27,7 +27,6 @@ export const id = {
     must_be_logged_in: 'Anda harus masuk untuk menggunakan penawaran.',
     at: 'di',
     learn_more: 'Pelajari lebih lanjut',
-    close: 'Tutup',
   },
   
   // Auth
@@ -118,10 +117,6 @@ export const id = {
     use_offer: 'Gunakan penawaran',
     already_used: 'Sudah digunakan',
     used_offer: 'Anda telah menggunakan penawaran',
-    processing: 'Memproses...',
-    offer_used_success: 'Penawaran berhasil digunakan!',
-    show_merchant: 'Tunjukkan layar ini kepada pedagang',
-    offer_validated: 'PENAWARAN DIVALIDASI',
   },
   
   // Favorites
@@ -133,7 +128,6 @@ export const id = {
     explore_partners: 'Jelajahi Mitra',
     added_on: 'Ditambahkan pada',
     loading_error: 'Tidak dapat memuat favorit',
-    view_all: 'Lihat semua favorit saya',
   },
   
   // Explorer

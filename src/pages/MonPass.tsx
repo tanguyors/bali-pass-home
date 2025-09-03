@@ -19,15 +19,13 @@ import {
   Clock,
   Star,
   Award,
-  ChevronRight,
-  Heart
+  ChevronRight
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { LanguageSelector } from '@/components/LanguageSelector';
 
 interface Pass {
   id: string;
@@ -71,6 +69,7 @@ const MonPass: React.FC = () => {
   const [pass, setPass] = useState<Pass | null>(null);
   const [redemptions, setRedemptions] = useState<Redemption[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [totalSavings, setTotalSavings] = useState<number>(0);
 
   // Auth state management
   useEffect(() => {
@@ -166,6 +165,12 @@ const MonPass: React.FC = () => {
           }
         }));
         setRedemptions(formattedRedemptions);
+
+        // Calculate total savings
+        const savings = formattedRedemptions.reduce((total, redemption) => {
+          return total + (redemption.offer.value_number || 0);
+        }, 0);
+        setTotalSavings(savings);
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -231,10 +236,6 @@ const MonPass: React.FC = () => {
   if (!user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
-        {/* Language Selector - Fixed at top right */}
-        <div className="fixed top-4 right-4 z-50">
-          <LanguageSelector />
-        </div>
         <div className="flex-1 p-4">
           <div className="flex items-center justify-center min-h-[80vh]">
             <Card className="w-full max-w-sm shadow-xl border-0 bg-card/60 backdrop-blur-sm">
@@ -284,10 +285,6 @@ const MonPass: React.FC = () => {
   if (!pass) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
-        {/* Language Selector - Fixed at top right */}
-        <div className="fixed top-4 right-4 z-50">
-          <LanguageSelector />
-        </div>
         <div className="p-4 space-y-6">
           <div className="text-center">
             <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
@@ -352,10 +349,6 @@ const MonPass: React.FC = () => {
   // Authenticated with active pass - full content
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
-      {/* Language Selector - Fixed at top right */}
-      <div className="fixed top-4 right-4 z-50">
-        <LanguageSelector />
-      </div>
       <div className="p-4 pb-24 space-y-6">
         {/* Pass Header with Gradient */}
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-primary/90 to-primary/70 text-white shadow-2xl">
@@ -400,10 +393,10 @@ const MonPass: React.FC = () => {
               <div className="w-2 h-6 bg-gradient-to-b from-primary to-primary/60 rounded-full"></div>
               {t('profile.quick_actions')}
             </h3>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <Button 
                 variant="ghost" 
-                className="flex flex-col items-center gap-3 h-auto py-4 hover:bg-primary/5 transition-all duration-300 group"
+                className="flex flex-col items-center gap-3 h-auto py-6 hover:bg-primary/5 transition-all duration-300 group"
                 onClick={handleScanPartner}
               >
                 <div className="w-12 h-12 bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
@@ -414,25 +407,34 @@ const MonPass: React.FC = () => {
               
               <Button 
                 variant="ghost" 
-                className="flex flex-col items-center gap-3 h-auto py-4 hover:bg-primary/5 transition-all duration-300 group"
+                className="flex flex-col items-center gap-3 h-auto py-6 hover:bg-primary/5 transition-all duration-300 group"
                 onClick={() => navigate('/explorer')}
               >
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500/10 to-blue-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <Search className="w-6 h-6 text-blue-600" />
                 </div>
-                <span className="text-sm font-medium">{t('nav.explorer')}</span>
+                <span className="text-sm font-medium">{t('profile.view_offers')}</span>
               </Button>
+            </div>
+          </CardContent>
+        </Card>
 
-              <Button 
-                variant="ghost" 
-                className="flex flex-col items-center gap-3 h-auto py-4 hover:bg-primary/5 transition-all duration-300 group"
-                onClick={() => navigate('/favorites')}
-              >
-                <div className="w-12 h-12 bg-gradient-to-br from-pink-500/10 to-rose-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <Heart className="w-6 h-6 text-pink-600" />
-                </div>
-                <span className="text-sm font-medium">{t('nav.favorites')}</span>
-              </Button>
+        {/* Savings Summary */}
+        <Card className="shadow-lg border-0 bg-gradient-to-br from-emerald-50/50 to-emerald-100/30 border-emerald-200/50">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-bold text-lg text-emerald-800 mb-1">{t('profile.my_savings')}</h3>
+                <p className="text-3xl font-bold text-emerald-700">
+                  {totalSavings > 0 ? `${totalSavings}%` : '0%'}
+                </p>
+                <p className="text-sm text-emerald-600">
+                  {redemptions.length} {t('profile.uses')}
+                </p>
+              </div>
+              <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-400 rounded-full flex items-center justify-center">
+                <TrendingUp className="w-8 h-8 text-white" />
+              </div>
             </div>
           </CardContent>
         </Card>

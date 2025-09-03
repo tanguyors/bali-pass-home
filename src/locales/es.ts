@@ -27,7 +27,6 @@ export const es = {
     must_be_logged_in: 'Debes estar conectado para usar una oferta.',
     at: 'en',
     learn_more: 'Saber más',
-    close: 'Cerrar',
   },
   
   // Auth
@@ -118,10 +117,6 @@ export const es = {
     use_offer: 'Usar oferta',
     already_used: 'Ya utilizada',
     used_offer: 'Has usado la oferta',
-    processing: 'Procesando...',
-    offer_used_success: '¡Oferta utilizada con éxito!',
-    show_merchant: 'Muestra esta pantalla al comerciante',
-    offer_validated: 'OFERTA VALIDADA',
   },
   
   // Favorites
@@ -133,7 +128,6 @@ export const es = {
     explore_partners: 'Explorar Socios',
     added_on: 'Agregado el',
     loading_error: 'No se pudieron cargar los favoritos',
-    view_all: 'Ver todos mis favoritos',
   },
   
   // Explorer

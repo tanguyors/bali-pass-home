@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { CreditCard, ArrowRight } from "lucide-react";
 import baliHeroImage from "@/assets/bali-hero.jpg";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -9,12 +11,32 @@ interface PassSettings {
   setting_value: string;
 }
 
-interface HeroNoPassProps {
-  passSettings: PassSettings[];
-}
-
-export function HeroNoPass({ passSettings }: HeroNoPassProps) {
+export function HeroNoPass() {
   const { t } = useLanguage();
+  const [passSettings, setPassSettings] = useState<PassSettings[]>([]);
+
+  useEffect(() => {
+    fetchPassSettings();
+  }, []);
+
+  const fetchPassSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('pass_settings')
+        .select('setting_key, setting_value');
+      
+      if (error) {
+        logger.error('Error fetching pass settings', error);
+        return;
+      }
+      
+      if (data) {
+        setPassSettings(data);
+      }
+    } catch (error) {
+      logger.error('Error in fetchPassSettings', error);
+    }
+  };
 
   const getSettingValue = (key: string, defaultValue: string = '') => {
     const setting = passSettings.find(s => s.setting_key === key);

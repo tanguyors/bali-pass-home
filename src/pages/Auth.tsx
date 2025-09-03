@@ -13,7 +13,6 @@ import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { LanguageSelector } from '@/components/LanguageSelector';
 
 const Auth: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -159,10 +158,6 @@ const Auth: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Language Selector - Fixed at top right */}
-      <div className="fixed top-4 right-4 z-50">
-        <LanguageSelector />
-      </div>
       {/* Animated background blobs */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full blur-3xl animate-pulse"></div>
@@ -222,7 +217,7 @@ const Auth: React.FC = () => {
                       <Input
                         id="signin-email"
                         type="email"
-                        placeholder="votre@email.com"
+                        placeholder="tanguycomptepro@gmail.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="h-14 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-primary/20 focus:border-primary transition-all duration-300"
@@ -302,7 +297,7 @@ const Auth: React.FC = () => {
                       <Input
                         id="signup-email"
                         type="email"
-                        placeholder="votre@email.com"
+                        placeholder="tanguycomptepro@gmail.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="h-12 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-primary/20 focus:border-primary transition-all duration-300"

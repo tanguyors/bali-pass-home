@@ -36,7 +36,6 @@ import { ChangePasswordDialog } from '@/components/ChangePasswordDialog';
 import { SupportLink } from '@/components/SupportLink';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { LanguageSelector } from '@/components/LanguageSelector';
 
 interface Profile {
   id: string;
@@ -294,10 +293,6 @@ const Profil: React.FC = () => {
   if (!user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
-        {/* Language Selector - Fixed at top right */}
-        <div className="fixed top-4 right-4 z-50">
-          <LanguageSelector />
-        </div>
         <div className="flex-1 p-4">
           <div className="flex items-center justify-center min-h-[80vh]">
             <Card className="w-full max-w-sm shadow-xl border-0 bg-card/60 backdrop-blur-sm">
@@ -346,10 +341,6 @@ const Profil: React.FC = () => {
   // Authenticated profile content
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
-      {/* Language Selector - Fixed at top right */}
-      <div className="fixed top-4 right-4 z-50">
-        <LanguageSelector />
-      </div>
       <div className="p-4 pb-24 space-y-6">
         {/* Profile Header with Gradient */}
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-primary/90 to-primary/70 text-white shadow-2xl">

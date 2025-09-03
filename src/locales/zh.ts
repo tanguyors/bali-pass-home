@@ -27,7 +27,6 @@ export const zh = {
     must_be_logged_in: '您必须登录才能使用优惠。',
     at: '在',
     learn_more: '了解更多',
-    close: '关闭',
   },
   
   // Auth
@@ -118,10 +117,6 @@ export const zh = {
     use_offer: '使用优惠',
     already_used: '已使用',
     used_offer: '您已使用优惠',
-    processing: '处理中...',
-    offer_used_success: '优惠使用成功！',
-    show_merchant: '向商家展示此屏幕',
-    offer_validated: '优惠已验证',
   },
   
   // Favorites
@@ -133,7 +128,6 @@ export const zh = {
     explore_partners: '探索合作伙伴',
     added_on: '添加于',
     loading_error: '无法加载收藏',
-    view_all: '查看所有收藏',
   },
   
   // Explorer
