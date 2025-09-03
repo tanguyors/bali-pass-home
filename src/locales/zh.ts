@@ -91,6 +91,7 @@ export const zh = {
       explore: '探索',
       save: '节省',
     },
+    partners: '合作伙伴',
   },
   
   // Categories
@@ -193,6 +194,47 @@ export const zh = {
     preferences_saved: '您的偏好设置已保存',
     preferences_error: '无法保存偏好设置',
     discover_bali_pass: '探索巴厘岛通行证',
+  },
+
+  // Pricing
+  pricing: {
+    you_pay: '您支付',
+    you_save: '您节省',
+    price_coming_soon: '价格即将公布',
+    savings_coming_soon: '节省金额即将公布',
+  },
+
+  // Actions
+  action: {
+    scan_qr: '扫描二维码',
+  },
+
+  // Toast messages
+  toast: {
+    scan_qr: '扫描合作伙伴的二维码',
+  },
+
+  // Pass Summary
+  pass_summary: {
+    my_pass: '我的通行证',
+    active: '有效',
+    expired: '已过期',
+    purchased_on: '购买于',
+    valid_until: '有效期至',
+    view_pass: '查看我的通行证',
+  },
+
+  // Reassurance
+  reassurance: {
+    secure_payment: '安全支付',
+    valid_12_months: '有效期12个月',
+    verified_partners: '认证合作伙伴',
+  },
+
+  // Footer CTA
+  footer: {
+    ready_for_bali: '准备好去巴厘岛了吗？',
+    discover_exclusive: '发现等待您的专属优惠！',
   },
 
   // Offer Card

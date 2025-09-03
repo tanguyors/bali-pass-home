@@ -91,6 +91,7 @@ export const id = {
       explore: 'Jelajahi',
       save: 'Hemat',
     },
+    partners: 'Mitra',
   },
   
   // Categories
@@ -193,6 +194,47 @@ export const id = {
     preferences_saved: 'Preferensi Anda telah disimpan',
     preferences_error: 'Tidak dapat menyimpan preferensi',
     discover_bali_pass: 'Temukan Bali Pass',
+  },
+
+  // Pricing
+  pricing: {
+    you_pay: 'Anda bayar',
+    you_save: 'Anda hemat',
+    price_coming_soon: 'Harga segera hadir',
+    savings_coming_soon: 'Penghematan segera hadir',
+  },
+
+  // Actions
+  action: {
+    scan_qr: 'Pindai QR',
+  },
+
+  // Toast messages
+  toast: {
+    scan_qr: 'Pindai kode QR mitra',
+  },
+
+  // Pass Summary
+  pass_summary: {
+    my_pass: 'Pass Saya',
+    active: 'Aktif',
+    expired: 'Kedaluwarsa',
+    purchased_on: 'Dibeli pada',
+    valid_until: 'Berlaku hingga',
+    view_pass: 'Lihat pass saya',
+  },
+
+  // Reassurance
+  reassurance: {
+    secure_payment: 'Pembayaran aman',
+    valid_12_months: 'Berlaku 12 bulan',
+    verified_partners: 'Mitra terverifikasi',
+  },
+
+  // Footer CTA
+  footer: {
+    ready_for_bali: 'Siap ke Bali?',
+    discover_exclusive: 'Temukan penawaran eksklusif yang menanti Anda!',
   },
 
   // Offer Card

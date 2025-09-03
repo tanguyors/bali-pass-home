@@ -91,6 +91,7 @@ export const en = {
       explore: 'Explore',
       save: 'Save',
     },
+    partners: 'Partners',
   },
   
   // Categories
@@ -193,6 +194,47 @@ export const en = {
     preferences_saved: 'Your preferences have been saved',
     preferences_error: 'Unable to save preferences',
     discover_bali_pass: 'Discover Bali Pass',
+  },
+
+  // Pricing
+  pricing: {
+    you_pay: 'You pay',
+    you_save: 'You save',
+    price_coming_soon: 'Price coming soon',
+    savings_coming_soon: 'Savings coming soon',
+  },
+
+  // Actions
+  action: {
+    scan_qr: 'Scan QR',
+  },
+
+  // Toast messages
+  toast: {
+    scan_qr: 'Scan the partner\'s QR code',
+  },
+
+  // Pass Summary
+  pass_summary: {
+    my_pass: 'My Pass',
+    active: 'Active',
+    expired: 'Expired',
+    purchased_on: 'Purchased on',
+    valid_until: 'Valid until',
+    view_pass: 'View my pass',
+  },
+
+  // Reassurance
+  reassurance: {
+    secure_payment: 'Secure payment',
+    valid_12_months: 'Valid 12 months',
+    verified_partners: 'Verified partners',
+  },
+
+  // Footer CTA
+  footer: {
+    ready_for_bali: 'Ready for Bali?',
+    discover_exclusive: 'Discover the exclusive offers waiting for you!',
   },
 
   // Offer Card

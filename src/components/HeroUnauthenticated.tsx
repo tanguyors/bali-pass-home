@@ -77,7 +77,7 @@ export function HeroUnauthenticated() {
           )}
           {getSettingValue('partner_count') && (
             <div className="bg-white/25 backdrop-blur-sm rounded-full px-3 py-1.5 text-xs font-medium">
-              {getSettingValue('partner_count')} Partenaires
+              {getSettingValue('partner_count')} {t('hero.partners')}
             </div>
           )}
           {getSettingValue('security_badge') && (

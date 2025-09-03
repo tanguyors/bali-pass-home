@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Pass {
   id: string;
@@ -16,6 +17,7 @@ interface PassSummarySectionProps {
 }
 
 export function PassSummarySection({ pass }: PassSummarySectionProps) {
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const formatDate = (dateString: string) => {
@@ -38,21 +40,21 @@ export function PassSummarySection({ pass }: PassSummarySectionProps) {
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
             <CheckCircle className="w-5 h-5 text-primary" />
-            <h3 className="font-semibold text-foreground">Mon Pass</h3>
+            <h3 className="font-semibold text-foreground">{t('pass_summary.my_pass')}</h3>
           </div>
           <Badge variant={isExpired ? "destructive" : "default"}>
-            {isExpired ? "Expiré" : "Actif"}
+            {isExpired ? t('pass_summary.expired') : t('pass_summary.active')}
           </Badge>
         </div>
         
         <div className="space-y-2 mb-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Calendar className="w-4 h-4" />
-            <span>Acheté le {formatDate(pass.purchased_at)}</span>
+            <span>{t('pass_summary.purchased_on')} {formatDate(pass.purchased_at)}</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Calendar className="w-4 h-4" />
-            <span>Valide jusqu'au {formatDate(pass.expires_at)}</span>
+            <span>{t('pass_summary.valid_until')} {formatDate(pass.expires_at)}</span>
           </div>
         </div>
         
@@ -62,7 +64,7 @@ export function PassSummarySection({ pass }: PassSummarySectionProps) {
           className="w-full"
           onClick={handleViewPass}
         >
-          Voir mon pass
+          {t('pass_summary.view_pass')}
         </Button>
       </Card>
     </div>

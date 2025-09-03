@@ -93,6 +93,7 @@ export const fr = {
       explore: 'Explorer',
       save: 'Économiser',
     },
+    partners: 'Partenaires',
   },
   
   // Categories
@@ -197,6 +198,47 @@ export const fr = {
     preferences_saved: 'Vos préférences ont été sauvegardées',
     preferences_error: 'Impossible de sauvegarder les préférences',
     discover_bali_pass: 'Découvrir Bali\'Pass',
+  },
+
+  // Pricing
+  pricing: {
+    you_pay: 'Vous payez',
+    you_save: 'Vous économisez',
+    price_coming_soon: 'Prix à venir',
+    savings_coming_soon: 'Économies à venir',
+  },
+
+  // Actions
+  action: {
+    scan_qr: 'Scanner QR',
+  },
+
+  // Toast messages
+  toast: {
+    scan_qr: 'Scannez le QR code du partenaire',
+  },
+
+  // Pass Summary
+  pass_summary: {
+    my_pass: 'Mon Pass',
+    active: 'Actif',
+    expired: 'Expiré',
+    purchased_on: 'Acheté le',
+    valid_until: 'Valide jusqu\'au',
+    view_pass: 'Voir mon pass',
+  },
+
+  // Reassurance
+  reassurance: {
+    secure_payment: 'Paiement sécurisé',
+    valid_12_months: 'Valable 12 mois',
+    verified_partners: 'Partenaires vérifiés',
+  },
+
+  // Footer CTA
+  footer: {
+    ready_for_bali: 'Prêt pour Bali ?',
+    discover_exclusive: 'Découvrez les offres exclusives qui vous attendent !',
   },
 
 

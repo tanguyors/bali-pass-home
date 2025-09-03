@@ -82,7 +82,7 @@ export function PricingHighlight() {
                 {t('pricing.you_pay')}
               </p>
               <p className="text-xl font-bold text-foreground">
-                {pricingData.price ? formatPrice(pricingData.price, pricingData.currency) : "Prix à venir"}
+                {pricingData.price ? formatPrice(pricingData.price, pricingData.currency) : t('pricing.price_coming_soon')}
               </p>
             </div>
           </div>
@@ -102,7 +102,7 @@ export function PricingHighlight() {
                     {t('pricing.you_save')}
                   </p>
                   <p className="text-xl font-bold text-coral">
-                    {pricingData.max_savings ? formatSavings(pricingData.max_savings, pricingData.currency) : "Économies à venir"}
+                    {pricingData.max_savings ? formatSavings(pricingData.max_savings, pricingData.currency) : t('pricing.savings_coming_soon')}
                   </p>
                 </div>
               </div>
