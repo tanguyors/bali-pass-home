@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { OffersList } from '@/components/OffersList';
 import { BottomNavigation } from '@/components/BottomNavigation';
@@ -23,14 +24,16 @@ interface City {
 }
 
 const Explorer = () => {
+  const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [categories, setCategories] = useState<Category[]>([]);
   const [cities, setCities] = useState<City[]>([]);
+  const isNearbyMode = searchParams.get('nearby') === 'true';
   const [currentFilters, setCurrentFilters] = useState<FilterState>({
     city: '',
     category: '',
-    sortBy: 'relevance',
-    distance: undefined
+    sortBy: isNearbyMode ? 'distance' : 'relevance',
+    distance: isNearbyMode ? 10 : undefined
   });
   const { t } = useLanguage();
   
@@ -96,6 +99,18 @@ const Explorer = () => {
     fetchCities();
   }, []);
 
+  // Apply initial filters when component mounts or nearby mode changes
+  useEffect(() => {
+    if (isNearbyMode) {
+      setFilters({
+        category: null,
+        city: null,
+        sortBy: 'distance',
+        maxDistance: 10,
+      });
+    }
+  }, [isNearbyMode, setFilters]);
+
   const handleApplyFilters = (newFilters: FilterState) => {
     setCurrentFilters(newFilters);
     // Apply filters to the useOffers hook
@@ -122,12 +137,21 @@ const Explorer = () => {
       <main className="pb-20">
         {/* Header Section */}
         <div className="px-4 pt-6 pb-4 bg-background">
-          <h1 className="text-2xl font-bold text-center text-foreground mb-2">
-            {t('explorer.discover_offers')}
-          </h1>
-          <p className="text-center text-muted-foreground text-sm">
-            {t('explorer.discover_subtitle')}
-          </p>
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-foreground mb-2">
+              {isNearbyMode ? t('explorer.nearby_offers') : t('explorer.discover_offers')}
+            </h1>
+            {isNearbyMode && (
+              <div className="inline-flex items-center gap-2 mb-2">
+                <div className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-medium">
+                  📍 {t('explorer.nearby_mode')} (10km)
+                </div>
+              </div>
+            )}
+            <p className="text-muted-foreground text-sm">
+              {isNearbyMode ? t('explorer.nearby_subtitle') : t('explorer.discover_subtitle')}
+            </p>
+          </div>
         </div>
         
         {/* Simple Category Filter */}

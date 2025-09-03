@@ -24,8 +24,8 @@ export function HeroWithPass({ user }: HeroWithPassProps) {
   };
 
   const handleNearMe = () => {
-    // TODO: Implement geolocation and nearby offers
-    navigate("/map");
+    // Navigate to Explorer with nearby filter enabled
+    navigate("/explorer?nearby=true");
   };
 
   const handleAllOffers = () => {

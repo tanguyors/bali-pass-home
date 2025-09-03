@@ -142,6 +142,8 @@ export const id = {
     offers_found: 'penawaran ditemukan',
     loading_offers_text: 'Memuat lebih banyak penawaran...',
     near_me: 'Dekat saya',
+    nearby_mode: 'Mode terdekat',
+    nearby_subtitle: 'Temukan penawaran eksklusif dalam radius 10km dari lokasi Anda',
   },
   
   // Profile

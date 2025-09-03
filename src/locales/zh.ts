@@ -142,6 +142,8 @@ export const zh = {
     offers_found: '个优惠',
     loading_offers_text: '加载更多优惠中...',
     near_me: '我附近',
+    nearby_mode: '附近模式',
+    nearby_subtitle: '发现您位置10公里范围内的独家优惠',
   },
   
   // Profile

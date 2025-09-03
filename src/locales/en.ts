@@ -142,6 +142,8 @@ export const en = {
     offers_found: 'offers found',
     loading_offers_text: 'Loading more offers...',
     near_me: 'Near me',
+    nearby_mode: 'Nearby mode',
+    nearby_subtitle: 'Discover exclusive offers within 10km of your location',
   },
   
   // Profile
