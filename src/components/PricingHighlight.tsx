@@ -14,6 +14,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 export function PricingHighlight() {
   const { t } = useLanguage();
   const [pricingData, setPricingData] = useState<PricingData>({});
+  const [loading, setLoading] = useState(true);
 
   const formatPrice = (cents: string, currency: string = 'usd') => {
     const value = parseInt(cents) / 100;
@@ -33,6 +34,7 @@ export function PricingHighlight() {
 
   const fetchPricingData = async () => {
     try {
+      setLoading(true);
       const { data, error } = await supabase
         .from('pass_settings')
         .select('setting_key, setting_value')
@@ -61,10 +63,14 @@ export function PricingHighlight() {
               break;
           }
         });
+        
+        console.log('Pricing data loaded:', pricing);
         setPricingData(pricing);
       }
     } catch (error) {
       console.error('Error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -82,7 +88,13 @@ export function PricingHighlight() {
                 {t('pricing.you_pay')}
               </p>
               <p className="text-xl font-bold text-foreground">
-                {pricingData.price ? formatPrice(pricingData.price, pricingData.currency) : t('pricing.price_coming_soon')}
+                {loading ? (
+                  <span className="animate-pulse bg-muted rounded h-6 w-16 block"></span>
+                ) : (
+                  pricingData.price && pricingData.price !== '' ? 
+                    formatPrice(pricingData.price, pricingData.currency) : 
+                    t('pricing.price_coming_soon')
+                )}
               </p>
             </div>
           </div>
@@ -102,7 +114,13 @@ export function PricingHighlight() {
                     {t('pricing.you_save')}
                   </p>
                   <p className="text-xl font-bold text-coral">
-                    {pricingData.max_savings ? formatSavings(pricingData.max_savings, pricingData.currency) : t('pricing.savings_coming_soon')}
+                    {loading ? (
+                      <span className="animate-pulse bg-muted rounded h-6 w-20 block"></span>
+                    ) : (
+                      pricingData.max_savings && pricingData.max_savings !== '' ? 
+                        formatSavings(pricingData.max_savings, pricingData.currency) : 
+                        t('pricing.savings_coming_soon')
+                    )}
                   </p>
                 </div>
               </div>
