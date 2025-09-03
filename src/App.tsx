@@ -3,7 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { TranslationProvider } from "./hooks/useTranslation";
+import { LanguageProvider } from "./contexts/LanguageContext";
 import Index from "./pages/Index";
 import Explorer from "./pages/Explorer";
 import MonPass from "./pages/MonPass";
@@ -19,7 +19,7 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <TranslationProvider>
+      <LanguageProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
@@ -36,7 +36,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
-      </TranslationProvider>
+      </LanguageProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
