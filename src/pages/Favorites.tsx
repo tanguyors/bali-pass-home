@@ -1,16 +1,16 @@
 import React from 'react';
-import { Heart, MapPin, ArrowLeft } from 'lucide-react';
+import { Heart, MapPin, ArrowLeft, Tag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
-import { usePartnerFavorites } from '@/hooks/usePartnerFavorites';
+import { useOfferFavorites } from '@/hooks/useOfferFavorites';
 
 const Favorites: React.FC = () => {
   const navigate = useNavigate();
-  const { favorites, loading, toggleFavorite } = usePartnerFavorites();
+  const { favorites, loading, removeFromFavorites } = useOfferFavorites();
 
   if (loading) {
     return (
@@ -42,7 +42,7 @@ const Favorites: React.FC = () => {
                 Mes Favoris
               </h1>
               <p className="text-sm text-muted-foreground">
-                {favorites.length} partenaire{favorites.length !== 1 ? 's' : ''} favori{favorites.length !== 1 ? 's' : ''}
+                {favorites.length} offre{favorites.length !== 1 ? 's' : ''} favorite{favorites.length !== 1 ? 's' : ''}
               </p>
             </div>
           </div>
@@ -59,13 +59,13 @@ const Favorites: React.FC = () => {
               </div>
               <h3 className="font-bold text-xl mb-3">Aucun favori pour le moment</h3>
               <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                Découvrez nos partenaires et ajoutez-les à vos favoris pour les retrouver facilement !
+                Découvrez nos offres et ajoutez-les à vos favoris pour les retrouver facilement !
               </p>
               <Button 
                 onClick={() => navigate('/explorer')}
                 className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                Explorer les partenaires
+                Explorer les offres
               </Button>
             </CardContent>
           </Card>
@@ -75,27 +75,46 @@ const Favorites: React.FC = () => {
               <Card 
                 key={favorite.id}
                 className="shadow-lg border-0 bg-card/80 backdrop-blur-sm hover:shadow-xl hover:bg-card/90 transition-all duration-300 group cursor-pointer"
-                onClick={() => navigate(`/partner/${favorite.partner?.slug}`)}
+                onClick={() => navigate(`/offer/${favorite.offer_id}`)}
               >
                 <CardContent className="p-6">
-                  <div className="flex items-center gap-4">
-                    <Avatar className="w-16 h-16 border-2 border-primary/20 group-hover:border-primary/40 transition-colors duration-300">
-                      <AvatarImage 
-                        src={favorite.partner?.logo_url || ''} 
-                        alt={favorite.partner?.name || 'Partner'} 
-                      />
-                      <AvatarFallback className="bg-gradient-to-br from-primary/10 to-primary/5 text-primary font-semibold text-lg">
-                        {favorite.partner?.name?.[0]?.toUpperCase() || 'P'}
-                      </AvatarFallback>
-                    </Avatar>
+                  <div className="flex items-start gap-4">
+                    {/* Image de l'offre ou dégradé */}
+                    <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border-2 border-primary/20 group-hover:border-primary/40 transition-colors duration-300">
+                      {favorite.offer?.partner?.photos && favorite.offer.partner.photos.length > 0 ? (
+                        <img
+                          src={favorite.offer.partner.photos[0]}
+                          alt={favorite.offer?.title || 'Offre'}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
+                          <Tag className="w-8 h-8 text-primary" />
+                        </div>
+                      )}
+                    </div>
                     
-                    <div className="flex-1">
-                      <h3 className="font-bold text-lg mb-1">{favorite.partner?.name}</h3>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-bold text-lg mb-1 line-clamp-2">{favorite.offer?.title}</h3>
+                      <p className="text-sm text-primary font-medium mb-2">{favorite.offer?.partner?.name}</p>
                       
-                      {favorite.partner?.cities && (
+                      {favorite.offer?.value_text && (
+                        <Badge variant="secondary" className="text-xs mb-2">
+                          {favorite.offer.value_text}
+                        </Badge>
+                      )}
+                      
+                      {favorite.offer?.category && (
                         <div className="flex items-center gap-1 text-sm text-muted-foreground mb-2">
-                          <MapPin className="w-4 h-4" />
-                          <span>{favorite.partner.cities.name}</span>
+                          <span>{favorite.offer.category.icon}</span>
+                          <span>{favorite.offer.category.name}</span>
+                        </div>
+                      )}
+                      
+                      {favorite.offer?.partner?.address && (
+                        <div className="flex items-center gap-1 text-sm text-muted-foreground mb-2">
+                          <MapPin className="w-4 h-4 flex-shrink-0" />
+                          <span className="truncate">{favorite.offer.partner.address}</span>
                         </div>
                       )}
                       
@@ -109,9 +128,9 @@ const Favorites: React.FC = () => {
                       size="icon"
                       onClick={(e) => {
                         e.stopPropagation();
-                        toggleFavorite(favorite.partner_id);
+                        removeFromFavorites(favorite.offer_id);
                       }}
-                      className="text-red-500 hover:text-red-600 hover:bg-red-50 transition-colors"
+                      className="text-red-500 hover:text-red-600 hover:bg-red-50 transition-colors flex-shrink-0"
                     >
                       <Heart className="w-5 h-5 fill-current" />
                     </Button>
