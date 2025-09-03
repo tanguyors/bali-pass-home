@@ -157,212 +157,256 @@ const Auth: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-primary/5 flex items-center justify-center p-4 relative">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated background blobs */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-secondary/20 to-primary/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      </div>
+
       {/* Back Button */}
       <Button
         variant="ghost"
         size="icon"
         onClick={() => navigate(-1)}
-        className="absolute top-4 left-4 z-10 w-10 h-10 bg-background/80 backdrop-blur-sm hover:bg-background/90"
+        className="absolute top-6 left-6 z-20 w-12 h-12 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/20 shadow-lg hover:bg-white/90 dark:hover:bg-slate-800/90 rounded-xl transition-all duration-300"
       >
         <ArrowLeft className="w-5 h-5" />
       </Button>
-      <Card className="w-full max-w-md shadow-2xl border-0">
-        <CardContent className="p-8">
-          {/* Logo and Branding */}
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-              <span className="text-white text-2xl font-bold">🌴</span>
-            </div>
-            <h1 className="text-2xl font-bold text-foreground mb-2">Bali Pass</h1>
-            <p className="text-muted-foreground text-sm">{t('pass.your_privilege_pass')}</p>
-          </div>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="signin" className="rounded-l-lg">{t('auth.sign_in')}</TabsTrigger>
-              <TabsTrigger value="signup" className="rounded-r-lg">{t('auth.sign_up')}</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="signin" className="space-y-4">
-              <form onSubmit={handleSignIn} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="signin-email" className="text-sm font-medium">{t('common.email')}</Label>
-                  <Input
-                    id="signin-email"
-                    type="email"
-                    placeholder="tanguycomptepro@gmail.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="h-12"
-                    required
-                  />
+      {/* Main Auth Card */}
+      <div className="relative z-10 w-full max-w-md">
+        <Card className="border-0 shadow-2xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl rounded-3xl overflow-hidden">
+          <CardContent className="p-0">
+            {/* Header Section */}
+            <div className="bg-gradient-to-br from-primary via-primary/90 to-secondary p-8 text-center relative overflow-hidden">
+              <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]"></div>
+              <div className="relative z-10">
+                <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
+                  <span className="text-4xl">🌴</span>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="signin-password" className="text-sm font-medium">{t('common.password')}</Label>
-                  <div className="relative">
-                    <Input
-                      id="signin-password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="h-12 pr-10"
-                      required
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-0 top-0 h-12 w-10"
-                      onClick={() => setShowPassword(!showPassword)}
+                <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Pass Bali</h1>
+                <p className="text-white/90 text-sm font-medium">{t('pass.your_privilege_pass')}</p>
+              </div>
+            </div>
+
+            {/* Form Section */}
+            <div className="p-8">
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                {/* Modern Tab Selector */}
+                <TabsList className="grid w-full grid-cols-2 mb-8 bg-slate-100 dark:bg-slate-800 rounded-2xl p-1 h-14">
+                  <TabsTrigger 
+                    value="signin" 
+                    className="rounded-xl text-sm font-semibold h-12 data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:text-primary dark:data-[state=active]:bg-slate-700 transition-all duration-300"
+                  >
+                    {t('auth.sign_in')}
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="signup" 
+                    className="rounded-xl text-sm font-semibold h-12 data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:text-primary dark:data-[state=active]:bg-slate-700 transition-all duration-300"
+                  >
+                    {t('auth.sign_up')}
+                  </TabsTrigger>
+                </TabsList>
+                
+                {/* Sign In Form */}
+                <TabsContent value="signin" className="space-y-6 animate-fade-in">
+                  <form onSubmit={handleSignIn} className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="signin-email" className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t('common.email')}</Label>
+                      <Input
+                        id="signin-email"
+                        type="email"
+                        placeholder="tanguycomptepro@gmail.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="h-14 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-primary/20 focus:border-primary transition-all duration-300"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="signin-password" className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t('common.password')}</Label>
+                      <div className="relative">
+                        <Input
+                          id="signin-password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="h-14 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-primary/20 focus:border-primary pr-12 transition-all duration-300"
+                          required
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-1 top-1 h-12 w-12 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? <EyeOffIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
+                        </Button>
+                      </div>
+                    </div>
+                    <Button 
+                      type="submit" 
+                      className="w-full h-14 bg-gradient-to-r from-primary via-primary to-secondary hover:from-primary/90 hover:via-primary/90 hover:to-secondary/90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                      disabled={isLoading}
                     >
-                      {showPassword ? <EyeOffIcon className="w-4 h-4" /> : <EyeIcon className="w-4 h-4" />}
+                      {isLoading ? (
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                          {t('auth.signing_in')}
+                        </div>
+                      ) : (
+                        t('auth.sign_in')
+                      )}
                     </Button>
-                  </div>
-                </div>
-                <Button 
-                  type="submit" 
-                  className="w-full h-12 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white font-medium"
-                  disabled={isLoading}
-                >
-                  {isLoading ? t('auth.signing_in') : t('auth.sign_in')}
-                </Button>
-              </form>
-            </TabsContent>
-            
-            <TabsContent value="signup" className="space-y-4">
-              <form onSubmit={handleSignUp} className="space-y-4">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName" className="text-sm font-medium">{t('auth.first_name')}</Label>
-                    <Input
-                      id="firstName"
-                      placeholder={t('auth.first_name')}
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      className="h-12"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName" className="text-sm font-medium">{t('auth.last_name')}</Label>
-                    <Input
-                      id="lastName"
-                      placeholder={t('auth.last_name')}
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      className="h-12"
-                      required
-                    />
-                  </div>
-                </div>
+                  </form>
+                </TabsContent>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="signup-email" className="text-sm font-medium">{t('common.email')}</Label>
-                  <Input
-                    id="signup-email"
-                    type="email"
-                    placeholder="tanguycomptepro@gmail.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="h-12"
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="phoneNumber" className="text-sm font-medium">{t('auth.phone_number')}</Label>
-                  <div className="flex gap-2">
-                    <Select value={countryCode} onValueChange={setCountryCode}>
-                      <SelectTrigger className="w-20 h-12">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="+33">FR +33</SelectItem>
-                        <SelectItem value="+62">ID +62</SelectItem>
-                        <SelectItem value="+1">US +1</SelectItem>
-                        <SelectItem value="+44">UK +44</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Input
-                      id="phoneNumber"
-                      type="tel"
-                      placeholder="6 12 34 56 78"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="flex-1 h-12"
-                    />
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="birthDate" className="text-sm font-medium">{t('auth.birth_date')}</Label>
-                  <Input
-                    id="birthDate"
-                    type="date"
-                    value={birthDate}
-                    onChange={(e) => setBirthDate(e.target.value)}
-                    className="h-12"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="signup-password" className="text-sm font-medium">{t('common.password')}</Label>
-                  <div className="relative">
-                    <Input
-                      id="signup-password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="h-12 pr-10"
-                      required
-                      minLength={6}
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-0 top-0 h-12 w-10"
-                      onClick={() => setShowPassword(!showPassword)}
+                {/* Sign Up Form */}
+                <TabsContent value="signup" className="space-y-5 animate-fade-in">
+                  <form onSubmit={handleSignUp} className="space-y-5">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="firstName" className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t('auth.first_name')}</Label>
+                        <Input
+                          id="firstName"
+                          placeholder={t('auth.first_name')}
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)}
+                          className="h-12 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-primary/20 focus:border-primary transition-all duration-300"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="lastName" className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t('auth.last_name')}</Label>
+                        <Input
+                          id="lastName"
+                          placeholder={t('auth.last_name')}
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
+                          className="h-12 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-primary/20 focus:border-primary transition-all duration-300"
+                          required
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-email" className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t('common.email')}</Label>
+                      <Input
+                        id="signup-email"
+                        type="email"
+                        placeholder="tanguycomptepro@gmail.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="h-12 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-primary/20 focus:border-primary transition-all duration-300"
+                        required
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="phoneNumber" className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t('auth.phone_number')}</Label>
+                      <div className="flex gap-3">
+                        <Select value={countryCode} onValueChange={setCountryCode}>
+                          <SelectTrigger className="w-24 h-12 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl">
+                            <SelectItem value="+33">🇫🇷 +33</SelectItem>
+                            <SelectItem value="+62">🇮🇩 +62</SelectItem>
+                            <SelectItem value="+1">🇺🇸 +1</SelectItem>
+                            <SelectItem value="+44">🇬🇧 +44</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <Input
+                          id="phoneNumber"
+                          type="tel"
+                          placeholder="6 12 34 56 78"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          className="flex-1 h-12 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-primary/20 focus:border-primary transition-all duration-300"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="birthDate" className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t('auth.birth_date')}</Label>
+                      <Input
+                        id="birthDate"
+                        type="date"
+                        value={birthDate}
+                        onChange={(e) => setBirthDate(e.target.value)}
+                        className="h-12 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-primary/20 focus:border-primary transition-all duration-300"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-password" className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t('common.password')}</Label>
+                      <div className="relative">
+                        <Input
+                          id="signup-password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="h-12 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-primary/20 focus:border-primary pr-12 transition-all duration-300"
+                          required
+                          minLength={6}
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-1 top-0 h-12 w-12 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? <EyeOffIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3 pt-2 p-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                      <Checkbox
+                        id="terms"
+                        checked={acceptTerms}
+                        onCheckedChange={(checked) => setAcceptTerms(checked as boolean)}
+                        className="mt-0.5 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                      />
+                      <div className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        <label htmlFor="terms" className="cursor-pointer">
+                          {t('auth.accept_terms')}{" "}
+                          <br className="mb-1" />{t('auth.terms_full').split(',').map((part, index) => (
+                            <span key={index}>
+                              {index > 0 && ', '}
+                              <a href="#" className="text-primary hover:underline font-medium">{part.trim()}</a>
+                            </span>
+                          ))}
+                        </label>
+                      </div>
+                    </div>
+                    
+                    <Button 
+                      type="submit" 
+                      className="w-full h-14 bg-gradient-to-r from-primary via-primary to-secondary hover:from-primary/90 hover:via-primary/90 hover:to-secondary/90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                      disabled={isLoading || !acceptTerms}
                     >
-                      {showPassword ? <EyeOffIcon className="w-4 h-4" /> : <EyeIcon className="w-4 h-4" />}
+                      {isLoading ? (
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                          {t('auth.creating_account')}
+                        </div>
+                      ) : (
+                        t('auth.create_account')
+                      )}
                     </Button>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-2 pt-2">
-                  <Checkbox
-                    id="terms"
-                    checked={acceptTerms}
-                    onCheckedChange={(checked) => setAcceptTerms(checked as boolean)}
-                  />
-                  <div className="text-xs text-muted-foreground">
-                    <label htmlFor="terms" className="cursor-pointer">
-                      {t('auth.accept_terms')}{" "}
-                      <br />{t('auth.terms_full').split(',').map((part, index) => (
-                        <span key={index}>
-                          {index > 0 && ', '}
-                          <a href="#" className="text-primary hover:underline">{part.trim()}</a>
-                        </span>
-                      ))}
-                    </label>
-                  </div>
-                </div>
-                
-                <Button 
-                  type="submit" 
-                  className="w-full h-12 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white font-medium"
-                  disabled={isLoading || !acceptTerms}
-                >
-                  {isLoading ? t('auth.creating_account') : t('auth.create_account')}
-                </Button>
-              </form>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+                  </form>
+                </TabsContent>
+              </Tabs>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
