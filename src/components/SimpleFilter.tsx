@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Category {
@@ -86,45 +87,36 @@ export const SimpleFilter: React.FC<SimpleFilterProps> = ({
         </div>
       </div>
 
-      {/* City Filter Section */}
+      {/* City Filter Section - Dropdown */}
       <div className="px-4 pb-4">
         <h3 className="text-base font-semibold text-foreground mb-2">
           {t('filter.city')}
         </h3>
-        <div className="grid grid-cols-3 gap-2">
-          {/* All Cities Button */}
-          <button
-            onClick={() => onCityChange(null)}
-            className={`p-2 rounded-lg border transition-all duration-200 flex items-center gap-2 text-sm ${
-              !selectedCity
-                ? 'bg-primary text-primary-foreground border-primary shadow-sm'
-                : 'bg-background text-foreground border-border hover:border-primary/50 hover:bg-muted/50'
-            }`}
-          >
-            <span className="text-base">🌍</span>
-            <span className="font-medium text-left flex-1 truncate">
-              {t('filter.all_cities')}
-            </span>
-          </button>
-          
-          {/* Individual City Buttons */}
-          {cities.map((city) => (
-            <button
-              key={city.id}
-              onClick={() => onCityChange(city.id)}
-              className={`p-2 rounded-lg border transition-all duration-200 flex items-center gap-2 text-sm ${
-                selectedCity === city.id
-                  ? 'bg-primary text-primary-foreground border-primary shadow-sm'
-                  : 'bg-background text-foreground border-border hover:border-primary/50 hover:bg-muted/50'
-              }`}
-            >
-              <span className="text-base">📍</span>
-              <span className="font-medium text-left flex-1 truncate">
-                {city.name}
-              </span>
-            </button>
-          ))}
-        </div>
+        <Select value={selectedCity || ""} onValueChange={(value) => onCityChange(value || null)}>
+          <SelectTrigger className="w-full bg-background border-border text-foreground hover:border-primary/50 focus:border-primary">
+            <SelectValue placeholder={t('filter.all_cities')} />
+          </SelectTrigger>
+          <SelectContent className="bg-background border-border shadow-lg z-50">
+            <SelectItem value="" className="text-foreground hover:bg-muted focus:bg-muted">
+              <div className="flex items-center gap-2">
+                <span>🌍</span>
+                <span>{t('filter.all_cities')}</span>
+              </div>
+            </SelectItem>
+            {cities.map((city) => (
+              <SelectItem 
+                key={city.id} 
+                value={city.id}
+                className="text-foreground hover:bg-muted focus:bg-muted"
+              >
+                <div className="flex items-center gap-2">
+                  <span>📍</span>
+                  <span>{city.name}</span>
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
