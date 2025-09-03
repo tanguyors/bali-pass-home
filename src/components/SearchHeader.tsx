@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Filter, Grid3X3, List, MapPin, SlidersHorizontal } from 'lucide-react';
+import { Search, Filter, Grid3X3, List, MapPin } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -37,8 +37,6 @@ export function SearchHeader({
   resultsCount,
   userLocation
 }: SearchHeaderProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
-
   const activeFiltersCount = [
     filters.category,
     filters.priceRange,
@@ -104,20 +102,10 @@ export function SearchHeader({
             <List className="w-4 h-4" />
           </Button>
         </div>
-
-        {/* Expand filters */}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="w-8 h-8 rounded-full"
-        >
-          <SlidersHorizontal className="w-4 h-4" />
-        </Button>
       </div>
 
       {/* Quick filters row */}
-      {(isExpanded || activeFiltersCount > 0) && (
+      {activeFiltersCount > 0 && (
         <div className="px-4 py-3 border-t border-border bg-muted/30">
           <div className="flex items-center gap-2 overflow-x-auto pb-2">
             {/* Category filter */}
