@@ -48,8 +48,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const fetchUserData = async (userId: string) => {
     try {
-      console.log('AuthContext: Starting fetchUserData for:', userId);
-      
       // Set a timeout for database queries
       const fetchWithTimeout = async (query: any, label: string) => {
         return Promise.race([
@@ -61,7 +59,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       };
       
       // Fetch profile with timeout
-      console.log('AuthContext: Fetching profile...');
       try {
         const { data: profileData, error: profileError } = await fetchWithTimeout(
           supabase
@@ -72,10 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           'Profile fetch'
         );
 
-        console.log('AuthContext: Profile result:', { profileData, profileError });
-
         if (profileError) {
-          console.error('AuthContext: Profile error:', profileError);
           logger.error('Error fetching profile', profileError);
         } else {
           setProfile(profileData);
@@ -86,7 +80,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       // Fetch active pass with timeout
-      console.log('AuthContext: Fetching pass...');
       try {
         const { data: passData, error: passError } = await fetchWithTimeout(
           supabase
@@ -100,10 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           'Pass fetch'
         );
 
-        console.log('AuthContext: Pass result:', { passData, passError });
-
         if (passError) {
-          console.error('AuthContext: Pass error:', passError);
           logger.error('Error fetching pass', passError);
         } else {
           setUserPass(passData);
@@ -112,10 +102,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.error('AuthContext: Pass fetch timeout');
         setUserPass(null);
       }
-      
-      console.log('AuthContext: fetchUserData completed successfully');
     } catch (error) {
-      console.error('AuthContext: Error in fetchUserData', error);
       logger.error('Error in fetchUserData', error);
     }
   };
@@ -131,9 +118,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const initAuth = async () => {
       try {
-        console.log('AuthContext: Starting auth initialization');
         const { data: { session: initialSession } } = await supabase.auth.getSession();
-        console.log('AuthContext: Got session', !!initialSession);
         
         if (!mounted) return;
         
@@ -141,16 +126,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(initialSession?.user ?? null);
         
         if (initialSession?.user) {
-          console.log('AuthContext: Fetching user data for:', initialSession.user.id);
           await fetchUserData(initialSession.user.id);
-          console.log('AuthContext: User data fetched');
         }
       } catch (error) {
-        console.error('AuthContext: Error initializing auth', error);
         logger.error('Error initializing auth', error);
       } finally {
         if (mounted) {
-          console.log('AuthContext: Setting loading to false');
           setLoading(false);
         }
       }
