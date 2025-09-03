@@ -6,6 +6,7 @@ import { ArrowLeft, MapPin, Star, Heart, Clock, Share2, Percent, Euro, Navigatio
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { QRScanner } from "@/components/QRScanner";
+import { useDiscountFormatter } from "@/hooks/useDiscountFormatter";
 
 interface Offer {
   id: string;
@@ -39,6 +40,7 @@ export default function OfferDetails() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useLanguage();
+  const { formatDiscount } = useDiscountFormatter();
   const [offer, setOffer] = useState<Offer | null>(null);
   const [loading, setLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -419,7 +421,7 @@ export default function OfferDetails() {
           {/* Discount Badge */}
           {offer.value_text && (
             <div className="absolute top-4 left-4 px-4 py-2 rounded-full text-white text-sm font-bold backdrop-blur-sm border border-white/20 bg-gradient-to-r from-primary via-primary/90 to-primary/80 shadow-lg">
-              {offer.value_text}
+              {formatDiscount(offer.value_text)}
             </div>
           )}
         </div>

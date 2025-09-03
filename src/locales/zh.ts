@@ -264,6 +264,16 @@ export const zh = {
     active_filters: '个活跃筛选',
   },
 
+  // Discount
+  discount: {
+    percentage_off: '-{{percentage}}%',
+    amount_off: '-{{amount}}',
+    special_offer: '特别优惠',
+    buy_get_offer: '买送优惠',
+    free_offer: '免费',
+    special_price: '特价',
+  },
+
   // Languages
   languages: {
     fr: 'Français',

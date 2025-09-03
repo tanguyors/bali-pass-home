@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { usePartnerFavorites } from '@/hooks/usePartnerFavorites';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useDiscountFormatter } from '@/hooks/useDiscountFormatter';
 
 interface Partner {
   id: string;
@@ -43,6 +44,7 @@ const PartnerDetail: React.FC = () => {
   const { toast } = useToast();
   const { isFavorite, toggleFavorite } = usePartnerFavorites();
   const { t } = useLanguage();
+  const { formatDiscount } = useDiscountFormatter();
   
   const [partner, setPartner] = useState<Partner | null>(null);
   const [loading, setLoading] = useState(true);
@@ -340,7 +342,7 @@ const PartnerDetail: React.FC = () => {
                     </div>
                     {offer.value_text && (
                       <Badge variant="destructive" className="ml-2 bg-red-500">
-                        {offer.value_text}
+                        {formatDiscount(offer.value_text)}
                       </Badge>
                     )}
                   </div>
