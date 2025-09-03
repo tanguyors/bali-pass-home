@@ -136,13 +136,6 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
                 <span className="text-xs text-muted-foreground">Image à venir</span>
               </div>
             )}
-            
-            {/* Discount Badge */}
-            {offer.value_text && (
-              <div className="absolute top-1 left-1 px-2 py-0.5 rounded-full text-white text-xs font-bold bg-red-500">
-                {offer.value_text}
-              </div>
-            )}
 
             {/* Favorite Button */}
             <Button
@@ -274,13 +267,6 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-primary/20 to-lagoon/20 flex items-center justify-center">
             <span className="text-sm text-muted-foreground">Image à venir</span>
-          </div>
-        )}
-        
-        {/* Discount Badge */}
-        {offer.value_text && (
-          <div className="absolute top-2 left-2 px-2 py-1 rounded-full text-white text-xs font-bold bg-red-500">
-            {offer.value_text}
           </div>
         )}
 
