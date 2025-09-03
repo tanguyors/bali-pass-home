@@ -264,16 +264,6 @@ export const id = {
     active_filters: 'filter aktif',
   },
 
-  // Discount
-  discount: {
-    percentage_off: '-{{percentage}}%',
-    amount_off: '-{{amount}}',
-    special_offer: 'Penawaran khusus',
-    buy_get_offer: 'Beli dan dapatkan',
-    free_offer: 'Gratis',
-    special_price: 'Harga khusus',
-  },
-
   // Languages
   languages: {
     fr: 'Français',

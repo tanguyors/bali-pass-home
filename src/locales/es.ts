@@ -264,16 +264,6 @@ export const es = {
     active_filters: 'filtro(s) activo(s)',
   },
 
-  // Discount
-  discount: {
-    percentage_off: '-{{percentage}}%',
-    amount_off: '-{{amount}}',
-    special_offer: 'Oferta especial',
-    buy_get_offer: 'Compra y obtén',
-    free_offer: 'Gratis',
-    special_price: 'Precio especial',
-  },
-
   // Languages
   languages: {
     fr: 'Français',

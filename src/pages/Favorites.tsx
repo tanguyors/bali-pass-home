@@ -7,14 +7,10 @@ import { Badge } from '@/components/ui/badge';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { useOfferFavorites } from '@/hooks/useOfferFavorites';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { useDiscountFormatter } from '@/hooks/useDiscountFormatter';
 
 const Favorites: React.FC = () => {
   const navigate = useNavigate();
   const { favorites, loading, removeFromFavorites } = useOfferFavorites();
-  const { t } = useLanguage();
-  const { formatDiscount } = useDiscountFormatter();
 
   if (loading) {
     return (
@@ -104,7 +100,7 @@ const Favorites: React.FC = () => {
                       
                       {favorite.offer?.value_text && (
                         <Badge variant="secondary" className="text-xs mb-2">
-                          {formatDiscount(favorite.offer.value_text)}
+                          {favorite.offer.value_text}
                         </Badge>
                       )}
                       

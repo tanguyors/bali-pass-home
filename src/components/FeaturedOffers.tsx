@@ -4,7 +4,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { MapPin, Navigation } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useDiscountFormatter } from "@/hooks/useDiscountFormatter";
 
 interface Offer {
   id: string;
@@ -34,7 +33,6 @@ interface UserPass {
 export function FeaturedOffers() {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const { formatDiscount } = useDiscountFormatter();
   const [offers, setOffers] = useState<EnhancedOffer[]>([]);
   const [user, setUser] = useState<any>(null);
   const [userPass, setUserPass] = useState<UserPass | null>(null);
@@ -221,7 +219,7 @@ export function FeaturedOffers() {
                       ? 'bg-red-500' 
                       : 'bg-green-500'
                   }`}>
-                    {formatDiscount(offer.value_text)}
+                    {offer.value_text}
                   </div>
                 )}
               </div>
