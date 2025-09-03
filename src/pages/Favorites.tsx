@@ -19,7 +19,7 @@ const Favorites: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Chargement de vos favoris...</p>
+          <p className="text-muted-foreground">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -41,10 +41,10 @@ const Favorites: React.FC = () => {
             </Button>
             <div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent">
-                Mes Favoris
+                {t('favorites.title')}
               </h1>
               <p className="text-sm text-muted-foreground">
-                {favorites.length} offre{favorites.length !== 1 ? 's' : ''} favorite{favorites.length !== 1 ? 's' : ''}
+                {favorites.length} {favorites.length === 1 ? t('simple_filter.offer_available') : t('simple_filter.offers_available')}
               </p>
             </div>
           </div>
@@ -59,15 +59,15 @@ const Favorites: React.FC = () => {
               <div className="w-20 h-20 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Heart className="w-10 h-10 text-primary" />
               </div>
-              <h3 className="font-bold text-xl mb-3">Aucun favori pour le moment</h3>
+              <h3 className="font-bold text-xl mb-3">{t('favorites.no_favorites')}</h3>
               <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                Découvrez nos offres et ajoutez-les à vos favoris pour les retrouver facilement !
+                {t('favorites.explore_partners')}
               </p>
               <Button 
                 onClick={() => navigate('/explorer')}
                 className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                Explorer les offres
+                {t('explorer.discover_offers')}
               </Button>
             </CardContent>
           </Card>
@@ -121,7 +121,7 @@ const Favorites: React.FC = () => {
                       )}
                       
                       <p className="text-xs text-muted-foreground">
-                        Ajouté le {new Date(favorite.created_at).toLocaleDateString('fr-FR')}
+                        {t('favorites.added_on')} {new Date(favorite.created_at).toLocaleDateString()}
                       </p>
                     </div>
                     
