@@ -216,19 +216,47 @@ export default function OfferDetails() {
     }
   };
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: offer?.title,
-        text: offer?.short_desc,
-        url: window.location.href,
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast({
-        title: t('offer_details.link_copied'),
-        description: t('offer_details.link_copied_desc'),
-      });
+  const handleShare = async () => {
+    if (!offer) return;
+
+    const shareData = {
+      title: `${offer.title} - Pass Bali`,
+      text: offer.short_desc || `Découvrez cette offre exclusive : ${offer.title}`,
+      url: window.location.href,
+    };
+
+    try {
+      // Vérifier si l'API Web Share est supportée
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+        toast({
+          title: t('offer_details.shared'),
+          description: t('offer_details.shared_successfully'),
+        });
+      } else {
+        // Fallback : copier le lien dans le presse-papiers
+        await navigator.clipboard.writeText(window.location.href);
+        toast({
+          title: t('offer_details.link_copied'),
+          description: t('offer_details.link_copied_desc'),
+        });
+      }
+    } catch (error) {
+      // Si le partage est annulé ou échoue, copier le lien en fallback
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        toast({
+          title: t('offer_details.link_copied'),
+          description: t('offer_details.link_copied_desc'),
+        });
+      } catch (clipboardError) {
+        // Fallback final : afficher le lien à copier manuellement
+        toast({
+          title: t('offer_details.share_link'),
+          description: window.location.href,
+          duration: 10000,
+        });
+      }
     }
   };
 
