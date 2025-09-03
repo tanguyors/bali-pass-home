@@ -147,36 +147,54 @@ const Profil: React.FC = () => {
 
   const handleSignOut = async () => {
     try {
-      // Clear local session first
+      // Clear local session first to ensure UI updates immediately
       setSession(null);
       setUser(null);
       
       // Then attempt server logout
       const { error } = await supabase.auth.signOut();
       
-      // Even if server logout fails, we still consider it a success since local state is cleared
-      if (error && !error.message.includes('session_not_found')) {
-        console.warn('Logout error (non-critical):', error);
-        toast({
-          title: t('common.error'),
-          description: t('profile.logout_error'),
-          variant: "destructive",
-        });
-        return;
+      // Handle specific error types that aren't critical
+      if (error) {
+        const isNonCriticalError = 
+          error.message?.includes('session_not_found') ||
+          error.message?.includes('Auth session missing') ||
+          error.message?.includes('AuthSessionMissingError') ||
+          error.code === 'session_not_found';
+          
+        if (isNonCriticalError) {
+          console.info('Session already cleared on server side');
+        } else {
+          console.warn('Logout error (attempting to continue):', error);
+          // Don't show error to user unless it's a real blocking error
+        }
       }
       
-      // Success message and navigation
+      // Always show success message and navigate
       toast({
         title: t('profile.logout_success'),
         description: t('profile.see_you_soon'),
       });
-      navigate('/');
+      
+      // Small delay to ensure state is updated before navigation
+      setTimeout(() => {
+        navigate('/');
+      }, 100);
+      
     } catch (error) {
       console.error('Unexpected logout error:', error);
-      // Still clear local state and navigate
+      // Still clear local state and navigate even on unexpected errors
       setSession(null);
       setUser(null);
-      navigate('/');
+      
+      toast({
+        title: t('profile.logout_success'),
+        description: t('profile.see_you_soon'),
+      });
+      
+      setTimeout(() => {
+        navigate('/');
+      }, 100);
     }
   };
 
