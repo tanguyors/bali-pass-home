@@ -252,6 +252,23 @@ export const fr = {
     website: 'Site web',
     available_offers: 'Offres disponibles',
   },
+
+  // Filter
+  filter: {
+    title: 'Filtres',
+    sort_by: 'Trier par',
+    location: 'Localisation',
+    distance: 'Distance',
+    city: 'Ville',
+    category: 'Catégorie',
+    all_cities: 'Toutes les villes',
+    all_categories: 'Toutes les catégories',
+    clear_all: 'Tout effacer',
+    apply_filters: 'Appliquer les filtres',
+    active_filters: 'filtre(s) actif(s)',
+  },
+  
+  // Languages
   languages: {
     fr: 'Français',
     en: 'English',

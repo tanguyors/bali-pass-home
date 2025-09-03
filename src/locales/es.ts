@@ -249,6 +249,21 @@ export const es = {
     available_offers: 'Ofertas disponibles',
   },
 
+  // Filter
+  filter: {
+    title: 'Filtros',
+    sort_by: 'Ordenar por',
+    location: 'Ubicación',
+    distance: 'Distancia',
+    city: 'Ciudad',
+    category: 'Categoría',
+    all_cities: 'Todas las ciudades',
+    all_categories: 'Todas las categorías',
+    clear_all: 'Limpiar todo',
+    apply_filters: 'Aplicar filtros',
+    active_filters: 'filtro(s) activo(s)',
+  },
+
   // Languages
   languages: {
     fr: 'Français',

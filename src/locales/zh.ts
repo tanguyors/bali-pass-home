@@ -249,6 +249,21 @@ export const zh = {
     available_offers: '可用优惠',
   },
 
+  // Filter
+  filter: {
+    title: '筛选',
+    sort_by: '排序方式',
+    location: '位置',
+    distance: '距离',
+    city: '城市',
+    category: '分类',
+    all_cities: '所有城市',
+    all_categories: '所有分类',
+    clear_all: '清除所有',
+    apply_filters: '应用筛选',
+    active_filters: '个活跃筛选',
+  },
+
   // Languages
   languages: {
     fr: 'Français',

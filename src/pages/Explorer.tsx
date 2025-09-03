@@ -4,7 +4,7 @@ import { SearchHeader } from '@/components/SearchHeader';
 import { OffersList } from '@/components/OffersList';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
-import { FilterBottomSheet } from '@/components/FilterBottomSheet';
+import { FilterSheet, FilterState } from '@/components/FilterSheet';
 import { PartnerCard } from '@/components/PartnerCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useOffers } from '@/hooks/useOffers';
@@ -43,6 +43,12 @@ const Explorer = () => {
   const [partners, setPartners] = useState<Partner[]>([]);
   const [partnersLoading, setPartnersLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('offers');
+  const [currentFilters, setCurrentFilters] = useState<FilterState>({
+    city: '',
+    category: '',
+    sortBy: 'relevance',
+    distance: undefined
+  });
   const { t } = useLanguage();
   
   const { latitude, longitude, error: locationError } = useGeolocation();
@@ -134,6 +140,17 @@ const Explorer = () => {
     }
   }, [activeTab]);
 
+  const handleApplyFilters = (newFilters: FilterState) => {
+    setCurrentFilters(newFilters);
+    // Apply filters to the useOffers hook
+    setFilters({
+      category: newFilters.category || null,
+      priceRange: null,
+      sortBy: newFilters.sortBy as "relevance" | "newest" | "distance" | "price",
+      maxDistance: newFilters.distance || null,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Search Header */}
@@ -220,10 +237,12 @@ const Explorer = () => {
         </Tabs>
       </main>
       
-      {/* Filter Bottom Sheet */}
-      <FilterBottomSheet 
+      {/* Filter Sheet */}
+      <FilterSheet 
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
+        onApplyFilters={handleApplyFilters}
+        currentFilters={currentFilters}
       />
       
       {/* Floating Action Button */}

@@ -249,6 +249,21 @@ export const id = {
     available_offers: 'Penawaran tersedia',
   },
 
+  // Filter
+  filter: {
+    title: 'Filter',
+    sort_by: 'Urutkan berdasarkan',
+    location: 'Lokasi',
+    distance: 'Jarak',
+    city: 'Kota',
+    category: 'Kategori',
+    all_cities: 'Semua kota',
+    all_categories: 'Semua kategori',
+    clear_all: 'Hapus semua',
+    apply_filters: 'Terapkan filter',
+    active_filters: 'filter aktif',
+  },
+
   // Languages
   languages: {
     fr: 'Français',

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { FilterBottomSheet } from "@/components/FilterBottomSheet";
 import { HeroUnauthenticated } from "@/components/HeroUnauthenticated";
 import { HeroNoPass } from "@/components/HeroNoPass";
 import { HeroWithPass } from "@/components/HeroWithPass";
@@ -30,7 +29,6 @@ const Index = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [userPass, setUserPass] = useState<UserPass | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     // Set up auth state listener
@@ -130,12 +128,6 @@ const Index = () => {
       
       {/* Bottom Navigation */}
       <BottomNavigation />
-      
-      {/* Filters Bottom Sheet */}
-      <FilterBottomSheet 
-        isOpen={showFilters} 
-        onClose={() => setShowFilters(false)} 
-      />
     </div>
   );
 };

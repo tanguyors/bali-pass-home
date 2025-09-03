@@ -249,6 +249,21 @@ export const en = {
     available_offers: 'Available offers',
   },
 
+  // Filter
+  filter: {
+    title: 'Filters',
+    sort_by: 'Sort by',
+    location: 'Location',
+    distance: 'Distance',
+    city: 'City',
+    category: 'Category',
+    all_cities: 'All cities',
+    all_categories: 'All categories',
+    clear_all: 'Clear all',
+    apply_filters: 'Apply filters',
+    active_filters: 'active filter(s)',
+  },
+
   // Languages
   languages: {
     fr: 'Français',
