@@ -1238,6 +1238,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_expired_passes: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       create_partner_pass: {
         Args: { partner_user_id: string }
         Returns: string
@@ -1280,6 +1284,22 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      search_offers: {
+        Args: {
+          category_filter?: string
+          city_filter?: string
+          limit_count?: number
+          search_term?: string
+        }
+        Returns: {
+          category_name: string
+          city_name: string
+          id: string
+          partner_name: string
+          short_desc: string
+          title: string
+        }[]
       }
     }
     Enums: {
