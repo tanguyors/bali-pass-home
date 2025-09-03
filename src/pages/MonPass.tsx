@@ -26,6 +26,7 @@ import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { LanguageSelector } from '@/components/LanguageSelector';
 
 interface Pass {
   id: string;
@@ -236,6 +237,10 @@ const MonPass: React.FC = () => {
   if (!user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+        {/* Language Selector - Fixed at top right */}
+        <div className="fixed top-4 right-4 z-50">
+          <LanguageSelector />
+        </div>
         <div className="flex-1 p-4">
           <div className="flex items-center justify-center min-h-[80vh]">
             <Card className="w-full max-w-sm shadow-xl border-0 bg-card/60 backdrop-blur-sm">
@@ -285,6 +290,10 @@ const MonPass: React.FC = () => {
   if (!pass) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+        {/* Language Selector - Fixed at top right */}
+        <div className="fixed top-4 right-4 z-50">
+          <LanguageSelector />
+        </div>
         <div className="p-4 space-y-6">
           <div className="text-center">
             <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
@@ -349,6 +358,10 @@ const MonPass: React.FC = () => {
   // Authenticated with active pass - full content
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+      {/* Language Selector - Fixed at top right */}
+      <div className="fixed top-4 right-4 z-50">
+        <LanguageSelector />
+      </div>
       <div className="p-4 pb-24 space-y-6">
         {/* Pass Header with Gradient */}
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-primary/90 to-primary/70 text-white shadow-2xl">

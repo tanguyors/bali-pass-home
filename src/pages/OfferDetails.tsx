@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { QRScanner } from "@/components/QRScanner";
 import { logger } from "@/lib/logger";
+import { LanguageSelector } from '@/components/LanguageSelector';
 
 interface Offer {
   id: string;
@@ -398,6 +399,10 @@ export default function OfferDetails() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
+      {/* Language Selector - Fixed at top right */}
+      <div className="fixed top-4 right-4 z-50">
+        <LanguageSelector />
+      </div>
       {/* Modern Header */}
       <div className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-700/50">
         <div className="flex items-center justify-between h-16 px-6">

@@ -11,6 +11,7 @@ import { Grid3X3, List } from 'lucide-react';
 import { useOffers } from '@/hooks/useOffers';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { LanguageSelector } from '@/components/LanguageSelector';
 
 interface Category {
   id: string;
@@ -145,6 +146,10 @@ const Explorer = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Language Selector - Fixed at top right */}
+      <div className="fixed top-4 right-4 z-50">
+        <LanguageSelector />
+      </div>
       {/* Location error message */}
       {locationError && (
         <div className="px-4 py-2 bg-orange-50 border-b border-orange-200">
