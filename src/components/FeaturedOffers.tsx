@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { MapPin, Navigation } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { logger } from "@/lib/logger";
 
 interface Offer {
@@ -25,76 +26,26 @@ interface EnhancedOffer extends Offer {
   badge_color: 'green' | 'red';
 }
 
-interface UserPass {
-  id: string;
-  status: string;
-  expires_at: string;
-}
-
 export function FeaturedOffers() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { user, hasActivePass } = useAuth();
   const [offers, setOffers] = useState<EnhancedOffer[]>([]);
-  const [user, setUser] = useState<any>(null);
-  const [userPass, setUserPass] = useState<UserPass | null>(null);
 
   useEffect(() => {
     let mounted = true;
     
-    const initializeComponent = async () => {
-      await fetchFeaturedOffers();
-      
+    const loadOffers = async () => {
       if (!mounted) return;
-      
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchUserPass(session.user.id);
-      }
+      await fetchFeaturedOffers();
     };
 
-    initializeComponent();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (!mounted) return;
-        
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          await fetchUserPass(session.user.id);
-        } else {
-          setUserPass(null);
-        }
-      }
-    );
+    loadOffers();
 
     return () => {
       mounted = false;
-      subscription.unsubscribe();
     };
   }, []);
-
-  const fetchUserPass = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('passes')
-        .select('id, status, expires_at')
-        .eq('user_id', userId)
-        .eq('status', 'active')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      if (error && error.code !== 'PGRST116') {
-        logger.error('Error fetching user pass', error);
-        return;
-      }
-
-      setUserPass(data);
-    } catch (error) {
-      logger.error('Error in fetchUserPass', error);
-    }
-  };
 
   const openNavigation = (address: string) => {
     if (!address) return;
@@ -163,7 +114,6 @@ export function FeaturedOffers() {
     }
   };
 
-  const hasActivePass = !!userPass && new Date(userPass.expires_at) > new Date();
   const shouldBlur = !user || !hasActivePass;
 
   if (offers.length === 0) {

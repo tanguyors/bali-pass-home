@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -37,24 +37,6 @@ import { SupportLink } from '@/components/SupportLink';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 
-interface Profile {
-  id: string;
-  user_id: string;
-  name: string | null;
-  first_name: string | null;
-  last_name: string | null;
-  phone: string | null;
-  locale: string | null;
-  user_type: string | null;
-}
-
-interface Pass {
-  id: string;
-  status: 'active' | 'expired' | 'pending' | 'refunded';
-  expires_at: string;
-  purchased_at: string;
-}
-
 interface UserPreferences {
   push_notifications: boolean;
   email_notifications: boolean;
@@ -62,11 +44,7 @@ interface UserPreferences {
 }
 
 const Profil: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [pass, setPass] = useState<Pass | null>(null);
+  const { user, profile, userPass: pass, loading, setProfile } = useAuth();
   const [preferences, setPreferences] = useState<UserPreferences>({
     push_notifications: false,
     email_notifications: false,
@@ -78,80 +56,9 @@ const Profil: React.FC = () => {
   const { toast } = useToast();
   const { t, language, setLanguage } = useLanguage();
 
-  // Auth state management
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }
-    );
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  // Fetch user data when authenticated
-  useEffect(() => {
-    if (user) {
-      fetchUserData();
-    }
-  }, [user]);
-
-  const fetchUserData = async () => {
-    if (!user) return;
-
-    try {
-      // Fetch user profile
-      const { data: profileData } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-
-      if (profileData) {
-        setProfile(profileData);
-      }
-
-      // Fetch active pass
-      const { data: passData } = await supabase
-        .from('passes')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      if (passData) {
-        setPass(passData);
-      }
-
-      // Set preferences from profile data
-      if (profileData) {
-        setPreferences({
-          push_notifications: true,
-          email_notifications: true,
-          language: profileData.locale || 'en'
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    }
-  };
-
   const handleSignOut = async () => {
     try {
-      // Clear local session first to ensure UI updates immediately
-      setSession(null);
-      setUser(null);
-      
-      // Then attempt server logout
+      // Attempt server logout
       const { error } = await supabase.auth.signOut();
       
       // Handle specific error types that aren't critical
@@ -183,9 +90,6 @@ const Profil: React.FC = () => {
       
     } catch (error) {
       console.error('Unexpected logout error:', error);
-      // Still clear local state and navigate even on unexpected errors
-      setSession(null);
-      setUser(null);
       
       toast({
         title: t('profile.logout_success'),

@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
 export interface OfferFavorite {
@@ -27,14 +28,13 @@ export interface OfferFavorite {
 }
 
 export const useOfferFavorites = () => {
+  const { user } = useAuth();
   const [favorites, setFavorites] = useState<OfferFavorite[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
   const fetchFavorites = useCallback(async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
       if (!user) {
         setFavorites([]);
         setLoading(false);
@@ -66,35 +66,34 @@ export const useOfferFavorites = () => {
             )
           )
         `)
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
 
-      if (error) {
+        if (error) {
+          console.error('Error fetching offer favorites:', error);
+          toast({
+            variant: "destructive",
+            title: "Erreur",
+            description: "Impossible de charger les favoris",
+          });
+          return;
+        }
+
+        setFavorites(data || []);
+      } catch (error) {
         console.error('Error fetching offer favorites:', error);
         toast({
           variant: "destructive",
           title: "Erreur",
           description: "Impossible de charger les favoris",
         });
-        return;
+      } finally {
+        setLoading(false);
       }
-
-      setFavorites(data || []);
-    } catch (error) {
-      console.error('Error fetching offer favorites:', error);
-      toast({
-        variant: "destructive",
-        title: "Erreur",
-        description: "Impossible de charger les favoris",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [toast]);
+    }, [user, toast]);
 
   const removeFromFavorites = useCallback(async (offerId: string) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
       const { error } = await supabase
@@ -127,11 +126,16 @@ export const useOfferFavorites = () => {
         description: "Impossible de retirer des favoris",
       });
     }
-  }, [toast, fetchFavorites]);
+  }, [user, toast, fetchFavorites]);
 
   useEffect(() => {
-    fetchFavorites();
-  }, [fetchFavorites]);
+    if (user) {
+      fetchFavorites();
+    } else {
+      setFavorites([]);
+      setLoading(false);
+    }
+  }, [user]);
 
   return {
     favorites,

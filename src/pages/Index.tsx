@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { HeroUnauthenticated } from "@/components/HeroUnauthenticated";
 import { HeroNoPass } from "@/components/HeroNoPass";
 import { HeroWithPass } from "@/components/HeroWithPass";
@@ -12,74 +11,12 @@ import { BottomNavigation } from "@/components/BottomNavigation";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
 import { PassSummarySection } from "@/components/PassSummarySection";
 import { LanguageSelector } from "@/components/LanguageSelector";
-import { supabase } from "@/integrations/supabase/client";
-import { User, Session } from "@supabase/supabase-js";
-
-interface UserPass {
-  id: string;
-  status: string;
-  expires_at: string;
-  purchased_at: string;
-}
-
+import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const Index = () => {
   const { t } = useLanguage();
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [userPass, setUserPass] = useState<UserPass | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          fetchUserPass(session.user.id);
-        } else {
-          setUserPass(null);
-        }
-        setLoading(false);
-      }
-    );
-
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchUserPass(session.user.id);
-      }
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const fetchUserPass = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('passes')
-        .select('id, status, expires_at, purchased_at')
-        .eq('user_id', userId)
-        .eq('status', 'active')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error fetching user pass:', error);
-        return;
-      }
-
-      setUserPass(data);
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
+  const { user, userPass, loading, isAuthenticated, hasActivePass } = useAuth();
 
   if (loading) {
     return (
@@ -88,10 +25,6 @@ const Index = () => {
       </div>
     );
   }
-
-  // Determine user state
-  const isAuthenticated = !!user;
-  const hasActivePass = !!userPass && new Date(userPass.expires_at) > new Date();
 
   return (
     <div className="min-h-screen bg-background">

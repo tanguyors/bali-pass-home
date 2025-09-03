@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
 export interface PartnerFavorite {
@@ -20,14 +21,14 @@ export interface PartnerFavorite {
 }
 
 export const usePartnerFavorites = () => {
+  const { user } = useAuth();
   const [favorites, setFavorites] = useState<PartnerFavorite[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
   const fetchFavorites = async () => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
+      if (!user) {
         setFavorites([]);
         setLoading(false);
         return;
@@ -48,7 +49,7 @@ export const usePartnerFavorites = () => {
             )
           )
         `)
-        .eq('user_id', session.user.id);
+        .eq('user_id', user.id);
 
       if (error) throw error;
       setFavorites(data || []);
@@ -66,8 +67,7 @@ export const usePartnerFavorites = () => {
 
   const addToFavorites = async (partnerId: string) => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
+      if (!user) {
         toast({
           title: "Connexion requise",
           description: "Vous devez être connecté pour ajouter aux favoris",
@@ -79,7 +79,7 @@ export const usePartnerFavorites = () => {
       const { error } = await supabase
         .from('partner_favorites')
         .insert({
-          user_id: session.user.id,
+          user_id: user.id,
           partner_id: partnerId
         });
 
@@ -113,13 +113,12 @@ export const usePartnerFavorites = () => {
 
   const removeFromFavorites = async (partnerId: string) => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) return false;
+      if (!user) return false;
 
       const { error } = await supabase
         .from('partner_favorites')
         .delete()
-        .eq('user_id', session.user.id)
+        .eq('user_id', user.id)
         .eq('partner_id', partnerId);
 
       if (error) throw error;
@@ -156,18 +155,7 @@ export const usePartnerFavorites = () => {
 
   useEffect(() => {
     fetchFavorites();
-    
-    // Listen to auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'SIGNED_IN') {
-        fetchFavorites();
-      } else if (event === 'SIGNED_OUT') {
-        setFavorites([]);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
+  }, [user]);
 
   return {
     favorites,

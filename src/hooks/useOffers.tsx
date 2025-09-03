@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { useGeolocation } from './useGeolocation';
 import { logger } from '@/lib/logger';
 
@@ -38,6 +39,7 @@ export interface FiltersType {
 }
 
 export function useOffers(userLatitude?: number | null, userLongitude?: number | null) {
+  const { user } = useAuth();
   const [offers, setOffers] = useState<Offer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -58,8 +60,10 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
   // Fetch user favorites
   const fetchFavorites = useCallback(async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        setFavorites(new Set());
+        return;
+      }
 
       const { data } = await supabase
         .from('favorites')
@@ -72,7 +76,7 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
     } catch (error) {
       logger.error('Error fetching favorites', error);
     }
-  }, []); // No dependencies to avoid loops
+  }, [user]); // Fixed dependencies
 
   const fetchOffers = useCallback(async (reset = false) => {
     try {
@@ -214,12 +218,11 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
     } finally {
       setLoading(false);
     }
-  }, [searchQuery, filters.category, filters.city, filters.sortBy, filters.maxDistance, page, userLatitude, userLongitude, calculateDistance, pageSize]); // Removed favorites from dependencies
+  }, [searchQuery, filters.category, filters.city, filters.sortBy, filters.maxDistance, page, userLatitude, userLongitude, calculateDistance, pageSize, favorites]); // Added favorites back
 
   // Toggle favorite
   const toggleFavorite = useCallback(async (offerId: string) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
       const isFavorite = favorites.has(offerId);
@@ -253,7 +256,7 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
     } catch (error) {
       logger.error('Error toggling favorite', error);
     }
-  }, [favorites]);
+  }, [favorites, user]);
 
   // Load more offers
   const loadMore = useCallback(() => {
@@ -270,8 +273,12 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
 
   // Effects
   useEffect(() => {
-    fetchFavorites();
-  }, []); // No dependencies to avoid loops
+    if (user) {
+      fetchFavorites();
+    } else {
+      setFavorites(new Set());
+    }
+  }, [user]); // Only depend on user
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -281,16 +288,6 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
 
     return () => clearTimeout(timeoutId);
   }, [searchQuery, filters.category, filters.city, filters.sortBy, filters.maxDistance, userLatitude, userLongitude]); // Fixed dependencies
-
-  // Update favorites in offers when favorites change - but only if offers exist
-  useEffect(() => {
-    if (offers.length > 0) {
-      setOffers(prev => prev.map(offer => ({
-        ...offer,
-        isFavorite: favorites.has(offer.id)
-      })));
-    }
-  }, [favorites]);
 
   return {
     offers,
