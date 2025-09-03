@@ -1235,27 +1235,12 @@ export type Database = {
       }
     }
     Views: {
-      quick_stats: {
-        Row: {
-          active_count: number | null
-          table_name: string | null
-          total_count: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
-      cleanup_expired_passes: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
       create_partner_pass: {
         Args: { partner_user_id: string }
         Returns: string
-      }
-      daily_maintenance: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
       }
       generate_partner_qr_code: {
         Args: Record<PropertyKey, never>
@@ -1264,10 +1249,6 @@ export type Database = {
       generate_reseller_code: {
         Args: Record<PropertyKey, never>
         Returns: string
-      }
-      get_partner_stats: {
-        Args: { partner_uuid: string }
-        Returns: Json
       }
       get_resellers_for_employee: {
         Args: { employee_id: string; reseller_ids: string[] }
@@ -1299,37 +1280,6 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
-      }
-      search_offers: {
-        Args: {
-          category_filter?: string
-          city_filter?: string
-          limit_count?: number
-          search_term?: string
-        }
-        Returns: {
-          category_name: string
-          city_name: string
-          id: string
-          partner_name: string
-          short_desc: string
-          title: string
-        }[]
-      }
-      search_offers_optimized: {
-        Args: {
-          category_uuid?: string
-          city_uuid?: string
-          limit_count?: number
-          search_text?: string
-        }
-        Returns: {
-          category_name: string
-          city_name: string
-          offer_id: string
-          offer_title: string
-          partner_name: string
-        }[]
       }
     }
     Enums: {
