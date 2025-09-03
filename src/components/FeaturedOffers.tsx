@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { MapPin, Navigation } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { logger } from "@/lib/logger";
+import { User } from "@supabase/supabase-js";
 
 interface Offer {
   id: string;
@@ -13,15 +12,13 @@ interface Offer {
   value_text?: string;
   promo_type?: string;
   value_number?: number;
-  partner: {
+  partner?: {
+    id: string;
     name: string;
     address?: string;
     phone?: string;
     photos?: string[];
   };
-}
-
-interface EnhancedOffer extends Offer {
   badge_color: 'green' | 'red';
 }
 
@@ -31,58 +28,15 @@ interface UserPass {
   expires_at: string;
 }
 
-export function FeaturedOffers() {
+interface FeaturedOffersProps {
+  offers: Offer[];
+  user: User | null;
+  userPass: UserPass | null;
+}
+
+export function FeaturedOffers({ offers, user, userPass }: FeaturedOffersProps) {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const [offers, setOffers] = useState<EnhancedOffer[]>([]);
-  const [user, setUser] = useState<any>(null);
-  const [userPass, setUserPass] = useState<UserPass | null>(null);
-
-  useEffect(() => {
-    fetchFeaturedOffers();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          fetchUserPass(session.user.id);
-        } else {
-          setUserPass(null);
-        }
-      }
-    );
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchUserPass(session.user.id);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const fetchUserPass = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('passes')
-        .select('id, status, expires_at')
-        .eq('user_id', userId)
-        .eq('status', 'active')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      if (error && error.code !== 'PGRST116') {
-        logger.error('Error fetching user pass', error);
-        return;
-      }
-
-      setUserPass(data);
-    } catch (error) {
-      logger.error('Error in fetchUserPass', error);
-    }
-  };
 
   const openNavigation = (address: string) => {
     if (!address) return;
@@ -115,58 +69,6 @@ export function FeaturedOffers() {
     }
   };
 
-  const fetchFeaturedOffers = async () => {
-    try {
-      // Simplified query - get offers first, then partners separately if needed
-      const { data, error } = await supabase
-        .from('offers')
-        .select(`
-          id,
-          title,
-          short_desc,
-          value_text,
-          promo_type,
-          value_number,
-          partner_id
-        `)
-        .eq('is_featured', true)
-        .eq('is_active', true)
-        .limit(5);
-      
-      if (error) {
-        logger.error('Error fetching featured offers', error);
-        return;
-      }
-      
-      if (data && data.length > 0) {
-        // Get partner details separately to avoid complex joins
-        const partnerIds = data.map(offer => offer.partner_id);
-        const { data: partners } = await supabase
-          .from('partners')
-          .select('id, name, address, phone, photos')
-          .in('id', partnerIds)
-          .eq('status', 'approved');
-
-        const partnersMap = partners?.reduce((acc, partner) => {
-          acc[partner.id] = partner;
-          return acc;
-        }, {} as Record<string, any>) || {};
-
-        // Enhance offers with partner data and badge color
-        const enhancedOffers: EnhancedOffer[] = data
-          .filter(offer => partnersMap[offer.partner_id]) // Only approved partners
-          .map(offer => ({
-            ...offer,
-            partner: partnersMap[offer.partner_id],
-            badge_color: offer.promo_type === 'percent' ? 'red' : 'green'
-          }));
-        
-        setOffers(enhancedOffers);
-      }
-    } catch (error) {
-      logger.error('Error in fetchFeaturedOffers', error);
-    }
-  };
 
   const hasActivePass = !!userPass && new Date(userPass.expires_at) > new Date();
   const shouldBlur = !user || !hasActivePass;
