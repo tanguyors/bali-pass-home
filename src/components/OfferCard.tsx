@@ -142,15 +142,21 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
 
             {/* Actions */}
             <div className="flex gap-2">
-              <Button 
-                variant="default" 
-                size="sm" 
-                onClick={() => navigate(`/offer/${offer.id}`)}
-                disabled={shouldBlur}
-                className="text-xs px-3 h-7 flex-1 disabled:opacity-50"
-              >
-                {t('offer_card.view_offer')}
-              </Button>
+              {offer.isUsed ? (
+                <div className="text-xs px-3 h-7 flex-1 flex items-center justify-center bg-gray-700 text-gray-300 rounded font-medium">
+                  DÉJÀ UTILISÉ
+                </div>
+              ) : (
+                <Button 
+                  variant="default" 
+                  size="sm" 
+                  onClick={() => navigate(`/offer/${offer.id}`)}
+                  disabled={shouldBlur}
+                  className="text-xs px-3 h-7 flex-1 disabled:opacity-50"
+                >
+                  {t('offer_card.view_offer')}
+                </Button>
+              )}
               
               {offer.partner.phone && (
                 <Button 
@@ -284,15 +290,21 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
 
         {/* Actions */}
         <div className="flex gap-2">
-          <Button 
-            variant="default" 
-            size="sm" 
-            onClick={() => navigate(`/offer/${offer.id}`)}
-            disabled={shouldBlur}
-            className="text-xs px-3 h-8 flex-1 disabled:opacity-50"
-          >
-            {t('offer_card.view_offer')}
-          </Button>
+          {offer.isUsed ? (
+            <div className="text-xs px-3 h-8 flex-1 flex items-center justify-center bg-gray-700 text-gray-300 rounded font-medium">
+              DÉJÀ UTILISÉ
+            </div>
+          ) : (
+            <Button 
+              variant="default" 
+              size="sm" 
+              onClick={() => navigate(`/offer/${offer.id}`)}
+              disabled={shouldBlur}
+              className="text-xs px-3 h-8 flex-1 disabled:opacity-50"
+            >
+              {t('offer_card.view_offer')}
+            </Button>
+          )}
           
           {offer.partner.address && (
             <Button 
