@@ -157,7 +157,7 @@ export function useOffers() {
         let filteredOffers = offersWithDistance;
         if (filters.maxDistance && latitude && longitude) {
           filteredOffers = offersWithDistance.filter(offer => 
-            offer.distance === undefined || offer.distance <= filters.maxDistance!
+            offer.distance !== undefined && offer.distance <= filters.maxDistance!
           );
         }
 
