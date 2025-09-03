@@ -54,14 +54,16 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
       }
 
       // Vérifier si l'offre a déjà été utilisée
-      const { data: existingRedemption } = await supabase
+      const { data: existingRedemption, error: redemptionError } = await supabase
         .from('redemptions')
         .select('id')
         .eq('pass_id', userPass.id)
         .eq('offer_id', offerId)
-        .maybeSingle();
+        .limit(1);
 
-      if (existingRedemption) {
+      console.log('Checking existing redemption:', { pass_id: userPass.id, offer_id: offerId, existingRedemption, redemptionError });
+
+      if (existingRedemption && existingRedemption.length > 0) {
         toast({
           title: t('offer.already_used'),
           description: t('offer.already_used_desc'),
