@@ -299,19 +299,26 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-full max-h-full w-full h-full p-0 border-0">
+      <DialogContent className="max-w-full max-h-full w-full h-full p-0 border-0 rounded-none">
         <VisuallyHidden>
           <DialogTitle>Scanner QR des partenaires</DialogTitle>
         </VisuallyHidden>
         
         {/* Loading state overlay */}
         {hasPermission === null && (
-          <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-            <div className="text-center p-6 bg-card rounded-lg">
-              <Camera className="w-12 h-12 mx-auto mb-4 text-muted-foreground animate-pulse" />
-              <h3 className="text-lg font-semibold mb-2">Initialisation de la caméra...</h3>
-              <p className="text-muted-foreground">
-                Veuillez patienter pendant que nous accédons à votre caméra.
+          <div className="absolute inset-0 bg-gradient-to-br from-background/95 via-background/90 to-primary/10 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="text-center p-8 bg-card/80 backdrop-blur-md rounded-3xl border border-border/50 shadow-2xl max-w-sm mx-4">
+              <div className="relative mb-6">
+                <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary to-primary/70 rounded-2xl flex items-center justify-center shadow-lg">
+                  <Camera className="w-8 h-8 text-white animate-pulse" />
+                </div>
+                <div className="absolute -top-2 -right-2 w-6 h-6 bg-emerald-500 rounded-full animate-ping"></div>
+              </div>
+              <h3 className="text-xl font-bold mb-3 bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent">
+                Initialisation
+              </h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                Préparation de la caméra pour scanner les codes QR
               </p>
             </div>
           </div>
@@ -319,33 +326,39 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
 
         {/* Error state overlay */}
         {hasPermission === false && (
-          <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-            <div className="text-center p-6 bg-card rounded-lg max-w-sm mx-4">
-              <Camera className="w-12 h-12 mx-auto mb-4 text-destructive" />
-              <h3 className="text-lg font-semibold mb-2">Scanner temporairement indisponible</h3>
-              <p className="text-muted-foreground mb-4">
-                Vous pouvez saisir manuellement le code partenaire en attendant.
+          <div className="absolute inset-0 bg-gradient-to-br from-background/95 via-background/90 to-destructive/10 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="text-center p-8 bg-card/80 backdrop-blur-md rounded-3xl border border-border/50 shadow-2xl max-w-md mx-4">
+              <div className="w-16 h-16 mx-auto bg-gradient-to-br from-destructive to-destructive/70 rounded-2xl flex items-center justify-center shadow-lg mb-6">
+                <Camera className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-foreground">Scanner indisponible</h3>
+              <p className="text-muted-foreground mb-6 text-sm">
+                Saisissez manuellement le code partenaire
               </p>
               
               <div className="space-y-4">
-                <div>
+                <div className="relative">
                   <input
                     type="text"
                     value={manualInput}
                     onChange={(e) => setManualInput(e.target.value)}
                     placeholder="PARTNER_XXXXX"
-                    className="w-full p-3 border rounded-lg text-center"
+                    className="w-full p-4 bg-background/60 border border-border/60 rounded-2xl text-center font-mono text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
                   />
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   <Button 
                     onClick={handleManualSubmit}
                     disabled={!manualInput.trim()}
-                    className="flex-1"
+                    className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg transition-all duration-300"
                   >
                     Valider
                   </Button>
-                  <Button variant="outline" onClick={onClose}>
+                  <Button 
+                    variant="outline" 
+                    onClick={onClose}
+                    className="h-12 px-6 rounded-2xl border-border/60 hover:bg-muted/50 transition-all duration-300"
+                  >
                     Fermer
                   </Button>
                 </div>
@@ -354,8 +367,8 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
           </div>
         )}
 
-        <div className="relative w-full h-full bg-black">
-          {/* Video element - toujours présent pour que videoRef.current existe */}
+        <div className="relative w-full h-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+          {/* Video element - Web */}
           {!Capacitor.isNativePlatform() && (
             <div className="relative w-full h-full">
               <video
@@ -370,77 +383,111 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
             </div>
           )}
           
-          {/* Interface native - pas de vidéo en temps réel */}
+          {/* Interface native */}
           {Capacitor.isNativePlatform() && (
-            <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-              <div className="text-center space-y-6">
-                <Camera className="w-24 h-24 mx-auto text-primary" />
+            <div className="w-full h-full bg-gradient-to-br from-slate-900 via-slate-800 to-primary/10 flex items-center justify-center">
+              <div className="text-center space-y-8 px-6">
+                <div className="relative">
+                  <div className="w-32 h-32 mx-auto bg-gradient-to-br from-primary via-primary to-primary/70 rounded-3xl flex items-center justify-center shadow-2xl">
+                    <Camera className="w-16 h-16 text-white" />
+                  </div>
+                  <div className="absolute -top-3 -right-3 w-8 h-8 bg-emerald-500 rounded-full animate-ping"></div>
+                </div>
                 <div>
-                  <h3 className="text-white text-xl font-semibold mb-2">Scanner QR Code</h3>
-                  <p className="text-white/80 mb-6">Appuyez sur le bouton pour prendre une photo du QR code</p>
+                  <h3 className="text-white text-2xl font-bold mb-3">Scanner QR</h3>
+                  <p className="text-white/80 mb-8 text-lg leading-relaxed">
+                    Capturez le code QR du partenaire
+                  </p>
                   <Button 
                     onClick={takeNativePhoto}
                     size="lg"
-                    className="mb-4"
+                    className="h-14 px-8 rounded-2xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-xl text-lg font-semibold transition-all duration-300 transform hover:scale-105"
                   >
-                    <Camera className="w-5 h-5 mr-2" />
-                    Prendre une photo
+                    <Camera className="w-6 h-6 mr-3" />
+                    Capturer
                   </Button>
                 </div>
               </div>
             </div>
           )}
           
-          {/* Overlay avec instructions (web uniquement) - seulement si caméra active */}
+          {/* Overlay moderne pour le web */}
           {!Capacitor.isNativePlatform() && hasPermission === true && (
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <div className="relative mb-8">
-                {/* Zone de scan */}
-                <div className="w-64 h-64 border-4 border-white border-opacity-30 rounded-lg bg-transparent">
-                  {/* Coins du cadre */}
-                  <div className="absolute -top-1 -left-1 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-lg"></div>
-                  <div className="absolute -top-1 -right-1 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-lg"></div>
-                  <div className="absolute -bottom-1 -left-1 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-lg"></div>
-                  <div className="absolute -bottom-1 -right-1 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-lg"></div>
+              {/* Zone de scan moderne */}
+              <div className="relative mb-12">
+                <div className="w-72 h-72 relative">
+                  {/* Fond du cadre avec effet glassmorphism */}
+                  <div className="absolute inset-0 bg-white/5 backdrop-blur-sm rounded-3xl border border-white/20"></div>
                   
-                  {/* Ligne de scan animée */}
-                  <div className="absolute inset-0 overflow-hidden rounded-lg">
-                    <div className="w-full h-1 bg-primary animate-scan-line opacity-80"></div>
+                  {/* Coins animés du cadre */}
+                  <div className="absolute -top-3 -left-3 w-12 h-12 border-t-4 border-l-4 border-primary rounded-tl-2xl animate-pulse"></div>
+                  <div className="absolute -top-3 -right-3 w-12 h-12 border-t-4 border-r-4 border-primary rounded-tr-2xl animate-pulse"></div>
+                  <div className="absolute -bottom-3 -left-3 w-12 h-12 border-b-4 border-l-4 border-primary rounded-bl-2xl animate-pulse"></div>
+                  <div className="absolute -bottom-3 -right-3 w-12 h-12 border-b-4 border-r-4 border-primary rounded-br-2xl animate-pulse"></div>
+                  
+                  {/* Ligne de scan avec gradient */}
+                  <div className="absolute inset-4 overflow-hidden rounded-2xl">
+                    <div className="w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent animate-scan-line opacity-90 shadow-lg"></div>
+                  </div>
+                  
+                  {/* Icône centrale */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-white/20">
+                      <div className="w-8 h-8 border-2 border-white/60 rounded border-dashed animate-spin"></div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Instructions - plus bas pour ne pas couvrir la zone de scan */}
-              <div className="absolute bottom-32 left-4 right-4 pointer-events-auto">
-                <div className="text-center space-y-4">
-                  <p className="text-white text-sm bg-black bg-opacity-70 px-4 py-2 rounded-lg">
-                    Pointez la caméra vers le QR code du partenaire
-                  </p>
-                  
-                  {isScanning && (
-                    <p className="text-primary text-xs bg-black bg-opacity-50 px-3 py-1 rounded">
-                      Scanner actif - Recherche de QR code...
+              {/* Interface utilisateur moderne */}
+              <div className="absolute bottom-24 left-6 right-6 pointer-events-auto space-y-4">
+                {/* Instructions principales */}
+                <div className="text-center">
+                  <div className="inline-flex items-center gap-3 bg-black/60 backdrop-blur-md px-6 py-3 rounded-full border border-white/20">
+                    <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                    <p className="text-white font-medium">
+                      Pointez la caméra vers le QR code du partenaire
                     </p>
-                  )}
-                  
-                  <div className="bg-black bg-opacity-80 p-4 rounded-lg">
-                    <p className="text-white text-xs mb-2">Ou saisissez le code manuellement :</p>
-                    <div className="flex gap-2">
+                  </div>
+                </div>
+                
+                {/* Statut de scan */}
+                {isScanning && (
+                  <div className="text-center">
+                    <div className="inline-flex items-center gap-2 bg-primary/20 backdrop-blur-sm px-4 py-2 rounded-full border border-primary/30">
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full animate-ping"></div>
+                      <p className="text-primary text-sm font-medium">
+                        Recherche en cours...
+                      </p>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Zone de saisie manuelle moderne */}
+                <div className="bg-black/70 backdrop-blur-md p-6 rounded-3xl border border-white/20 shadow-2xl">
+                  <div className="text-center mb-4">
+                    <p className="text-white/90 text-sm font-medium">
+                      Ou saisissez le code manuellement
+                    </p>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="flex-1 relative">
                       <input
                         type="text"
                         value={manualInput}
                         onChange={(e) => setManualInput(e.target.value)}
                         placeholder="PARTNER_XXXXX"
-                        className="px-3 py-2 rounded text-sm flex-1"
+                        className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl text-white placeholder-white/50 font-mono text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
                       />
-                      <Button 
-                        size="sm"
-                        onClick={handleManualSubmit}
-                        disabled={!manualInput.trim()}
-                      >
-                        OK
-                      </Button>
                     </div>
+                    <Button 
+                      onClick={handleManualSubmit}
+                      disabled={!manualInput.trim()}
+                      className="h-12 px-6 rounded-2xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 disabled:opacity-50 font-semibold shadow-lg transition-all duration-300 transform hover:scale-105 disabled:transform-none"
+                    >
+                      OK
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -449,20 +496,23 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
 
           {/* Saisie manuelle pour l'app native */}
           {Capacitor.isNativePlatform() && (
-            <div className="absolute bottom-20 left-4 right-4">
-              <div className="bg-black bg-opacity-70 p-4 rounded-lg">
-                <p className="text-white text-sm mb-2 text-center">Ou saisissez le code manuellement :</p>
-                <div className="flex gap-2">
+            <div className="absolute bottom-24 left-6 right-6">
+              <div className="bg-black/70 backdrop-blur-md p-6 rounded-3xl border border-white/20 shadow-2xl">
+                <p className="text-white text-center mb-4 font-medium">
+                  Ou saisissez le code manuellement
+                </p>
+                <div className="flex gap-3">
                   <input
                     type="text"
                     value={manualInput}
                     onChange={(e) => setManualInput(e.target.value)}
                     placeholder="PARTNER_XXXXX"
-                    className="px-3 py-2 rounded flex-1"
+                    className="flex-1 px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl text-white placeholder-white/50 font-mono focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
                   />
                   <Button 
                     onClick={handleManualSubmit}
                     disabled={!manualInput.trim()}
+                    className="h-12 px-6 rounded-2xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 disabled:opacity-50 font-semibold shadow-lg transition-all duration-300"
                   >
                     Valider
                   </Button>
@@ -471,22 +521,29 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
             </div>
           )}
 
-          {/* Contrôle de fermeture */}
-          <div className="absolute top-4 right-4 z-10">
+          {/* Bouton de fermeture moderne */}
+          <div className="absolute top-6 right-6 z-10">
             <Button
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="bg-black bg-opacity-50 text-white hover:bg-black hover:bg-opacity-70"
+              className="w-12 h-12 bg-black/30 backdrop-blur-sm text-white hover:bg-black/50 border border-white/20 rounded-2xl transition-all duration-300 transform hover:scale-110"
             >
               <X className="w-6 h-6" />
             </Button>
           </div>
 
+          {/* État de validation avec animation */}
           {scanned && (
-            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-              <div className="bg-card p-6 rounded-lg">
-                <p className="text-center">Validation du code...</p>
+            <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/50 to-primary/20 backdrop-blur-sm flex items-center justify-center z-40">
+              <div className="bg-card/90 backdrop-blur-md p-8 rounded-3xl border border-border/50 shadow-2xl animate-scale-in">
+                <div className="text-center">
+                  <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary to-primary/70 rounded-2xl flex items-center justify-center mb-4 animate-pulse">
+                    <div className="w-6 h-6 border-2 border-white rounded-full border-t-transparent animate-spin"></div>
+                  </div>
+                  <p className="text-lg font-semibold text-foreground">Validation du code...</p>
+                  <p className="text-sm text-muted-foreground mt-2">Vérification en cours</p>
+                </div>
               </div>
             </div>
           )}
