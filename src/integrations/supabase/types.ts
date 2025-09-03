@@ -1247,7 +1247,7 @@ export type Database = {
     Functions: {
       cleanup_expired_passes: {
         Args: Record<PropertyKey, never>
-        Returns: undefined
+        Returns: number
       }
       create_partner_pass: {
         Args: { partner_user_id: string }
@@ -1264,6 +1264,10 @@ export type Database = {
       generate_reseller_code: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      get_partner_stats: {
+        Args: { partner_uuid: string }
+        Returns: Json
       }
       get_resellers_for_employee: {
         Args: { employee_id: string; reseller_ids: string[] }
