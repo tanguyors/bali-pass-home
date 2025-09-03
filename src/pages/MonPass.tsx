@@ -1,31 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { 
-  User as UserIcon, 
-  QrCode, 
-  Search, 
+  ArrowLeft, 
   Calendar, 
-  MapPin, 
-  CheckCircle, 
-  TrendingUp,
+  Users, 
+  QrCode, 
+  History, 
+  BarChart3, 
   CreditCard,
-  Wallet,
+  Search,
   Gift,
+  CheckCircle,
+  TrendingUp,
   Clock,
-  Star,
   Award,
   ChevronRight
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { QRScanner } from '@/components/QRScanner';
+import { PassSummarySection } from '@/components/PassSummarySection';
+import { PartnerOffersModal } from '@/components/PartnerOffersModal';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
-import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Pass {
   id: string;
@@ -63,32 +66,11 @@ const MonPass: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useLanguage();
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [pass, setPass] = useState<Pass | null>(null);
+  const { user, profile, userPass, loading, hasActivePass } = useAuth();
+  const [showScanner, setShowScanner] = useState(false);
+  const [scannedPartner, setScannedPartner] = useState<any>(null);
   const [redemptions, setRedemptions] = useState<Redemption[]>([]);
-  const [profile, setProfile] = useState<Profile | null>(null);
   const [totalSavings, setTotalSavings] = useState<number>(0);
-
-  // Auth state management
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }
-    );
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
 
   // Fetch user data when authenticated
   useEffect(() => {
@@ -101,31 +83,6 @@ const MonPass: React.FC = () => {
     if (!user) return;
 
     try {
-      // Fetch user profile
-      const { data: profileData } = await supabase
-        .from('profiles')
-        .select('name, first_name, last_name')
-        .eq('user_id', user.id)
-        .single();
-
-      if (profileData) {
-        setProfile(profileData);
-      }
-
-      // Fetch active pass
-      const { data: passData } = await supabase
-        .from('passes')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('status', 'active')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      if (passData) {
-        setPass(passData);
-      }
-
       // Fetch redemptions with partner and offer details
       const { data: redemptionsData } = await supabase
         .from('redemptions')
@@ -178,10 +135,10 @@ const MonPass: React.FC = () => {
   };
 
   const getPassProgress = (): number => {
-    if (!pass) return 0;
+    if (!userPass) return 0;
     
-    const startDate = new Date(pass.purchased_at);
-    const endDate = new Date(pass.expires_at);
+    const startDate = new Date(userPass.purchased_at);
+    const endDate = new Date(userPass.expires_at);
     const now = new Date();
     
     const totalDuration = endDate.getTime() - startDate.getTime();
@@ -209,9 +166,9 @@ const MonPass: React.FC = () => {
   };
 
   const getDaysRemaining = (): number => {
-    if (!pass) return 0;
+    if (!userPass) return 0;
     const now = new Date();
-    const expiryDate = new Date(pass.expires_at);
+    const expiryDate = new Date(userPass.expires_at);
     const diffTime = expiryDate.getTime() - now.getTime();
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   };
@@ -282,7 +239,7 @@ const MonPass: React.FC = () => {
   }
 
   // Authenticated but no active pass
-  if (!pass) {
+  if (!userPass) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
         <div className="p-4 space-y-6">
@@ -363,14 +320,14 @@ const MonPass: React.FC = () => {
                 variant="secondary" 
                 className="bg-green-100 text-green-800 border-green-200"
               >
-                {pass.status === 'active' ? t('pass.active') : t('pass.inactive')}
+                {userPass.status === 'active' ? t('pass.active') : t('pass.inactive')}
               </Badge>
             </div>
             
             <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-white/80 text-sm">{t('pass.expires_on')}</span>
-                <span className="font-semibold">{formatDate(pass.expires_at)}</span>
+                <span className="font-semibold">{formatDate(userPass.expires_at)}</span>
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">

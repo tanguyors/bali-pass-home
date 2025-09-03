@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heart, MapPin, Navigation, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Offer } from '@/hooks/useOffers';
-import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface OfferCardProps {
   offer: Offer;
@@ -13,64 +13,13 @@ interface OfferCardProps {
   viewMode: 'grid' | 'list';
 }
 
-interface UserPass {
-  id: string;
-  status: string;
-  expires_at: string;
-}
-
 export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps) {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { user, hasActivePass } = useAuth();
   const [imageError, setImageError] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const [userPass, setUserPass] = useState<UserPass | null>(null);
 
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          fetchUserPass(session.user.id);
-        } else {
-          setUserPass(null);
-        }
-      }
-    );
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchUserPass(session.user.id);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const fetchUserPass = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('passes')
-        .select('id, status, expires_at')
-        .eq('user_id', userId)
-        .eq('status', 'active')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error fetching user pass:', error);
-        return;
-      }
-
-      setUserPass(data);
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
-  const hasActivePass = !!userPass && new Date(userPass.expires_at) > new Date();
+  // Check if user should see blurred content
   const shouldBlur = !user || !hasActivePass;
 
   const handleNavigation = () => {
