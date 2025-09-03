@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { Loader2 } from 'lucide-react';
 import { OfferCard } from './OfferCard';
 import { Offer } from '@/hooks/useOffers';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface OffersListProps {
   offers: Offer[];
@@ -24,7 +24,7 @@ export function OffersList({
   error 
 }: OffersListProps) {
   const observer = useRef<IntersectionObserver>();
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   
   const lastOfferElementRef = useCallback((node: HTMLDivElement) => {
     if (loading) return;

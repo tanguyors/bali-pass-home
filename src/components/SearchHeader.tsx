@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { FiltersType } from '@/hooks/useOffers';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface SearchHeaderProps {
   searchQuery: string;
@@ -38,7 +38,7 @@ export function SearchHeader({
   resultsCount,
   userLocation
 }: SearchHeaderProps) {
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   
   const activeFiltersCount = [
     filters.category,

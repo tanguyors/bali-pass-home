@@ -9,7 +9,7 @@ import { PartnerCard } from '@/components/PartnerCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useOffers } from '@/hooks/useOffers';
 import { useGeolocation } from '@/hooks/useGeolocation';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Category {
   id: string;
@@ -43,7 +43,7 @@ const Explorer = () => {
   const [partners, setPartners] = useState<Partner[]>([]);
   const [partnersLoading, setPartnersLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('offers');
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   
   const { latitude, longitude, error: locationError } = useGeolocation();
   
