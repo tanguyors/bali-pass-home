@@ -72,11 +72,11 @@ const PassHistory: React.FC = () => {
           id,
           redeemed_at,
           status,
-          partners (
+          partners!inner (
             name,
-            cities (name)
+            cities!inner (name)
           ),
-          offers (
+          offers!inner (
             title,
             value_number,
             promo_type
