@@ -539,8 +539,8 @@ export default function OfferDetails() {
             variant={isAlreadyUsed ? "secondary" : "default"}
           >
             {isUsing ? t('common.loading') : 
-             isAlreadyUsed ? t('offer.already_used') : 
-             t('offer.use_offer')}
+             isAlreadyUsed ? t('offers.already_used') : 
+             t('offers.use_offer')}
           </Button>
           {offer.partner.address && (
             <Button 

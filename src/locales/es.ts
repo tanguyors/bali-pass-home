@@ -104,18 +104,18 @@ export const es = {
     title: 'Ofertas Destacadas',
     subtitle: 'Las mejores oportunidades del momento',
   },
-  
+  // Offers
+  offers: {
+    view_offer: 'Ver Oferta',
+    connect_message: 'Conéctate y obtén tu Bali\'Pass',
+    access_details: 'Accede a todos los detalles de la oferta',
+    connect_button: 'Conectar',
     used_successfully: '¡Oferta utilizada exitosamente!',
     enjoy_discount: '¡Disfruta de tu descuento!',
     use_error: 'Ocurrió un error al usar la oferta.',
     use_offer: 'Usar oferta',
     already_used: 'Ya utilizada',
     used_offer: 'Has usado la oferta',
-  offers: {
-    view_offer: 'Ver Oferta',
-    connect_message: 'Conéctate y obtén tu Bali\'Pass',
-    access_details: 'Accede a todos los detalles de la oferta',
-    connect_button: 'Conectar',
   },
   
   // Favorites

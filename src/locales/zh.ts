@@ -104,18 +104,18 @@ export const zh = {
     title: '精选优惠',
     subtitle: '当前最佳机会',
   },
-  
+  // Offers
+  offers: {
+    view_offer: '查看优惠',
+    connect_message: '连接并获取您的巴厘岛通行证',
+    access_details: '访问完整的优惠详情',
+    connect_button: '连接',
     used_successfully: '优惠使用成功！',
     enjoy_discount: '享受您的折扣！',
     use_error: '使用优惠时发生错误。',
     use_offer: '使用优惠',
     already_used: '已使用',
     used_offer: '您已使用优惠',
-  offers: {
-    view_offer: '查看优惠',
-    connect_message: '连接并获取您的巴厘岛通行证',
-    access_details: '访问完整的优惠详情',
-    connect_button: '连接',
   },
   
   // Favorites

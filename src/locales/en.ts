@@ -104,18 +104,18 @@ export const en = {
     title: 'Featured Offers',
     subtitle: 'The best opportunities of the moment',
   },
-  
+  // Offers
+  offers: {
+    view_offer: 'View Offer',
+    connect_message: 'Connect and get your Bali\'Pass',
+    access_details: 'Access full offer details',
+    connect_button: 'Connect',
     used_successfully: 'Offer used successfully!',
     enjoy_discount: 'Enjoy your discount!',
     use_error: 'An error occurred while using the offer.',
     use_offer: 'Use offer',
     already_used: 'Already used',
     used_offer: 'You have used the offer',
-  offers: {
-    view_offer: 'View Offer',
-    connect_message: 'Connect and get your Bali\'Pass',
-    access_details: 'Access full offer details',
-    connect_button: 'Connect',
   },
   
   // Favorites
