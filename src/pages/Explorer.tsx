@@ -33,7 +33,7 @@ const Explorer = () => {
     city: '',
     category: '',
     sortBy: isNearbyMode ? 'distance' : 'relevance',
-    distance: isNearbyMode ? 10 : undefined
+    distance: isNearbyMode ? 2000 : undefined  // 2000km pour test depuis Bangkok
   });
   const { t } = useLanguage();
   
@@ -114,7 +114,7 @@ const Explorer = () => {
         category: null,
         city: null,
         sortBy: 'distance',
-        maxDistance: 10,
+        maxDistance: 2000,  // 2000km pour test depuis Bangkok
       });
     }
   }, [isNearbyMode, setFilters]);
@@ -152,7 +152,7 @@ const Explorer = () => {
             {isNearbyMode && (
               <div className="inline-flex items-center gap-2 mb-2">
                 <div className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-medium">
-                  📍 {t('explorer.nearby_mode')} (10km)
+                  📍 {t('explorer.nearby_mode')} (2000km - TEST)
                 </div>
               </div>
             )}
