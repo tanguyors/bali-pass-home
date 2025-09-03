@@ -307,6 +307,16 @@ export default function OfferDetails() {
     try {
       if (!offer || !userPass) return;
 
+      // Vérifier que le partenaire scanné correspond à l'offre
+      if (scannedData.id !== offer.partner.id) {
+        toast({
+          title: t('common.error'),
+          description: "Ce QR code ne correspond pas au partenaire de cette offre.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       setIsUsing(true);
 
       // Créer la redemption après scan réussi
@@ -329,10 +339,24 @@ export default function OfferDetails() {
         return;
       }
 
-      toast({
-        title: t('offer.used_successfully'),
-        description: t('offer.enjoy_discount'),
-      });
+      // Préparer les données de confirmation
+      const confirmationData = {
+        offer: offer,
+        partner: offer.partner,
+        userEmail: 'amaury.ledeuc@hotmail.fr', // Email par défaut
+        redemptionTime: new Date().toLocaleString('fr-FR', {
+          day: '2-digit',
+          month: '2-digit', 
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        })
+      };
+
+      // Afficher la confirmation au lieu du toast
+      setRedemptionData(confirmationData);
+      setShowRedemptionConfirmation(true);
 
       // Marquer l'offre comme utilisée
       setIsAlreadyUsed(true);
