@@ -168,7 +168,7 @@ const Auth: React.FC = () => {
       <Button
         variant="ghost"
         size="icon"
-        onClick={() => navigate(-1)}
+        onClick={() => navigate('/')}
         className="absolute top-6 left-6 z-20 w-12 h-12 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/20 shadow-lg hover:bg-white/90 dark:hover:bg-slate-800/90 rounded-xl transition-all duration-300"
       >
         <ArrowLeft className="w-5 h-5" />
