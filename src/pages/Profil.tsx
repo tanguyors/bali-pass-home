@@ -36,6 +36,7 @@ import { ChangePasswordDialog } from '@/components/ChangePasswordDialog';
 import { SupportLink } from '@/components/SupportLink';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { LanguageSelector } from '@/components/LanguageSelector';
 
 interface UserPreferences {
   push_notifications: boolean;

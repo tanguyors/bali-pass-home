@@ -30,6 +30,7 @@ import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { LanguageSelector } from '@/components/LanguageSelector';
 import { useToast } from '@/components/ui/use-toast';
 import { useOfferFavorites } from '@/hooks/useOfferFavorites';
 import { supabase } from '@/integrations/supabase/client';

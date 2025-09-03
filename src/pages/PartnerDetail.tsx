@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { usePartnerFavorites } from '@/hooks/usePartnerFavorites';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { LanguageSelector } from '@/components/LanguageSelector';
 
 interface Partner {
   id: string;

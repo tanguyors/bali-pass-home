@@ -8,6 +8,7 @@ import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { useOfferFavorites } from '@/hooks/useOfferFavorites';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { LanguageSelector } from '@/components/LanguageSelector';
 
 const Favorites: React.FC = () => {
   const navigate = useNavigate();
