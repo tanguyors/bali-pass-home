@@ -28,7 +28,6 @@ import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageSelector } from '@/components/LanguageSelector';
-import { useOfferFavorites } from '@/hooks/useOfferFavorites';
 
 interface Pass {
   id: string;
@@ -72,7 +71,6 @@ const MonPass: React.FC = () => {
   const [pass, setPass] = useState<Pass | null>(null);
   const [redemptions, setRedemptions] = useState<Redemption[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
-  const { favorites } = useOfferFavorites();
 
   // Auth state management
   useEffect(() => {
@@ -402,10 +400,10 @@ const MonPass: React.FC = () => {
               <div className="w-2 h-6 bg-gradient-to-b from-primary to-primary/60 rounded-full"></div>
               {t('profile.quick_actions')}
             </h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <Button 
                 variant="ghost" 
-                className="flex flex-col items-center gap-3 h-auto py-6 hover:bg-primary/5 transition-all duration-300 group"
+                className="flex flex-col items-center gap-3 h-auto py-4 hover:bg-primary/5 transition-all duration-300 group"
                 onClick={handleScanPartner}
               >
                 <div className="w-12 h-12 bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
@@ -416,87 +414,26 @@ const MonPass: React.FC = () => {
               
               <Button 
                 variant="ghost" 
-                className="flex flex-col items-center gap-3 h-auto py-6 hover:bg-primary/5 transition-all duration-300 group"
+                className="flex flex-col items-center gap-3 h-auto py-4 hover:bg-primary/5 transition-all duration-300 group"
                 onClick={() => navigate('/explorer')}
               >
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500/10 to-blue-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <Search className="w-6 h-6 text-blue-600" />
                 </div>
-                <span className="text-sm font-medium">{t('profile.view_offers')}</span>
+                <span className="text-sm font-medium">{t('nav.explorer')}</span>
+              </Button>
+
+              <Button 
+                variant="ghost" 
+                className="flex flex-col items-center gap-3 h-auto py-4 hover:bg-primary/5 transition-all duration-300 group"
+                onClick={() => navigate('/favorites')}
+              >
+                <div className="w-12 h-12 bg-gradient-to-br from-pink-500/10 to-rose-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <Heart className="w-6 h-6 text-pink-600" />
+                </div>
+                <span className="text-sm font-medium">{t('nav.favorites')}</span>
               </Button>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* My Favorites */}
-        <Card className="shadow-lg border-0 bg-gradient-to-br from-pink-50/80 to-rose-100/40 border-pink-200/30 animate-fade-in">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-rose-400 rounded-xl flex items-center justify-center shadow-lg">
-                  <Heart className="w-5 h-5 text-white fill-current" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg text-rose-800">{t('favorites.title')}</h3>
-                  <p className="text-xs text-rose-600/80">
-                    {favorites.length} {favorites.length === 1 ? t('simple_filter.offer_available') : t('simple_filter.offers_available')}
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            {favorites.length === 0 ? (
-              <div className="text-center py-6">
-                <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Heart className="w-6 h-6 text-pink-400" />
-                </div>
-                <p className="text-sm text-rose-700 mb-3 font-medium">{t('favorites.no_favorites')}</p>
-                <Button 
-                  variant="outline"
-                  size="sm"
-                  onClick={() => navigate('/explorer')}
-                  className="border-pink-200 text-rose-700 hover:bg-pink-50 hover:border-pink-300 transition-all duration-300 text-xs px-4 py-2 h-8"
-                >
-                  {t('explorer.discover_offers')}
-                </Button>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {favorites.slice(0, 2).map((favorite) => (
-                  <div 
-                    key={favorite.id} 
-                    className="flex items-center justify-between p-3 rounded-xl bg-white/70 backdrop-blur-sm cursor-pointer hover:bg-white/90 hover:shadow-md transition-all duration-300 group border border-pink-100/50"
-                    onClick={() => navigate(`/offer/${favorite.offer_id}`)}
-                  >
-                    <div className="flex items-center gap-3 flex-1">
-                      <div className="w-8 h-8 bg-gradient-to-br from-pink-400/20 to-rose-400/10 rounded-lg flex items-center justify-center">
-                        <Heart className="w-4 h-4 text-pink-500 fill-current" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-sm text-rose-900 truncate group-hover:text-rose-800 transition-colors">
-                          {favorite.offer?.title || 'Offre'}
-                        </p>
-                        <p className="text-xs text-rose-600/70 truncate">
-                          {favorite.offer?.partner?.name || 'Partenaire'}
-                        </p>
-                      </div>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-pink-400 flex-shrink-0 group-hover:text-pink-600 group-hover:translate-x-0.5 transition-all duration-300" />
-                  </div>
-                ))}
-                
-                {favorites.length > 2 && (
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    className="w-full mt-3 text-rose-700 hover:bg-pink-50 hover:text-rose-800 transition-all duration-300 h-8 text-xs font-medium"
-                    onClick={() => navigate('/favorites')}
-                  >
-                    {t('favorites.view_all')} ({favorites.length})
-                  </Button>
-                )}
-              </div>
-            )}
           </CardContent>
         </Card>
 
