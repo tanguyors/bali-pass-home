@@ -69,7 +69,6 @@ const Explorer = () => {
     fetchCategories();
   }, []);
 
-
   const handleApplyFilters = (newFilters: FilterState) => {
     setCurrentFilters(newFilters);
     // Apply filters to the useOffers hook
