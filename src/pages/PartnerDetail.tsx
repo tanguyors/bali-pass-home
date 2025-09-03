@@ -163,6 +163,10 @@ const PartnerDetail: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+      {/* Language Selector - Fixed at top right */}
+      <div className="fixed top-4 right-4 z-50">
+        <LanguageSelector />
+      </div>
       {/* Header */}
       <div className="sticky top-0 z-10 bg-gradient-to-r from-background/95 via-background/98 to-primary/5 backdrop-blur-xl border-b border-border/50">
         <div className="p-4">

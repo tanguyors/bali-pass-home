@@ -130,6 +130,10 @@ const PassHistory: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+      {/* Language Selector - Fixed at top right */}
+      <div className="fixed top-4 right-4 z-50">
+        <LanguageSelector />
+      </div>
       <div className="p-4 pb-24 space-y-6">
         {/* Header */}
         <div className="flex items-center gap-4">
