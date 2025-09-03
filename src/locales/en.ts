@@ -27,6 +27,8 @@ export const en = {
     must_be_logged_in: 'You must be logged in to use an offer.',
     at: 'at',
     learn_more: 'Learn more',
+    close: 'Close',
+    approved: 'Approved',
   },
   
   // Auth

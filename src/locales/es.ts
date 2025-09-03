@@ -27,6 +27,8 @@ export const es = {
     must_be_logged_in: 'Debes estar conectado para usar una oferta.',
     at: 'en',
     learn_more: 'Saber más',
+    close: 'Cerrar',
+    approved: 'Aprobado',
   },
   
   // Auth

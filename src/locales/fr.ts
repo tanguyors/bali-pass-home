@@ -353,4 +353,11 @@ export const fr = {
     'Villa & Hostel': 'Villa & Auberge',
     'Water Sports': 'Sports nautiques',
   },
+
+  // Redemption confirmation
+  redemption: {
+    success_title: 'Offre utilisée avec succès !',
+    show_to_merchant: 'Montrez cet écran au commerçant',
+    offer_validated: 'OFFRE VALIDÉE',
+  },
 };

@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { QRScanner } from "@/components/QRScanner";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { OfferRedemptionConfirmation } from "@/components/OfferRedemptionConfirmation";
 import { logger } from "@/lib/logger";
 
 interface Offer {

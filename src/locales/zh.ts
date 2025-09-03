@@ -27,6 +27,8 @@ export const zh = {
     must_be_logged_in: '您必须登录才能使用优惠。',
     at: '在',
     learn_more: '了解更多',
+    close: '关闭',
+    approved: '已批准',
   },
   
   // Auth

@@ -27,6 +27,8 @@ export const id = {
     must_be_logged_in: 'Anda harus masuk untuk menggunakan penawaran.',
     at: 'di',
     learn_more: 'Pelajari lebih lanjut',
+    close: 'Tutup',
+    approved: 'Disetujui',
   },
   
   // Auth
