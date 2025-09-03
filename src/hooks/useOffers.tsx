@@ -299,12 +299,19 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
   }, [fetchFavorites]);
 
   useEffect(() => {
+    console.log('🔄 useOffers useEffect triggered:', {
+      userLatitude,
+      userLongitude,
+      searchQuery,
+      filters
+    });
+    
     const timeoutId = setTimeout(() => {
       refreshOffers();
     }, 300); // Debounce search
 
     return () => clearTimeout(timeoutId);
-  }, [searchQuery, filters]);
+  }, [searchQuery, filters, userLatitude, userLongitude, refreshOffers]);
 
   // Update favorites in offers when favorites change
   useEffect(() => {
