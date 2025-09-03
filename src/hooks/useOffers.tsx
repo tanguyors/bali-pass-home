@@ -52,7 +52,7 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
   });
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   
-  const { latitude, longitude, calculateDistance } = useGeolocation();
+  const { calculateDistance } = useGeolocation();
   const pageSize = 20;
 
   // Fetch user favorites
@@ -145,16 +145,14 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
         }
 
         // Calculate distances if geolocation is available
-        const currentLat = userLatitude ?? latitude;
-        const currentLng = userLongitude ?? longitude;
+        const currentLat = userLatitude;
+        const currentLng = userLongitude;
         
         console.log('🗺️ Calcul des distances', { 
           userLat: currentLat, 
           userLng: currentLng, 
           paramLat: userLatitude,
           paramLng: userLongitude,
-          hookLat: latitude,
-          hookLng: longitude,
           offersCount: filteredData.length 
         });
         
@@ -241,7 +239,7 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
     } finally {
       setLoading(false);
     }
-  }, [searchQuery, filters, page, userLatitude, userLongitude, latitude, longitude, calculateDistance, favorites, pageSize]);
+  }, [searchQuery, filters, page, userLatitude, userLongitude, calculateDistance, favorites, pageSize]);
 
   // Toggle favorite
   const toggleFavorite = useCallback(async (offerId: string) => {
