@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, MapPin, Star, Heart, Clock, Share2, Percent, Euro, Navigation } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowLeft, MapPin, Star, Heart, Clock, Share2, Percent, Euro, Navigation, Phone, Globe, Instagram, Calendar, CheckCircle, Sparkles, Gift } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { QRScanner } from "@/components/QRScanner";
@@ -367,32 +369,36 @@ export default function OfferDetails() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur border-b border-border">
-        <div className="flex items-center justify-between h-14 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
+      {/* Modern Header */}
+      <div className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-700/50">
+        <div className="flex items-center justify-between h-16 px-6">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate(-1)}
-            className="w-9 h-9"
+            className="w-12 h-12 rounded-full bg-white/50 dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-700/50 hover:bg-white dark:hover:bg-slate-800 shadow-sm transition-all duration-300"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <Button
               variant="ghost"
               size="icon"
               onClick={toggleFavorite}
-              className="w-9 h-9"
+              className={`w-12 h-12 rounded-full border transition-all duration-300 ${
+                isFavorite 
+                  ? 'bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400' 
+                  : 'bg-white/50 dark:bg-slate-800/50 border-slate-200/50 dark:border-slate-700/50 hover:bg-white dark:hover:bg-slate-800'
+              }`}
             >
-              <Heart className={`w-5 h-5 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`} />
+              <Heart className={`w-5 h-5 transition-all duration-300 ${isFavorite ? 'fill-current scale-110' : ''}`} />
             </Button>
             <Button
               variant="ghost"
               size="icon"
               onClick={handleShare}
-              className="w-9 h-9"
+              className="w-12 h-12 rounded-full bg-white/50 dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-700/50 hover:bg-white dark:hover:bg-slate-800 shadow-sm transition-all duration-300"
             >
               <Share2 className="w-5 h-5" />
             </Button>
@@ -400,157 +406,240 @@ export default function OfferDetails() {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="pb-20">
-        {/* Image */}
-        <div className="h-64 bg-gradient-card relative overflow-hidden">
+      {/* Content with scroll animations */}
+      <div className="pb-24">
+        {/* Hero Image Section */}
+        <div className="relative h-80 overflow-hidden">
           {offer.partner.photos && offer.partner.photos.length > 0 ? (
-            <img
-              src={offer.partner.photos[0]}
-              alt={offer.title}
-              className="w-full h-full object-cover"
-            />
+            <div className="relative w-full h-full">
+              <img
+                src={offer.partner.photos[0]}
+                alt={offer.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            </div>
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-primary/20 to-lagoon/20 flex items-center justify-center">
-              <p className="text-muted-foreground">{t('offer_card.image_coming_soon')}</p>
+            <div className="w-full h-full bg-gradient-to-br from-primary/30 via-secondary/20 to-lagoon/30 flex items-center justify-center relative">
+              <div className="absolute inset-0 bg-grid-white/10"></div>
+              <div className="relative z-10 text-center">
+                <Sparkles className="w-16 h-16 text-white/80 mx-auto mb-4" />
+                <p className="text-white/90 font-medium">{t('offer_card.image_coming_soon')}</p>
+              </div>
             </div>
           )}
           
-          {/* Discount Badge */}
+          {/* Floating Discount Badge */}
           {offer.value_text && (
-            <div className="absolute top-4 left-4 px-4 py-2 rounded-full text-white text-sm font-bold backdrop-blur-sm border border-white/20 bg-gradient-to-r from-primary via-primary/90 to-primary/80 shadow-lg">
-              {offer.value_text}
+            <div className="absolute top-6 left-6 animate-fade-in">
+              <div className="px-6 py-3 rounded-2xl text-white font-bold backdrop-blur-xl bg-gradient-to-r from-primary/90 to-secondary/90 border border-white/20 shadow-2xl">
+                <div className="flex items-center gap-2">
+                  <Gift className="w-5 h-5" />
+                  <span className="text-lg">{offer.value_text}</span>
+                </div>
+              </div>
             </div>
           )}
+
+          {/* Category Badge */}
+          <div className="absolute top-6 right-6 animate-fade-in">
+            <Badge className="px-4 py-2 bg-white/20 backdrop-blur-xl border border-white/30 text-white font-medium rounded-xl">
+              <div className="flex items-center gap-2">
+                {offer.category.icon && <span className="text-base">{offer.category.icon}</span>}
+                <span>{t(`category_names.${offer.category.name}`) || offer.category.name}</span>
+              </div>
+            </Badge>
+          </div>
         </div>
 
-        <div className="p-4 space-y-6">
-          {/* Title & Category */}
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              {offer.category.icon && (
-                <span className="text-lg">{offer.category.icon}</span>
+        {/* Main Content */}
+        <div className="px-6 -mt-8 relative z-10 space-y-6">
+          {/* Title Card */}
+          <Card className="border-0 shadow-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl animate-slide-in-right">
+            <CardContent className="p-6">
+              <h1 className="text-3xl font-bold text-slate-900 dark:text-white leading-tight mb-2">
+                {offer.title}
+              </h1>
+              {offer.short_desc && (
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {offer.short_desc}
+                </p>
               )}
-              <span className="text-sm text-primary font-medium">{t(`category_names.${offer.category.name}`) || offer.category.name}</span>
-            </div>
-            <h1 className="text-2xl font-bold text-foreground leading-tight">
-              {offer.title}
-            </h1>
-          </div>
+            </CardContent>
+          </Card>
 
-          {/* Partner Info */}
-          <div className="bg-card rounded-lg p-4">
-            <h3 className="font-semibold text-lg text-foreground mb-2">
-              {offer.partner.name}
-            </h3>
-            {offer.partner.address && (
-              <div className="flex items-center gap-2 text-muted-foreground mb-2">
-                <MapPin className="w-4 h-4" />
-                <span className="text-sm">{offer.partner.address}</span>
+          {/* Partner Info Card */}
+          <Card className="border-0 shadow-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl animate-fade-in">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
+                    {offer.partner.name}
+                  </h3>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Star className="w-5 h-5 text-amber-400 fill-current" />
+                    <span className="text-lg font-semibold text-slate-900 dark:text-white">
+                      {(Math.random() * 1.5 + 3.5).toFixed(1)}
+                    </span>
+                    <span className="text-slate-500 dark:text-slate-400">
+                      ({Math.floor(Math.random() * 200) + 50} {t('offer_details.reviews')})
+                    </span>
+                  </div>
+                </div>
               </div>
-            )}
-            {offer.partner.phone && (
-              <div className="flex items-center gap-2 text-muted-foreground mb-2">
-                <span className="text-sm">📞 {offer.partner.phone}</span>
-              </div>
-            )}
-            <div className="flex items-center gap-2">
-              <Star className="w-4 h-4 text-gold fill-current" />
-              <span className="text-sm font-semibold">
-                {(Math.random() * 1.5 + 3.5).toFixed(1)}
-              </span>
-              <span className="text-sm text-muted-foreground">
-                ({Math.floor(Math.random() * 200) + 50} {t('offer_details.reviews')})
-              </span>
-            </div>
-          </div>
 
-          {/* Description */}
-          {offer.short_desc && (
-            <div>
-              <h3 className="font-semibold text-foreground mb-2">{t('offer_details.description')}</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                {offer.short_desc}
-              </p>
-            </div>
-          )}
+              <div className="space-y-3">
+                {offer.partner.address && (
+                  <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                      <MapPin className="w-5 h-5 text-primary" />
+                    </div>
+                    <span className="text-slate-700 dark:text-slate-300 flex-1">{offer.partner.address}</span>
+                  </div>
+                )}
+                
+                {offer.partner.phone && (
+                  <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                    <div className="w-10 h-10 bg-green-500/10 rounded-full flex items-center justify-center">
+                      <Phone className="w-5 h-5 text-green-600" />
+                    </div>
+                    <span className="text-slate-700 dark:text-slate-300 flex-1">{offer.partner.phone}</span>
+                  </div>
+                )}
+
+                {offer.partner.website && (
+                  <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                    <div className="w-10 h-10 bg-blue-500/10 rounded-full flex items-center justify-center">
+                      <Globe className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <span className="text-slate-700 dark:text-slate-300 flex-1">{offer.partner.website}</span>
+                  </div>
+                )}
+
+                {offer.partner.instagram && (
+                  <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                    <div className="w-10 h-10 bg-pink-500/10 rounded-full flex items-center justify-center">
+                      <Instagram className="w-5 h-5 text-pink-600" />
+                    </div>
+                    <span className="text-slate-700 dark:text-slate-300 flex-1">@{offer.partner.instagram}</span>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Offer Details Card */}
+          <Card className="border-0 shadow-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl animate-scale-in">
+            <CardContent className="p-6">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                <Sparkles className="w-6 h-6 text-primary" />
+                {t('offer_details.offer_details')}
+              </h3>
+              
+              <div className="grid grid-cols-1 gap-4">
+                {offer.promo_type && (
+                  <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-xl border border-primary/10">
+                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                      {offer.promo_type === 'percent' ? (
+                        <Percent className="w-6 h-6 text-primary" />
+                      ) : (
+                        <Euro className="w-6 h-6 text-primary" />
+                      )}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-slate-900 dark:text-white">
+                        {t('offer_details.type')}
+                      </p>
+                      <p className="text-slate-600 dark:text-slate-300">
+                        {offer.promo_type === 'percent' ? t('offer_details.percentage') : t('offer_details.fixed_amount')}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                
+                {offer.end_date && (
+                  <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-orange/5 to-amber-500/5 rounded-xl border border-orange/10">
+                    <div className="w-12 h-12 bg-orange/10 rounded-full flex items-center justify-center">
+                      <Calendar className="w-6 h-6 text-orange" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-slate-900 dark:text-white">
+                        {t('offer_details.valid_until')}
+                      </p>
+                      <p className="text-slate-600 dark:text-slate-300">
+                        {new Date(offer.end_date).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Long Description */}
           {offer.long_desc && (
-            <div>
-              <h3 className="font-semibold text-foreground mb-2">{t('offer_details.details')}</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                {offer.long_desc}
-              </p>
-            </div>
+            <Card className="border-0 shadow-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl animate-fade-in">
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
+                  {t('offer_details.details')}
+                </h3>
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {offer.long_desc}
+                </p>
+              </CardContent>
+            </Card>
           )}
-
-          {/* Offer Details */}
-          <div className="bg-card rounded-lg p-4">
-            <h3 className="font-semibold text-foreground mb-3">{t('offer_details.offer_details')}</h3>
-            <div className="space-y-3">
-              {offer.promo_type && (
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                    {offer.promo_type === 'percent' ? (
-                      <Percent className="w-4 h-4 text-primary" />
-                    ) : (
-                      <Euro className="w-4 h-4 text-primary" />
-                    )}
-                  </div>
-                  <span className="text-sm">
-                    {t('offer_details.type')}: {offer.promo_type === 'percent' ? t('offer_details.percentage') : t('offer_details.fixed_amount')}
-                  </span>
-                </div>
-              )}
-              {offer.end_date && (
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-orange/10 rounded-full flex items-center justify-center">
-                    <Clock className="w-4 h-4 text-orange" />
-                  </div>
-                  <span className="text-sm">
-                    {t('offer_details.valid_until')} {new Date(offer.end_date).toLocaleDateString()}
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
 
           {/* Conditions */}
           {offer.conditions_text && (
-            <div>
-              <h3 className="font-semibold text-foreground mb-2">{t('offer_details.conditions')}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {offer.conditions_text}
-              </p>
-            </div>
+            <Card className="border-0 shadow-xl bg-amber-50/80 dark:bg-amber-950/20 backdrop-blur-xl border border-amber-200/50 dark:border-amber-800/50 animate-fade-in">
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold text-amber-900 dark:text-amber-100 mb-4 flex items-center gap-2">
+                  <CheckCircle className="w-6 h-6" />
+                  {t('offer_details.conditions')}
+                </h3>
+                <p className="text-amber-800 dark:text-amber-200 leading-relaxed">
+                  {offer.conditions_text}
+                </p>
+              </CardContent>
+            </Card>
           )}
         </div>
       </div>
 
-      {/* Bottom Action */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4">
-        <div className="flex gap-3">
+      {/* Modern Bottom Action Bar */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t border-slate-200/50 dark:border-slate-700/50 p-6">
+        <div className="flex gap-4">
           <Button 
-            className="flex-1" 
-            size="lg"
+            className="flex-1 h-14 bg-gradient-to-r from-primary via-primary to-secondary hover:from-primary/90 hover:via-primary/90 hover:to-secondary/90 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none" 
             onClick={handleUseOffer}
             disabled={isUsing || !userPass || isAlreadyUsed}
-            variant={isAlreadyUsed ? "secondary" : "default"}
           >
-            {isUsing ? t('common.loading') : 
-             isAlreadyUsed ? t('offers.already_used') : 
-             t('offers.use_offer')}
+            <div className="flex items-center gap-3">
+              {isUsing ? (
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              ) : isAlreadyUsed ? (
+                <CheckCircle className="w-5 h-5" />
+              ) : (
+                <Gift className="w-5 h-5" />
+              )}
+              <span className="text-lg">
+                {isUsing ? t('common.loading') : 
+                 isAlreadyUsed ? t('offers.already_used') : 
+                 t('offers.use_offer')}
+              </span>
+            </div>
           </Button>
+          
           {offer.partner.address && (
             <Button 
               variant="outline" 
               size="lg"
-              className="px-4 bg-gradient-to-r from-primary/10 to-lagoon/10 border-primary/20 hover:from-primary/20 hover:to-lagoon/20 hover:border-primary/30 hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md"
+              className="h-14 px-6 bg-white/50 dark:bg-slate-800/50 border-2 border-primary/20 hover:bg-primary/5 hover:border-primary/40 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg"
               onClick={() => openNavigation(offer.partner.address!)}
               title={t('offer_card.navigation')}
             >
-              <Navigation className="w-5 h-5 text-primary" />
+              <Navigation className="w-6 h-6 text-primary" />
             </Button>
           )}
         </div>
