@@ -6,6 +6,7 @@ import { ArrowLeft, MapPin, Star, Heart, Clock, Share2, Percent, Euro, Navigatio
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { QRScanner } from "@/components/QRScanner";
+import { logger } from "@/lib/logger";
 
 interface Offer {
   id: string;
@@ -318,8 +319,7 @@ export default function OfferDetails() {
   const openNavigation = (address: string) => {
     if (!address) return;
     
-    console.log("=== GPS Navigation Debug (OfferDetails) ===");
-    console.log("Adresse reçue:", address);
+    logger.debug("GPS Navigation from OfferDetails", { address });
     
     const encodedAddress = encodeURIComponent(address);
     
@@ -327,22 +327,22 @@ export default function OfferDetails() {
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const isAndroid = /Android/.test(navigator.userAgent);
     
-    console.log("Plateforme détectée:", { isIOS, isAndroid });
+    logger.debug("Platform detected", { isIOS, isAndroid });
     
     if (isIOS) {
       // Try Apple Maps first
       const appleUrl = `maps://maps.apple.com/?q=${encodedAddress}`;
-      console.log("Tentative Apple Maps:", appleUrl);
+      logger.debug("Opening Apple Maps", { url: appleUrl });
       window.location.href = appleUrl;
     } else if (isAndroid) {
       // Try Android Maps intent
       const androidUrl = `geo:0,0?q=${encodedAddress}`;
-      console.log("URL Android Maps:", androidUrl);
+      logger.debug("Opening Android Maps", { url: androidUrl });
       window.location.href = androidUrl;
     } else {
       // Use Google Maps for web
       const webUrl = `https://www.google.com/maps/search/${encodedAddress}`;
-      console.log("URL Web Google Maps:", webUrl);
+      logger.debug("Opening Web Google Maps", { url: webUrl });
       window.open(webUrl, '_blank');
     }
   };

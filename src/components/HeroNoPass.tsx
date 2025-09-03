@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { CreditCard, ArrowRight } from "lucide-react";
 import baliHeroImage from "@/assets/bali-hero.jpg";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { logger } from "@/lib/logger";
 
 interface PassSettings {
   setting_key: string;
@@ -25,7 +26,7 @@ export function HeroNoPass() {
         .select('setting_key, setting_value');
       
       if (error) {
-        console.error('Error fetching pass settings:', error);
+        logger.error('Error fetching pass settings', error);
         return;
       }
       
@@ -33,7 +34,7 @@ export function HeroNoPass() {
         setPassSettings(data);
       }
     } catch (error) {
-      console.error('Error:', error);
+      logger.error('Error in fetchPassSettings', error);
     }
   };
 
@@ -48,7 +49,7 @@ export function HeroNoPass() {
 
   const handleViewOffers = () => {
     // TODO: Navigate to offers
-    console.log("Navigating to offers...");
+    logger.debug("Navigating to offers");
   };
 
   return (

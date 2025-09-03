@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useGeolocation } from './useGeolocation';
+import { logger } from '@/lib/logger';
 
 export interface Offer {
   id: string;
@@ -69,7 +70,7 @@ export function useOffers() {
         setFavorites(new Set(data.map(fav => fav.offer_id)));
       }
     } catch (error) {
-      console.error('Error fetching favorites:', error);
+      logger.error('Error fetching favorites', error);
     }
   }, []);
 
@@ -78,7 +79,7 @@ export function useOffers() {
       setLoading(true);
       setError(null);
 
-      console.log('🔍 Fetching offers with filters:', filters);
+      logger.debug('Fetching offers with filters', filters);
 
       let query = supabase
         .from('offers')
@@ -122,12 +123,12 @@ export function useOffers() {
       }
 
       if (data) {
-        console.log('📊 Raw offers fetched:', data.length);
+        logger.debug('Raw offers fetched', { count: data.length });
         
         // Apply city filter if specified
         let filteredData = data;
         if (filters.city) {
-          console.log('🏙️ Applying city filter:', filters.city);
+          logger.debug('Applying city filter', { city: filters.city });
           // First fetch the partners in the specified city
           const { data: cityPartners } = await supabase
             .from('partners')
@@ -136,11 +137,11 @@ export function useOffers() {
             .eq('status', 'approved');
           
           const partnerIds = cityPartners?.map(p => p.id) || [];
-          console.log('🏢 Partners in city:', partnerIds.length);
+          logger.debug('Partners in city', { count: partnerIds.length });
           filteredData = data.filter(offer => 
             offer.partner && partnerIds.includes(offer.partner.id)
           );
-          console.log('🎯 Offers after city filter:', filteredData.length);
+          logger.debug('Offers after city filter', { count: filteredData.length });
         }
 
         // Calculate distances if geolocation is available
@@ -189,7 +190,7 @@ export function useOffers() {
           }
         });
 
-        console.log('✅ Final filtered offers:', filteredOffers.length);
+        logger.debug('Final filtered offers', { count: filteredOffers.length });
 
         if (reset) {
           setOffers(filteredOffers);
@@ -203,7 +204,7 @@ export function useOffers() {
       }
     } catch (error) {
       setError('Une erreur s\'est produite lors du chargement des offres');
-      console.error('Error fetching offers:', error);
+      logger.error('Error fetching offers', error);
     } finally {
       setLoading(false);
     }
@@ -244,7 +245,7 @@ export function useOffers() {
           : offer
       ));
     } catch (error) {
-      console.error('Error toggling favorite:', error);
+      logger.error('Error toggling favorite', error);
     }
   }, [favorites]);
 

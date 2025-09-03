@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { DollarSign, Gift } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { logger } from "@/lib/logger";
 
 interface PricingData {
   price?: string;
@@ -8,8 +10,6 @@ interface PricingData {
   currency?: string;
   availability_status?: string;
 }
-
-import { useLanguage } from "@/contexts/LanguageContext";
 
 export function PricingHighlight() {
   const { t } = useLanguage();
@@ -41,7 +41,7 @@ export function PricingHighlight() {
         .in('setting_key', ['pass_price', 'savings_amount', 'pass_currency', 'availability_status']);
       
       if (error) {
-        console.error('Error fetching pricing data:', error);
+        logger.error('Error fetching pricing data', error);
         return;
       }
       
@@ -64,11 +64,11 @@ export function PricingHighlight() {
           }
         });
         
-        console.log('Pricing data loaded:', pricing);
+        logger.debug('Pricing data loaded', pricing);
         setPricingData(pricing);
       }
     } catch (error) {
-      console.error('Error:', error);
+      logger.error('Error in fetchPricingData', error);
     } finally {
       setLoading(false);
     }

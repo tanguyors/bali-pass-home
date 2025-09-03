@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Capacitor } from "@capacitor/core";
 import { Camera as CapCamera, CameraResultType, CameraSource } from "@capacitor/camera";
 import jsQR from "jsqr";
+import { logger } from "@/lib/logger";
 
 interface QRScannerProps {
   isOpen: boolean;
@@ -26,10 +27,10 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   const { toast } = useToast();
 
   useEffect(() => {
-    console.log("QRScanner useEffect triggered. isOpen:", isOpen);
+    logger.debug("QRScanner useEffect triggered", { isOpen });
     
     if (isOpen) {
-      console.log("QRScanner is opening...");
+      logger.debug("QRScanner is opening");
       setScanned(false);
       setManualInput("");
       setHasPermission(null);
@@ -38,7 +39,7 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
         startCamera();
       }, 100);
     } else {
-      console.log("QRScanner is closing...");
+      logger.debug("QRScanner is closing");
       stopCamera();
     }
 
@@ -48,18 +49,18 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   }, [isOpen]);
 
   const startCamera = async () => {
-    console.log("startCamera called");
+    logger.debug("startCamera called");
     
     // Vérifier si on est dans un environnement natif
     if (Capacitor.isNativePlatform()) {
-      console.log("Native platform detected");
+      logger.debug("Native platform detected");
       setHasPermission(true);
       return;
     }
 
     // Utiliser l'API web pour le navigateur
     try {
-      console.log("Requesting camera access...");
+      logger.debug("Requesting camera access");
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: 'environment',
@@ -68,10 +69,10 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
         }
       });
 
-      console.log("Camera stream obtained");
+      logger.debug("Camera stream obtained");
       
       if (videoRef.current) {
-        console.log("Setting video source");
+        logger.debug("Setting video source");
         videoRef.current.srcObject = stream;
         
         // Propriétés nécessaires pour Safari mobile
@@ -79,11 +80,11 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
         videoRef.current.muted = true;
         videoRef.current.autoplay = true;
         
-        console.log("Video element properties set");
+        logger.debug("Video element properties set");
         
         // Attendre que la vidéo soit prête
         videoRef.current.onloadedmetadata = () => {
-          console.log("Video metadata loaded");
+          logger.debug("Video metadata loaded");
           setHasPermission(true);
           setIsScanning(true);
           startScanning();
@@ -91,7 +92,7 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
         
         // Fallback
         setTimeout(() => {
-          console.log("Fallback: setting permission to true");
+          logger.debug("Fallback: setting permission to true");
           setHasPermission(true);
           setIsScanning(true);
           startScanning();
@@ -119,7 +120,7 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   };
 
   const startScanning = () => {
-    console.log("Starting QR code scanning...");
+    logger.debug("Starting QR code scanning");
     intervalRef.current = setInterval(() => {
       scanQRCode();
     }, 100); // Scan toutes les 100ms
@@ -146,12 +147,13 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
     });
 
     if (code) {
-      console.log("=== QR CODE DETECTÉ ===");
-      console.log("Données brutes:", JSON.stringify(code.data));
+      logger.debug("QR CODE DÉTECTÉ", { 
+        rawData: code.data,
+        cleanedData: code.data.trim().replace(/[\r\n\t\s]/g, '')
+      });
       
       // Nettoyer les données scannées
       const cleanedData = code.data.trim().replace(/[\r\n\t\s]/g, '');
-      console.log("Données nettoyées:", JSON.stringify(cleanedData));
       
       stopCamera();
       handleScanResult(cleanedData);
@@ -188,7 +190,7 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   };
 
   const stopCamera = () => {
-    console.log("Stopping camera and scanning");
+    logger.debug("Stopping camera and scanning");
     
     // Arrêter le scanning
     if (intervalRef.current) {
