@@ -15,6 +15,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 interface Category {
   id: string;
   name: string;
+  slug: string;
   icon: string;
 }
 
@@ -29,6 +30,8 @@ const Explorer = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [cities, setCities] = useState<City[]>([]);
   const isNearbyMode = searchParams.get('nearby') === 'true';
+  const categoryFromUrl = searchParams.get('category');
+  
   const [currentFilters, setCurrentFilters] = useState<FilterState>({
     city: '',
     category: '',
@@ -56,7 +59,7 @@ const Explorer = () => {
       try {
         const { data, error } = await supabase
           .from('categories')
-          .select('id, name, icon')
+          .select('id, name, slug, icon')
           .order('name');
 
         if (error) {
@@ -99,9 +102,27 @@ const Explorer = () => {
     fetchCities();
   }, []);
 
+  // Apply category filter from URL when categories are loaded
+  useEffect(() => {
+    if (categoryFromUrl && categories.length > 0) {
+      // Find category by slug
+      const category = categories.find(cat => cat.slug === categoryFromUrl);
+      if (category) {
+        const newFilters = { ...currentFilters, category: category.id };
+        setCurrentFilters(newFilters);
+        setFilters({
+          category: category.id,
+          city: null,
+          sortBy: 'relevance',
+          maxDistance: null,
+        });
+      }
+    }
+  }, [categoryFromUrl, categories]);
+
   // Apply initial filters when component mounts or nearby mode changes
   useEffect(() => {
-    if (isNearbyMode) {
+    if (isNearbyMode && !categoryFromUrl) {
       setFilters({
         category: null,
         city: null,
@@ -109,7 +130,7 @@ const Explorer = () => {
         maxDistance: 10,
       });
     }
-  }, [isNearbyMode, setFilters]);
+  }, [isNearbyMode, setFilters, categoryFromUrl]);
 
   const handleApplyFilters = (newFilters: FilterState) => {
     setCurrentFilters(newFilters);
