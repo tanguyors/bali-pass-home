@@ -234,6 +234,21 @@ export const en = {
     reviews: 'reviews',
   },
 
+  // Partner Details
+  partner_details: {
+    loading: 'Loading partner...',
+    loading_error: 'Unable to load partner information',
+    unexpected_error: 'An error occurred',
+    not_found: 'Partner not found',
+    not_found_description: 'The partner you are looking for does not exist or is no longer available.',
+    view_all_partners: 'View all partners',
+    cover_alt: 'Cover of',
+    verified: 'Verified',
+    contact_info: 'Contact Information',
+    website: 'Website',
+    available_offers: 'Available offers',
+  },
+
   // Languages
   languages: {
     fr: 'Français',

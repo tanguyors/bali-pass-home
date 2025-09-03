@@ -234,6 +234,21 @@ export const es = {
     reviews: 'reseñas',
   },
 
+  // Partner Details
+  partner_details: {
+    loading: 'Cargando socio...',
+    loading_error: 'No se puede cargar la información del socio',
+    unexpected_error: 'Ocurrió un error',
+    not_found: 'Socio no encontrado',
+    not_found_description: 'El socio que buscas no existe o ya no está disponible.',
+    view_all_partners: 'Ver todos los socios',
+    cover_alt: 'Portada de',
+    verified: 'Verificado',
+    contact_info: 'Información de contacto',
+    website: 'Sitio web',
+    available_offers: 'Ofertas disponibles',
+  },
+
   // Languages
   languages: {
     fr: 'Français',

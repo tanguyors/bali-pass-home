@@ -234,6 +234,21 @@ export const id = {
     reviews: 'ulasan',
   },
 
+  // Partner Details
+  partner_details: {
+    loading: 'Memuat mitra...',
+    loading_error: 'Tidak dapat memuat informasi mitra',
+    unexpected_error: 'Terjadi kesalahan',
+    not_found: 'Mitra tidak ditemukan',
+    not_found_description: 'Mitra yang Anda cari tidak ada atau tidak lagi tersedia.',
+    view_all_partners: 'Lihat semua mitra',
+    cover_alt: 'Sampul dari',
+    verified: 'Terverifikasi',
+    contact_info: 'Informasi Kontak',
+    website: 'Situs web',
+    available_offers: 'Penawaran tersedia',
+  },
+
   // Languages
   languages: {
     fr: 'Français',

@@ -10,6 +10,7 @@ import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { supabase } from '@/integrations/supabase/client';
 import { usePartnerFavorites } from '@/hooks/usePartnerFavorites';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Partner {
   id: string;
@@ -41,6 +42,7 @@ const PartnerDetail: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { isFavorite, toggleFavorite } = usePartnerFavorites();
+  const { t } = useLanguage();
   
   const [partner, setPartner] = useState<Partner | null>(null);
   const [loading, setLoading] = useState(true);
@@ -79,8 +81,8 @@ const PartnerDetail: React.FC = () => {
       if (error) {
         console.error('Error fetching partner:', error);
         toast({
-          title: "Erreur",
-          description: "Impossible de charger les informations du partenaire",
+          title: t('common.error'),
+          description: t('partner_details.loading_error'),
           variant: "destructive"
         });
         return;
@@ -90,8 +92,8 @@ const PartnerDetail: React.FC = () => {
     } catch (error) {
       console.error('Error:', error);
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue",
+        title: t('common.error'),
+        description: t('partner_details.unexpected_error'),
         variant: "destructive"
       });
     } finally {
@@ -132,7 +134,7 @@ const PartnerDetail: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Chargement du partenaire...</p>
+          <p className="text-muted-foreground">{t('partner_details.loading')}</p>
         </div>
       </div>
     );
@@ -143,12 +145,12 @@ const PartnerDetail: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center">
         <Card className="shadow-xl border-0 bg-card/60 backdrop-blur-sm max-w-md">
           <CardContent className="text-center py-16">
-            <h3 className="font-bold text-xl mb-3">Partenaire non trouvé</h3>
+            <h3 className="font-bold text-xl mb-3">{t('partner_details.not_found')}</h3>
             <p className="text-muted-foreground mb-6">
-              Le partenaire que vous recherchez n'existe pas ou n'est plus disponible.
+              {t('partner_details.not_found_description')}
             </p>
             <Button onClick={() => navigate('/explorer')}>
-              Voir tous les partenaires
+              {t('partner_details.view_all_partners')}
             </Button>
           </CardContent>
         </Card>
@@ -192,7 +194,7 @@ const PartnerDetail: React.FC = () => {
         <div className="h-48 relative">
           <img
             src={partner.cover_url}
-            alt={`Couverture de ${partner.name}`}
+            alt={`${t('partner_details.cover_alt')} ${partner.name}`}
             className="w-full h-full object-cover"
             onError={() => setImageError(true)}
           />
@@ -216,7 +218,7 @@ const PartnerDetail: React.FC = () => {
                 <div className="flex items-center gap-2 mb-2">
                   <h1 className="text-2xl font-bold">{partner.name}</h1>
                   <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">
-                    Vérifié
+                    {t('partner_details.verified')}
                   </Badge>
                 </div>
                 
@@ -243,7 +245,7 @@ const PartnerDetail: React.FC = () => {
                   className="flex-1 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 gap-2"
                 >
                   <Phone className="w-4 h-4" />
-                  Appeler
+                  {t('offer_card.call')}
                 </Button>
               )}
               
@@ -254,7 +256,7 @@ const PartnerDetail: React.FC = () => {
                   className="flex-1 gap-2"
                 >
                   <MapPin className="w-4 h-4" />
-                  Itinéraire
+                  {t('offer_card.navigation')}
                 </Button>
               )}
             </div>
@@ -264,7 +266,7 @@ const PartnerDetail: React.FC = () => {
         {/* Contact Info */}
         <Card className="shadow-lg border-0 bg-card/80 backdrop-blur-sm mb-6">
           <CardHeader>
-            <CardTitle className="text-lg">Informations de contact</CardTitle>
+            <CardTitle className="text-lg">{t('partner_details.contact_info')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {partner.address && (
@@ -290,7 +292,7 @@ const PartnerDetail: React.FC = () => {
                   rel="noopener noreferrer"
                   className="text-sm text-primary hover:underline"
                 >
-                  Site web
+                  {t('partner_details.website')}
                 </a>
               </div>
             )}
@@ -317,7 +319,7 @@ const PartnerDetail: React.FC = () => {
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
                 <Star className="w-5 h-5 text-primary" />
-                Offres disponibles ({activeOffers.length})
+                {t('partner_details.available_offers')} ({activeOffers.length})
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">

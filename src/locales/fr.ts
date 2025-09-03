@@ -238,7 +238,20 @@ export const fr = {
     reviews: 'avis',
   },
 
-  // Languages
+  // Partner Details
+  partner_details: {
+    loading: 'Chargement du partenaire...',
+    loading_error: 'Impossible de charger les informations du partenaire',
+    unexpected_error: 'Une erreur est survenue',
+    not_found: 'Partenaire non trouvé',
+    not_found_description: 'Le partenaire que vous recherchez n\'existe pas ou n\'est plus disponible.',
+    view_all_partners: 'Voir tous les partenaires',
+    cover_alt: 'Couverture de',
+    verified: 'Vérifié',
+    contact_info: 'Informations de contact',
+    website: 'Site web',
+    available_offers: 'Offres disponibles',
+  },
   languages: {
     fr: 'Français',
     en: 'English',

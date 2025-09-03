@@ -234,6 +234,21 @@ export const zh = {
     reviews: '评价',
   },
 
+  // Partner Details
+  partner_details: {
+    loading: '加载合作伙伴中...',
+    loading_error: '无法加载合作伙伴信息',
+    unexpected_error: '发生错误',
+    not_found: '未找到合作伙伴',
+    not_found_description: '您寻找的合作伙伴不存在或不再可用。',
+    view_all_partners: '查看所有合作伙伴',
+    cover_alt: '封面图',
+    verified: '已验证',
+    contact_info: '联系信息',
+    website: '网站',
+    available_offers: '可用优惠',
+  },
+
   // Languages
   languages: {
     fr: 'Français',
