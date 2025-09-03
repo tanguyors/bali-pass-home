@@ -186,33 +186,53 @@ export const FilterSheet: React.FC<FilterSheetProps> = ({
 
                 {/* Cities */}
                 {cities.length > 0 && (
-                  <div className="space-y-2">
-                    <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                      {t('filter.city')}
-                    </h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                        {t('filter.city')}
+                      </h4>
+                      {tempFilters.city && (
+                        <button 
+                          onClick={() => setTempFilters(prev => ({ ...prev, city: '' }))}
+                          className="text-xs text-primary hover:text-primary/80 font-medium"
+                        >
+                          {t('filter.clear')}
+                        </button>
+                      )}
+                    </div>
                     {loading ? (
-                      <div className="flex items-center justify-center py-4">
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
+                      <div className="flex items-center justify-center py-8">
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
                       </div>
                     ) : (
-                      <div className="flex flex-wrap gap-1.5">
-                        <FilterChip
-                          label={t('filter.all_cities')}
-                          icon="🏙️"
-                          isSelected={!tempFilters.city}
-                          onClick={() => setTempFilters(prev => ({ ...prev, city: '' }))}
-                          variant="compact"
-                        />
-                        {cities.map((city) => (
+                      <div className="space-y-3">
+                        {/* Selected city or All cities option */}
+                        <div className="p-3 bg-card/30 rounded-xl border border-border/30">
                           <FilterChip
-                            key={city.id}
-                            label={city.name}
-                            icon="📍"
-                            isSelected={tempFilters.city === city.id}
-                            onClick={() => setTempFilters(prev => ({ ...prev, city: city.id }))}
-                            variant="compact"
+                            label={tempFilters.city ? cities.find(c => c.id === tempFilters.city)?.name || t('filter.all_cities') : t('filter.all_cities')}
+                            icon={tempFilters.city ? "📍" : "🏙️"}
+                            isSelected={true}
+                            onClick={() => setTempFilters(prev => ({ ...prev, city: '' }))}
+                            className="w-full justify-center"
                           />
-                        ))}
+                        </div>
+                        
+                        {/* Cities grid - only show if no city is selected */}
+                        {!tempFilters.city && (
+                          <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
+                            {cities.map((city) => (
+                              <FilterChip
+                                key={city.id}
+                                label={city.name}
+                                icon="📍"
+                                isSelected={false}
+                                onClick={() => setTempFilters(prev => ({ ...prev, city: city.id }))}
+                                variant="compact"
+                                className="justify-center text-center"
+                              />
+                            ))}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -221,34 +241,54 @@ export const FilterSheet: React.FC<FilterSheetProps> = ({
 
               {/* Categories */}
               <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Tag className="w-4 h-4 text-primary" />
-                  <h3 className="text-base font-semibold">{t('filter.category')}</h3>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Tag className="w-4 h-4 text-primary" />
+                    <h3 className="text-base font-semibold">{t('filter.category')}</h3>
+                  </div>
+                  {tempFilters.category && (
+                    <button 
+                      onClick={() => setTempFilters(prev => ({ ...prev, category: '' }))}
+                      className="text-xs text-primary hover:text-primary/80 font-medium"
+                    >
+                      {t('filter.clear')}
+                    </button>
+                  )}
                 </div>
                 
                 {loading ? (
-                  <div className="flex items-center justify-center py-4">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
+                  <div className="flex items-center justify-center py-8">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
                   </div>
                 ) : (
-                  <div className="flex flex-wrap gap-1.5">
-                    <FilterChip
-                      label={t('filter.all_categories')}
-                      icon="📂"
-                      isSelected={!tempFilters.category}
-                      onClick={() => setTempFilters(prev => ({ ...prev, category: '' }))}
-                      variant="compact"
-                    />
-                    {categories.map((category) => (
+                  <div className="space-y-3">
+                    {/* Selected category or All categories option */}
+                    <div className="p-3 bg-card/30 rounded-xl border border-border/30">
                       <FilterChip
-                        key={category.id}
-                        label={category.name}
-                        icon={category.icon || '📄'}
-                        isSelected={tempFilters.category === category.id}
-                        onClick={() => setTempFilters(prev => ({ ...prev, category: category.id }))}
-                        variant="compact"
+                        label={tempFilters.category ? categories.find(c => c.id === tempFilters.category)?.name || t('filter.all_categories') : t('filter.all_categories')}
+                        icon={tempFilters.category ? categories.find(c => c.id === tempFilters.category)?.icon || '📄' : "📂"}
+                        isSelected={true}
+                        onClick={() => setTempFilters(prev => ({ ...prev, category: '' }))}
+                        className="w-full justify-center"
                       />
-                    ))}
+                    </div>
+                    
+                    {/* Categories grid - only show if no category is selected */}
+                    {!tempFilters.category && (
+                      <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
+                        {categories.map((category) => (
+                          <FilterChip
+                            key={category.id}
+                            label={category.name}
+                            icon={category.icon || '📄'}
+                            isSelected={false}
+                            onClick={() => setTempFilters(prev => ({ ...prev, category: category.id }))}
+                            variant="compact"
+                            className="justify-center text-center"
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
