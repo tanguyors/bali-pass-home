@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Search, MapPin, Heart, Star, QrCode, Grid3X3 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { QrCode, Heart, Grid3X3, Radar } from "lucide-react";
 import { QRScanner } from "@/components/QRScanner";
 import { PartnerOffersModal } from "@/components/PartnerOffersModal";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/integrations/supabase/client";
 
 interface QuickActionsProps {
   hasActivePass?: boolean;
@@ -15,7 +12,6 @@ interface QuickActionsProps {
 
 export function QuickActions({ hasActivePass = false }: QuickActionsProps) {
   const { t } = useLanguage();
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [showScanner, setShowScanner] = useState(false);
   const [scannedPartner, setScannedPartner] = useState<any>(null);
@@ -25,10 +21,8 @@ export function QuickActions({ hasActivePass = false }: QuickActionsProps) {
   useEffect(() => {
     const fetchFavoritesCount = async () => {
       try {
-        if (!user) {
-          setFavoritesCount(0);
-          return;
-        }
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
 
         const { data, error } = await supabase
           .from('favorites')
@@ -47,7 +41,7 @@ export function QuickActions({ hasActivePass = false }: QuickActionsProps) {
     };
 
     fetchFavoritesCount();
-  }, [user]);
+  }, []);
 
   const handleScanSuccess = (partnerData: any) => {
     setScannedPartner(partnerData);
