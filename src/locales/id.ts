@@ -133,6 +133,8 @@ export const id = {
     location_not_available: '📍 Lokasi tidak tersedia. Fitur kedekatan dinonaktifkan.',
     discover_offers: 'Temukan Penawaran Bali',
     discover_subtitle: 'Temukan penawaran terbaik di dekat Anda dengan peta interaktif kami',
+    no_offers_found: 'Tidak ada penawaran ditemukan',
+    try_different_filters: 'Coba ubah kriteria pencarian atau filter untuk menemukan lebih banyak penawaran.',
   },
   
   // Profile

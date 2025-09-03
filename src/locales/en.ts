@@ -133,6 +133,8 @@ export const en = {
     location_not_available: '📍 Location not available. Proximity features are disabled.',
     discover_offers: 'Discover Bali Offers',
     discover_subtitle: 'Find the best offers near you with our interactive map',
+    no_offers_found: 'No offers found',
+    try_different_filters: 'Try changing your search criteria or filters to find more offers.',
   },
   
   // Profile

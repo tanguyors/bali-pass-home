@@ -137,6 +137,8 @@ export const fr = {
     location_not_available: '📍 Localisation non disponible. Les fonctionnalités de proximité sont désactivées.',
     discover_offers: 'Découvrez les Offres à Bali',
     discover_subtitle: 'Trouvez les meilleures offres près de vous avec notre carte interactive',
+    no_offers_found: 'Aucune offre trouvée',
+    try_different_filters: 'Essayez de modifier vos critères de recherche ou vos filtres pour trouver plus d\'offres.',
   },
   
   // Profile
