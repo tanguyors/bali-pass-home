@@ -5,6 +5,8 @@ import { OffersList } from '@/components/OffersList';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { FilterSheet, FilterState } from '@/components/FilterSheet';
+import { CategoryFilter } from '@/components/CategoryFilter';
+import { OffersProximityHeader } from '@/components/OffersProximityHeader';
 import { PartnerCard } from '@/components/PartnerCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useOffers } from '@/hooks/useOffers';
@@ -177,10 +179,10 @@ const Explorer = () => {
       )}
       
       {/* Main Content */}
-      <main className="pb-20 pt-4">
+      <main className="pb-20">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           {/* Tabs Header */}
-          <div className="px-4 mb-4">
+          <div className="px-4 pt-4 mb-0">
             <TabsList className="grid w-full grid-cols-2 bg-card/60 backdrop-blur-sm">
               <TabsTrigger value="offers" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                 {t('explorer.offers')}
@@ -193,6 +195,23 @@ const Explorer = () => {
 
           {/* Offers Tab */}
           <TabsContent value="offers" className="mt-0">
+            {/* Category Filter */}
+            <CategoryFilter
+              categories={categories}
+              selectedCategory={currentFilters.category}
+              onCategoryChange={(categoryId) => {
+                const newFilters = { ...currentFilters, category: categoryId || '' };
+                handleApplyFilters(newFilters);
+              }}
+              className="mt-4"
+            />
+            
+            {/* Offers Proximity Header */}
+            <OffersProximityHeader
+              offersCount={offers.length}
+              userLocation={latitude && longitude ? { latitude, longitude } : null}
+            />
+            
             <OffersList
               offers={offers}
               loading={loading}

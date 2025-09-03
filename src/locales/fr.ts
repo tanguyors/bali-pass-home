@@ -163,6 +163,7 @@ export const fr = {
     try_different_filters: 'Essayez de modifier vos critères de recherche ou vos filtres pour trouver plus d\'offres.',
     loading_offers_text: 'Chargement des offres...',
     all_offers_viewed: 'Vous avez vu toutes les offres disponibles',
+    nearby_offers: 'Offres à proximité',
   },
   
   // Profile
@@ -310,6 +311,8 @@ export const fr = {
     apply_filters: 'Appliquer les filtres',
     active_filters: 'filtre(s) actif(s)',
     clear: 'Effacer',
+    filter_by_category: 'Filtrer par catégorie',
+    nearby_offers: 'Offres à proximité',
   },
   
   // Languages

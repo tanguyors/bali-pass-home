@@ -159,6 +159,7 @@ export const en = {
     try_different_filters: 'Try changing your search criteria or filters to find more offers.',
     loading_offers_text: 'Loading offers...',
     all_offers_viewed: 'You have seen all available offers',
+    nearby_offers: 'Nearby offers',
   },
   
   // Profile
@@ -304,6 +305,8 @@ export const en = {
     clear_all: 'Clear all',
     apply_filters: 'Apply filters',
     active_filters: 'active filter(s)',
+    filter_by_category: 'Filter by category',
+    nearby_offers: 'Nearby offers',
   },
 
   // Languages
