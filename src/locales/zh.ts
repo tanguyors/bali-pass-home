@@ -117,6 +117,7 @@ export const zh = {
     use_offer: '使用优惠',
     already_used: '已使用',
     used_offer: '您已使用优惠',
+    processing: '处理中...',
   },
   
   // Favorites

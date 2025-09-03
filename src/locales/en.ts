@@ -117,6 +117,7 @@ export const en = {
     use_offer: 'Use offer',
     already_used: 'Already used',
     used_offer: 'You have used the offer',
+    processing: 'Processing...',
   },
   
   // Favorites
@@ -271,6 +272,8 @@ export const en = {
     link_copied: 'Link copied',
     link_copied_desc: 'The link has been copied to clipboard',
     reviews: 'reviews',
+    show_merchant: 'Show this screen to the merchant',
+    validated: 'OFFER VALIDATED',
   },
 
   // Partner Details

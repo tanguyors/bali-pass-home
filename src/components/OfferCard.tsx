@@ -25,16 +25,19 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
   const [imageError, setImageError] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [userPass, setUserPass] = useState<UserPass | null>(null);
+  const [isOfferUsed, setIsOfferUsed] = useState(false);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          fetchUserPass(session.user.id);
-        } else {
-          setUserPass(null);
-        }
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchUserPass(session.user.id);
+        checkIfOfferUsed(session.user.id);
+      } else {
+        setUserPass(null);
+        setIsOfferUsed(false);
+      }
       }
     );
 
@@ -42,11 +45,31 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
       setUser(session?.user ?? null);
       if (session?.user) {
         fetchUserPass(session.user.id);
+        checkIfOfferUsed(session.user.id);
       }
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const checkIfOfferUsed = async (userId: string) => {
+    try {
+      const { data } = await supabase
+        .from('redemptions')
+        .select(`
+          id,
+          passes!inner(user_id)
+        `)
+        .eq('offer_id', offer.id)
+        .eq('passes.user_id', userId)
+        .single();
+
+      setIsOfferUsed(!!data);
+    } catch (error) {
+      // Not used yet or error
+      setIsOfferUsed(false);
+    }
+  };
 
   const fetchUserPass = async (userId: string) => {
     try {
@@ -103,7 +126,20 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
 
   if (viewMode === 'list') {
     return (
-      <div className={`bg-card rounded-xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-all duration-200 relative ${shouldBlur ? 'blur-sm' : ''}`}>
+      <div className={`bg-card rounded-xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-all duration-200 relative ${
+        shouldBlur ? 'blur-sm' : ''
+      } ${
+        isOfferUsed ? 'bg-gray-100 opacity-60' : ''
+      }`}>
+        {isOfferUsed && (
+          <div className="absolute inset-0 bg-gray-500/20 z-5 flex items-center justify-center">
+            <div className="bg-gray-600/90 backdrop-blur-sm rounded-lg px-4 py-2">
+              <p className="text-white font-semibold text-sm">
+                {t('offers.already_used')}
+              </p>
+            </div>
+          </div>
+        )}
         {shouldBlur && (
           <div className="absolute inset-0 bg-black/20 z-10 flex items-center justify-center">
             <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 mx-4 text-center">
@@ -237,7 +273,20 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
 
   // Grid view
   return (
-    <div className={`bg-card rounded-xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-all duration-200 relative ${shouldBlur ? 'blur-sm' : ''}`}>
+    <div className={`bg-card rounded-xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-all duration-200 relative ${
+      shouldBlur ? 'blur-sm' : ''
+    } ${
+      isOfferUsed ? 'bg-gray-100 opacity-60' : ''
+    }`}>
+      {isOfferUsed && (
+        <div className="absolute inset-0 bg-gray-500/20 z-5 flex items-center justify-center">
+          <div className="bg-gray-600/90 backdrop-blur-sm rounded-lg px-4 py-2">
+            <p className="text-white font-semibold text-sm">
+              {t('offers.already_used')}
+            </p>
+          </div>
+        </div>
+      )}
       {shouldBlur && (
         <div className="absolute inset-0 bg-black/20 z-10 flex items-center justify-center">
           <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 mx-4 text-center">

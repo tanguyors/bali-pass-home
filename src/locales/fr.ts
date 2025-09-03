@@ -121,6 +121,7 @@ export const fr = {
     use_offer: 'Utiliser l\'offre',
     already_used: 'Déjà utilisée',
     used_offer: 'Vous avez utilisé l\'offre',
+    processing: 'En cours...',
   },
   
   // Favorites
@@ -276,6 +277,8 @@ export const fr = {
     link_copied: 'Lien copié',
     link_copied_desc: 'Le lien a été copié dans le presse-papiers',
     reviews: 'avis',
+    show_merchant: 'Montrez cet écran au commerçant',
+    validated: 'OFFRE VALIDÉE',
   },
 
   // Partner Details

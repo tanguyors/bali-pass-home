@@ -117,6 +117,7 @@ export const es = {
     use_offer: 'Usar oferta',
     already_used: 'Ya utilizada',
     used_offer: 'Has usado la oferta',
+    processing: 'Procesando...',
   },
   
   // Favorites

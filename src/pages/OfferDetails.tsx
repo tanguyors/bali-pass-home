@@ -4,12 +4,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, MapPin, Star, Heart, Clock, Share2, Percent, Euro, Navigation, Phone, Globe, Instagram, Calendar, CheckCircle, Sparkles, Gift } from "lucide-react";
+import { ArrowLeft, MapPin, Star, Heart, Clock, Share2, Percent, Euro, Navigation, Phone, Globe, Instagram, Calendar, CheckCircle, Sparkles, Gift, QrCode } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { QRScanner } from "@/components/QRScanner";
 import { logger } from "@/lib/logger";
 import { LanguageSelector } from '@/components/LanguageSelector';
+import { OfferUsedConfirmation } from '@/components/OfferUsedConfirmation';
 
 interface Offer {
   id: string;
@@ -50,12 +51,16 @@ export default function OfferDetails() {
   const [isUsing, setIsUsing] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
   const [isAlreadyUsed, setIsAlreadyUsed] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [redemptionData, setRedemptionData] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
 
   useEffect(() => {
     if (id) {
       fetchOffer(id);
       checkIfFavorite(id);
       checkUserPass();
+      getCurrentUser();
     }
   }, [id]);
 
@@ -64,6 +69,15 @@ export default function OfferDetails() {
       checkIfOfferAlreadyUsed(id);
     }
   }, [userPass, id]);
+
+  const getCurrentUser = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      setCurrentUser(user);
+    } catch (error) {
+      console.error('Error getting current user:', error);
+    }
+  };
 
   const checkUserPass = async () => {
     try {
@@ -303,19 +317,21 @@ export default function OfferDetails() {
     setShowScanner(false);
     
     try {
-      if (!offer || !userPass) return;
+      if (!offer || !userPass || !currentUser) return;
 
       setIsUsing(true);
 
       // Créer la redemption après scan réussi
-      const { error } = await supabase
+      const { data: redemptionResult, error } = await supabase
         .from('redemptions')
         .insert({
           offer_id: offer.id,
           pass_id: userPass.id,
           partner_id: offer.partner.id,
           status: 'approved'
-        });
+        })
+        .select()
+        .single();
 
       if (error) {
         console.error('Error using offer:', error);
@@ -327,13 +343,17 @@ export default function OfferDetails() {
         return;
       }
 
-      toast({
-        title: t('offer.used_successfully'),
-        description: t('offer.enjoy_discount'),
+      // Préparer les données pour la confirmation
+      setRedemptionData({
+        ...redemptionResult,
+        redeemed_at: new Date().toISOString()
       });
 
       // Marquer l'offre comme utilisée
       setIsAlreadyUsed(true);
+
+      // Afficher la confirmation
+      setShowConfirmation(true);
 
     } catch (error) {
       console.error('Error:', error);
@@ -622,26 +642,32 @@ export default function OfferDetails() {
       {/* Modern Bottom Action Bar */}
       <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t border-slate-200/50 dark:border-slate-700/50 p-6">
         <div className="flex gap-4">
-          <Button 
-            className="flex-1 h-14 bg-gradient-to-r from-primary via-primary to-secondary hover:from-primary/90 hover:via-primary/90 hover:to-secondary/90 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none" 
-            onClick={handleUseOffer}
-            disabled={isUsing || !userPass || isAlreadyUsed}
-          >
-            <div className="flex items-center gap-3">
+            <Button
+              className={`w-full font-semibold py-4 rounded-2xl text-lg transition-all duration-300 ${
+                isAlreadyUsed 
+                  ? 'bg-gray-500 text-gray-300 cursor-not-allowed opacity-60' 
+                  : 'bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl'
+              }`}
+              onClick={isAlreadyUsed ? undefined : handleUseOffer}
+              disabled={isUsing || isAlreadyUsed || !userPass}
+            >
               {isUsing ? (
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  {t('offers.processing')}
+                </div>
               ) : isAlreadyUsed ? (
-                <CheckCircle className="w-5 h-5" />
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5" />
+                  {t('offers.already_used')}
+                </div>
               ) : (
-                <Gift className="w-5 h-5" />
+                <div className="flex items-center gap-2">
+                  <QrCode className="w-5 h-5" />
+                  {t('offers.use_offer')}
+                </div>
               )}
-              <span className="text-lg">
-                {isUsing ? t('common.loading') : 
-                 isAlreadyUsed ? t('offers.already_used') : 
-                 t('offers.use_offer')}
-              </span>
-            </div>
-          </Button>
+            </Button>
           
           {offer.partner.address && (
             <Button 
@@ -658,10 +684,21 @@ export default function OfferDetails() {
       </div>
 
       {/* QR Scanner */}
-      <QRScanner
-        isOpen={showScanner}
-        onClose={() => setShowScanner(false)}
-        onScanSuccess={handleScanSuccess}
+      {showScanner && (
+        <QRScanner 
+          isOpen={showScanner}
+          onScanSuccess={handleScanSuccess}
+          onClose={() => setShowScanner(false)}
+        />
+      )}
+
+      {/* Confirmation Modal */}
+      <OfferUsedConfirmation
+        isOpen={showConfirmation}
+        onClose={() => setShowConfirmation(false)}
+        offer={offer}
+        userEmail={currentUser?.email}
+        redemptionTime={redemptionData?.redeemed_at}
       />
     </div>
   );

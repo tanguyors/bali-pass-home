@@ -117,6 +117,7 @@ export const id = {
     use_offer: 'Gunakan penawaran',
     already_used: 'Sudah digunakan',
     used_offer: 'Anda telah menggunakan penawaran',
+    processing: 'Memproses...',
   },
   
   // Favorites
