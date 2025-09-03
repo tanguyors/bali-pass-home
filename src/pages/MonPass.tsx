@@ -18,7 +18,10 @@ import {
   TrendingUp,
   Clock,
   Award,
-  ChevronRight
+  ChevronRight,
+  Heart,
+  MapPin,
+  Tag
 } from 'lucide-react';
 import { QRScanner } from '@/components/QRScanner';
 import { PassSummarySection } from '@/components/PassSummarySection';
@@ -28,6 +31,7 @@ import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
+import { useOfferFavorites } from '@/hooks/useOfferFavorites';
 import { supabase } from '@/integrations/supabase/client';
 
 interface Pass {
@@ -67,6 +71,7 @@ const MonPass: React.FC = () => {
   const { toast } = useToast();
   const { t } = useLanguage();
   const { user, profile, userPass, loading, hasActivePass } = useAuth();
+  const { favorites, loading: favoritesLoading, removeFromFavorites } = useOfferFavorites();
   const [showScanner, setShowScanner] = useState(false);
   const [scannedPartner, setScannedPartner] = useState<any>(null);
   const [redemptions, setRedemptions] = useState<Redemption[]>([]);
@@ -376,23 +381,91 @@ const MonPass: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Savings Summary */}
-        <Card className="shadow-lg border-0 bg-gradient-to-br from-emerald-50/50 to-emerald-100/30 border-emerald-200/50">
+        {/* Favorites Section */}
+        <Card className="shadow-lg border-0 bg-card/60 backdrop-blur-sm">
           <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-bold text-lg text-emerald-800 mb-1">{t('profile.my_savings')}</h3>
-                <p className="text-3xl font-bold text-emerald-700">
-                  {totalSavings > 0 ? `${totalSavings}%` : '0%'}
-                </p>
-                <p className="text-sm text-emerald-600">
-                  {redemptions.length} {t('profile.uses')}
-                </p>
+            <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+              <div className="w-2 h-6 bg-gradient-to-b from-red-500 to-red-400 rounded-full"></div>
+              {t('favorites.title')}
+            </h3>
+            
+            {favoritesLoading ? (
+              <div className="text-center py-4">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
               </div>
-              <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-400 rounded-full flex items-center justify-center">
-                <TrendingUp className="w-8 h-8 text-white" />
+            ) : favorites.length === 0 ? (
+              <div className="text-center py-6">
+                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Heart className="w-6 h-6 text-red-500" />
+                </div>
+                <p className="text-muted-foreground mb-3 text-sm">{t('favorites.no_favorites')}</p>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => navigate('/explorer')}
+                  className="text-xs"
+                >
+                  {t('explorer.discover_offers')}
+                </Button>
               </div>
-            </div>
+            ) : (
+              <div className="space-y-3">
+                {favorites.slice(0, 2).map((favorite) => (
+                  <div 
+                    key={favorite.id} 
+                    className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer"
+                    onClick={() => navigate(`/offer/${favorite.offer_id}`)}
+                  >
+                    <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
+                      {favorite.offer?.partner?.photos && favorite.offer.partner.photos.length > 0 ? (
+                        <img
+                          src={favorite.offer.partner.photos[0]}
+                          alt={favorite.offer?.title || 'Offre'}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
+                          <Tag className="w-6 h-6 text-primary" />
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="flex-1">
+                      <p className="font-medium text-sm line-clamp-1">{favorite.offer?.title}</p>
+                      <p className="text-xs text-primary mb-1">{favorite.offer?.partner?.name}</p>
+                      {favorite.offer?.partner?.address && (
+                        <div className="flex items-center gap-1">
+                          <MapPin className="w-3 h-3 text-muted-foreground" />
+                          <p className="text-xs text-muted-foreground truncate">{favorite.offer.partner.address}</p>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeFromFavorites(favorite.offer_id);
+                      }}
+                      className="text-red-500 hover:text-red-600 hover:bg-red-50 w-8 h-8"
+                    >
+                      <Heart className="w-4 h-4 fill-current" />
+                    </Button>
+                  </div>
+                ))}
+                
+                {favorites.length > 2 && (
+                  <Button 
+                    variant="ghost" 
+                    className="w-full mt-3 text-sm"
+                    onClick={() => navigate('/favorites')}
+                  >
+                    Voir tous les favoris ({favorites.length})
+                  </Button>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
 
