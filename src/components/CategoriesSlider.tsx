@@ -36,21 +36,10 @@ export function CategoriesSlider() {
 
   const fetchCategories = async () => {
     try {
-      const { data, error } = await supabase
+      // Simplified query to avoid complex joins
+      const { data: categories, error } = await supabase
         .from('categories')
-        .select(`
-          id, 
-          name, 
-          slug, 
-          icon,
-          offers!inner(
-            id,
-            is_active,
-            partners!inner(
-              status
-            )
-          )
-        `)
+        .select('id, name, slug, icon')
         .order('name', { ascending: true });
       
       if (error) {
@@ -58,23 +47,35 @@ export function CategoriesSlider() {
         return;
       }
       
-      if (data) {
-        // Enhance categories with real offers count and gradients
-        const categoriesWithExtras: CategoryWithOffers[] = data.map((category, index) => {
-          // Count only active offers from approved partners
-          const activeOffers = category.offers?.filter(offer => 
-            offer.is_active && offer.partners?.status === 'approved'
-          ) || [];
-          
-          return {
+      if (categories && categories.length > 0) {
+        // Get offers count for each category with a single optimized query
+        const { data: offerCounts } = await supabase
+          .from('offers')
+          .select(`
+            category_id,
+            partners!inner(status)
+          `)
+          .eq('is_active', true);
+
+        // Count offers by category for approved partners only
+        const countsByCategory = (offerCounts || []).reduce((acc, offer) => {
+          if (offer.partners?.status === 'approved') {
+            acc[offer.category_id] = (acc[offer.category_id] || 0) + 1;
+          }
+          return acc;
+        }, {} as Record<string, number>);
+        
+        // Enhance categories with counts and gradients
+        const categoriesWithExtras: CategoryWithOffers[] = categories
+          .map((category, index) => ({
             id: category.id,
             name: category.name,
             slug: category.slug,
             icon: category.icon,
-            offers_count: activeOffers.length,
+            offers_count: countsByCategory[category.id] || 0,
             gradient: gradientPalette[index % gradientPalette.length]
-          };
-        }).filter(category => category.offers_count > 0); // Only show categories with offers
+          }))
+          .filter(category => category.offers_count > 0); // Only show categories with offers
         
         setCategories(categoriesWithExtras);
       }

@@ -81,6 +81,7 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
 
       logger.debug('Fetching offers with filters', filters);
 
+      // Build query with simplified joins
       let query = supabase
         .from('offers')
         .select(`
@@ -92,8 +93,8 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
           promo_type,
           value_number,
           is_featured,
-          partner:partners(id, name, address, phone, photos, lat, lng, city_id),
-          category:categories(id, name, icon)
+          partner_id,
+          category_id
         `)
         .eq('is_active', true);
 
@@ -107,7 +108,24 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
         query = query.eq('category_id', filters.category);
       }
 
-      // Note: City filter will be applied after data fetching since we need to join with partners
+      // Apply city filter at query level if specified
+      if (filters.city) {
+        const { data: cityPartners } = await supabase
+          .from('partners')
+          .select('id')
+          .eq('city_id', filters.city)
+          .eq('status', 'approved');
+        
+        const partnerIds = cityPartners?.map(p => p.id) || [];
+        if (partnerIds.length > 0) {
+          query = query.in('partner_id', partnerIds);
+        } else {
+          // No partners in this city, return empty result
+          setOffers(reset ? [] : offers);
+          setHasMore(false);
+          return;
+        }
+      }
 
       // Pagination
       const currentPage = reset ? 0 : page;
@@ -122,39 +140,55 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
         return;
       }
 
-      if (data) {
+      if (data && data.length > 0) {
         logger.debug('Raw offers fetched', { count: data.length });
         
-        // Apply city filter if specified
-        let filteredData = data;
-        if (filters.city) {
-          logger.debug('Applying city filter', { city: filters.city });
-          // First fetch the partners in the specified city
-          const { data: cityPartners } = await supabase
-            .from('partners')
-            .select('id')
-            .eq('city_id', filters.city)
-            .eq('status', 'approved');
-          
-          const partnerIds = cityPartners?.map(p => p.id) || [];
-          logger.debug('Partners in city', { count: partnerIds.length });
-          filteredData = data.filter(offer => 
-            offer.partner && partnerIds.includes(offer.partner.id)
-          );
-          logger.debug('Offers after city filter', { count: filteredData.length });
-        }
+        // Get partner and category details separately for better performance
+        const partnerIds = [...new Set(data.map(offer => offer.partner_id))];
+        const categoryIds = [...new Set(data.map(offer => offer.category_id))];
 
-        // Calculate distances if geolocation is available
+        const [partnersResult, categoriesResult] = await Promise.all([
+          supabase
+            .from('partners')
+            .select('id, name, address, phone, photos, lat, lng')
+            .in('id', partnerIds)
+            .eq('status', 'approved'),
+          supabase
+            .from('categories')
+            .select('id, name, icon')
+            .in('id', categoryIds)
+        ]);
+
+        const partnersMap = partnersResult.data?.reduce((acc, partner) => {
+          acc[partner.id] = partner;
+          return acc;
+        }, {} as Record<string, any>) || {};
+
+        const categoriesMap = categoriesResult.data?.reduce((acc, category) => {
+          acc[category.id] = category;
+          return acc;
+        }, {} as Record<string, any>) || {};
+
+        // Filter out offers without approved partners
+        const filteredData = data.filter(offer => partnersMap[offer.partner_id]);
+        logger.debug('Offers after partner filter', { count: filteredData.length });
+
+        // Calculate distances if geolocation is available and add partner/category data
         const currentLat = userLatitude;
         const currentLng = userLongitude;
         
-        const offersWithDistance = filteredData.map(offer => ({
-          ...offer,
-          distance: (currentLat && currentLng && offer.partner?.lat && offer.partner?.lng)
-            ? calculateDistance(currentLat, currentLng, offer.partner.lat, offer.partner.lng)
-            : undefined,
-          isFavorite: favorites.has(offer.id),
-        }));
+        const offersWithDistance = filteredData.map(offer => {
+          const partner = partnersMap[offer.partner_id];
+          return {
+            ...offer,
+            partner,
+            category: categoriesMap[offer.category_id],
+            distance: (currentLat && currentLng && partner?.lat && partner?.lng)
+              ? calculateDistance(currentLat, currentLng, partner.lat, partner.lng)
+              : undefined,
+            isFavorite: favorites.has(offer.id),
+          };
+        });
 
         // Apply distance filter
         let filteredOffers = offersWithDistance;

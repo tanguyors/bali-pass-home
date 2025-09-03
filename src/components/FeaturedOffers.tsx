@@ -117,6 +117,7 @@ export function FeaturedOffers() {
 
   const fetchFeaturedOffers = async () => {
     try {
+      // Simplified query - get offers first, then partners separately if needed
       const { data, error } = await supabase
         .from('offers')
         .select(`
@@ -126,7 +127,7 @@ export function FeaturedOffers() {
           value_text,
           promo_type,
           value_number,
-          partner:partners(name, address, phone, photos)
+          partner_id
         `)
         .eq('is_featured', true)
         .eq('is_active', true)
@@ -137,12 +138,28 @@ export function FeaturedOffers() {
         return;
       }
       
-      if (data) {
-        // Enhance offers with badge color
-        const enhancedOffers: EnhancedOffer[] = data.map(offer => ({
-          ...offer,
-          badge_color: offer.promo_type === 'percent' ? 'red' : 'green'
-        }));
+      if (data && data.length > 0) {
+        // Get partner details separately to avoid complex joins
+        const partnerIds = data.map(offer => offer.partner_id);
+        const { data: partners } = await supabase
+          .from('partners')
+          .select('id, name, address, phone, photos')
+          .in('id', partnerIds)
+          .eq('status', 'approved');
+
+        const partnersMap = partners?.reduce((acc, partner) => {
+          acc[partner.id] = partner;
+          return acc;
+        }, {} as Record<string, any>) || {};
+
+        // Enhance offers with partner data and badge color
+        const enhancedOffers: EnhancedOffer[] = data
+          .filter(offer => partnersMap[offer.partner_id]) // Only approved partners
+          .map(offer => ({
+            ...offer,
+            partner: partnersMap[offer.partner_id],
+            badge_color: offer.promo_type === 'percent' ? 'red' : 'green'
+          }));
         
         setOffers(enhancedOffers);
       }
