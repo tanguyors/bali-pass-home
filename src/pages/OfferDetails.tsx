@@ -51,6 +51,8 @@ export default function OfferDetails() {
   const [isUsing, setIsUsing] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
   const [isAlreadyUsed, setIsAlreadyUsed] = useState(false);
+  const [showRedemptionConfirmation, setShowRedemptionConfirmation] = useState(false);
+  const [redemptionData, setRedemptionData] = useState<any>(null);
 
   useEffect(() => {
     if (id) {
