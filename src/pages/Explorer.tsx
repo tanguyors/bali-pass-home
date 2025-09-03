@@ -17,9 +17,15 @@ interface Category {
   icon: string;
 }
 
+interface City {
+  id: string;
+  name: string;
+}
+
 const Explorer = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [categories, setCategories] = useState<Category[]>([]);
+  const [cities, setCities] = useState<City[]>([]);
   const [currentFilters, setCurrentFilters] = useState<FilterState>({
     city: '',
     category: '',
@@ -41,7 +47,7 @@ const Explorer = () => {
     loadMore,
   } = useOffers();
 
-  // Fetch categories
+  // Fetch categories and cities
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -66,7 +72,28 @@ const Explorer = () => {
       }
     };
 
+    const fetchCities = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('cities')
+          .select('id, name')
+          .order('name');
+
+        if (error) {
+          console.error('Error fetching cities:', error);
+          return;
+        }
+
+        if (data) {
+          setCities(data);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
     fetchCategories();
+    fetchCities();
   }, []);
 
   const handleApplyFilters = (newFilters: FilterState) => {
@@ -106,9 +133,15 @@ const Explorer = () => {
         {/* Simple Category Filter */}
         <SimpleFilter
           categories={categories}
+          cities={cities}
           selectedCategory={currentFilters.category}
+          selectedCity={currentFilters.city}
           onCategoryChange={(categoryId) => {
             const newFilters = { ...currentFilters, category: categoryId || '' };
+            handleApplyFilters(newFilters);
+          }}
+          onCityChange={(cityId) => {
+            const newFilters = { ...currentFilters, city: cityId || '' };
             handleApplyFilters(newFilters);
           }}
           offersCount={offers.length}
