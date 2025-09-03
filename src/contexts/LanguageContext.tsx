@@ -18,43 +18,58 @@ interface LanguageProviderProps {
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
   const [language, setLanguageState] = useState<SupportedLanguage>(() => {
-    // Récupérer la langue depuis localStorage ou utiliser la langue par défaut
-    const savedLanguage = localStorage.getItem(STORAGE_KEY) as SupportedLanguage;
-    return savedLanguage && locales[savedLanguage] ? savedLanguage : DEFAULT_LANGUAGE;
+    try {
+      // Récupérer la langue depuis localStorage ou utiliser la langue par défaut
+      const savedLanguage = localStorage.getItem(STORAGE_KEY) as SupportedLanguage;
+      return savedLanguage && locales[savedLanguage] ? savedLanguage : DEFAULT_LANGUAGE;
+    } catch (error) {
+      console.warn('Error accessing localStorage for language preference:', error);
+      return DEFAULT_LANGUAGE;
+    }
   });
 
   // Sauvegarder dans localStorage quand la langue change
   const setLanguage = (lang: SupportedLanguage) => {
-    setLanguageState(lang);
-    localStorage.setItem(STORAGE_KEY, lang);
+    try {
+      setLanguageState(lang);
+      localStorage.setItem(STORAGE_KEY, lang);
+    } catch (error) {
+      console.warn('Error saving language preference to localStorage:', error);
+      setLanguageState(lang);
+    }
   };
 
   // Fonction de traduction avec système de fallback
   const t = (key: string): string => {
-    // 1. Essayer dans la langue courante
-    const currentLangValue = getNestedValue(locales[language], key);
-    if (currentLangValue !== key) {
-      return currentLangValue;
-    }
-
-    // 2. Fallback vers le français
-    if (language !== 'fr') {
-      const frenchValue = getNestedValue(locales.fr, key);
-      if (frenchValue !== key) {
-        return frenchValue;
+    try {
+      // 1. Essayer dans la langue courante
+      const currentLangValue = getNestedValue(locales[language], key);
+      if (currentLangValue !== key) {
+        return currentLangValue;
       }
-    }
 
-    // 3. Fallback vers l'anglais si ce n'est pas la langue courante
-    if (language !== 'en') {
-      const englishValue = getNestedValue(locales.en, key);
-      if (englishValue !== key) {
-        return englishValue;
+      // 2. Fallback vers le français
+      if (language !== 'fr') {
+        const frenchValue = getNestedValue(locales.fr, key);
+        if (frenchValue !== key) {
+          return frenchValue;
+        }
       }
-    }
 
-    // 4. Retourner la clé si aucune traduction n'est trouvée
-    return key;
+      // 3. Fallback vers l'anglais si ce n'est pas la langue courante
+      if (language !== 'en') {
+        const englishValue = getNestedValue(locales.en, key);
+        if (englishValue !== key) {
+          return englishValue;
+        }
+      }
+
+      // 4. Retourner la clé si aucune traduction n'est trouvée
+      return key;
+    } catch (error) {
+      console.warn('Translation error for key:', key, error);
+      return key;
+    }
   };
 
   const value: LanguageContextType = {
@@ -73,7 +88,13 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 export function useLanguage(): LanguageContextType {
   const context = useContext(LanguageContext);
   if (context === undefined) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
+    console.error('useLanguage must be used within a LanguageProvider. Providing fallback.');
+    // Provide a fallback to prevent crashes
+    return {
+      language: DEFAULT_LANGUAGE,
+      setLanguage: () => console.warn('setLanguage called outside provider'),
+      t: (key: string) => key,
+    };
   }
   return context;
 }
