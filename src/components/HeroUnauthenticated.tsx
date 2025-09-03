@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { CreditCard } from "lucide-react";
 import baliHeroImage from "@/assets/bali-hero.jpg";
 import { useNavigate } from "react-router-dom";
+import { LanguageSelector } from "@/components/LanguageSelector";
 
 interface PassSettings {
   setting_key: string;
@@ -65,6 +66,11 @@ export function HeroUnauthenticated() {
       
       {/* Bottom gradient overlay only */}
       <div className="absolute inset-0 gradient-overlay-bottom" />
+      
+      {/* Language Selector - Top Right */}
+      <div className="absolute top-4 right-4 z-20">
+        <LanguageSelector variant="mobile" className="bg-white/10 backdrop-blur-md border-white/20 text-white" />
+      </div>
       
       {/* Content positioned center */}
       <div className="relative z-10 flex flex-col justify-center items-center h-full p-6 text-white text-center">

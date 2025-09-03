@@ -37,7 +37,7 @@ export function LanguageSelector({ variant = 'default', className = '' }: Langua
       <SelectTrigger 
         className={`w-auto gap-2 border-border/50 hover:border-border transition-colors ${className}`}
       >
-        <Globe className="w-4 h-4 text-muted-foreground" />
+        <Globe className="w-4 h-4 opacity-80" />
         <SelectValue>
           <div className="flex items-center gap-2">
             <span className="text-sm">{currentLanguageConfig.flag}</span>
@@ -49,7 +49,7 @@ export function LanguageSelector({ variant = 'default', className = '' }: Langua
           </div>
         </SelectValue>
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="bg-background/95 backdrop-blur-lg border-border/60">
         {Object.entries(languageConfig).map(([code, config]) => (
           <SelectItem key={code} value={code}>
             <div className="flex items-center gap-3">
