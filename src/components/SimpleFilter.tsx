@@ -89,20 +89,29 @@ export const SimpleFilter: React.FC<SimpleFilterProps> = ({
 
       {/* City Filter Section - Dropdown */}
       <div className="px-4 pb-4">
-        <h3 className="text-base font-semibold text-foreground mb-2">
-          {t('filter.city')}
-        </h3>
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-base font-semibold text-foreground">
+            {t('filter.city')}
+          </h3>
+          {selectedCity && (
+            <button
+              onClick={() => onCityChange(null)}
+              className="text-xs text-muted-foreground hover:text-foreground bg-muted hover:bg-muted/80 px-2 py-1 rounded-md transition-colors"
+            >
+              ✕ {t('filter.clear')}
+            </button>
+          )}
+        </div>
         <Select value={selectedCity || ""} onValueChange={(value) => onCityChange(value || null)}>
           <SelectTrigger className="w-full bg-background border-border text-foreground hover:border-primary/50 focus:border-primary">
-            <SelectValue placeholder={t('filter.all_cities')} />
-          </SelectTrigger>
-          <SelectContent className="bg-background border-border shadow-lg z-50">
-            <SelectItem value="" className="text-foreground hover:bg-muted focus:bg-muted">
+            <SelectValue placeholder={
               <div className="flex items-center gap-2">
                 <span>🌍</span>
                 <span>{t('filter.all_cities')}</span>
               </div>
-            </SelectItem>
+            } />
+          </SelectTrigger>
+          <SelectContent className="bg-background border-border shadow-lg z-50">
             {cities.map((city) => (
               <SelectItem 
                 key={city.id} 
