@@ -482,57 +482,74 @@ const MonPass: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Recent Activity */}
+        {/* Used Offers Section */}
         <Card className="shadow-lg border-0 bg-card/60 backdrop-blur-sm">
           <CardContent className="p-6">
             <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-              <div className="w-2 h-6 bg-gradient-to-b from-orange-500 to-orange-400 rounded-full"></div>
-              {t('profile.recent_activity')}
+              <div className="w-2 h-6 bg-gradient-to-b from-green-500 to-green-400 rounded-full"></div>
+              Offres utilisées
             </h3>
             
             {redemptions.length === 0 ? (
               <div className="text-center py-8">
                 <div className="w-16 h-16 bg-muted/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Clock className="w-8 h-8 text-muted-foreground" />
+                  <CheckCircle className="w-8 h-8 text-muted-foreground" />
                 </div>
-                <p className="text-muted-foreground mb-2">{t('profile.no_activity')}</p>
+                <p className="text-muted-foreground mb-2">Aucune offre utilisée</p>
                 <p className="text-sm text-muted-foreground">
-                  {t('profile.start_using')}
+                  Scannez le code QR des partenaires pour commencer
                 </p>
               </div>
             ) : (
-              <div className="space-y-3">
-                {redemptions.slice(0, 3).map((redemption) => (
-                  <div key={redemption.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full flex items-center justify-center">
-                        <Award className="w-5 h-5 text-primary" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm">{redemption.partner.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {redemption.partner.city.name} • {formatDate(redemption.redeemed_at)}
-                        </p>
-                      </div>
+              <div className="space-y-4">
+                {redemptions.slice(0, 4).map((redemption) => (
+                  <div key={redemption.id} className="border border-green-200 bg-green-50/50 rounded-xl p-4 relative">
+                    {/* Badge UTILISÉE */}
+                    <div className="absolute top-3 right-3">
+                      <Badge className="bg-green-600 text-white text-xs font-semibold px-2 py-1">
+                        ✓ UTILISÉE
+                      </Badge>
                     </div>
-                    <div className="flex items-center gap-2">
-                      {redemption.offer.value_number && (
-                        <Badge variant="secondary" className="bg-green-100 text-green-800">
-                          -{redemption.offer.value_number}%
-                        </Badge>
-                      )}
-                      <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                    
+                    <div className="flex items-start gap-3 pr-20">
+                      <div className="w-12 h-12 bg-gradient-to-br from-green-500/20 to-green-400/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-6 h-6 text-green-600" />
+                      </div>
+                      
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="font-semibold text-sm text-green-800">{redemption.offer.title}</h4>
+                          {redemption.offer.value_number && (
+                            <Badge variant="secondary" className="bg-green-100 text-green-700 text-xs">
+                              -{redemption.offer.value_number}%
+                            </Badge>
+                          )}
+                        </div>
+                        
+                        <p className="font-medium text-sm text-gray-700 mb-1">{redemption.partner.name}</p>
+                        
+                        <div className="flex items-center gap-4 text-xs text-gray-600">
+                          <div className="flex items-center gap-1">
+                            <MapPin className="w-3 h-3" />
+                            <span>{redemption.partner.city.name}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            <span>{formatDate(redemption.redeemed_at)}</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ))}
                 
-                {redemptions.length > 3 && (
+                {redemptions.length > 4 && (
                   <Button 
-                    variant="ghost" 
-                    className="w-full mt-4"
+                    variant="outline" 
+                    className="w-full mt-4 border-green-200 text-green-700 hover:bg-green-50"
                     onClick={() => navigate('/pass-history')}
                   >
-                    {t('profile.view_full_history')}
+                    Voir toutes les offres utilisées ({redemptions.length})
                   </Button>
                 )}
               </div>
