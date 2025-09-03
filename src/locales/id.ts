@@ -186,7 +186,18 @@ export const id = {
     preferences_error: 'Tidak dapat menyimpan preferensi',
     discover_bali_pass: 'Temukan Bali Pass',
   },
-  
+
+  // Offer Card
+  offer_card: {
+    image_coming_soon: 'Gambar segera hadir',
+    login_and_get_pass: 'Masuk dan dapatkan Bali\'Pass Anda',
+    access_full_details: 'Akses detail lengkap penawaran',
+    login: 'Masuk',
+    view_offer: 'Lihat penawaran',
+    call: 'Panggil',
+    navigation: 'Navigasi',
+  },
+
   // Languages
   languages: {
     fr: 'Français',

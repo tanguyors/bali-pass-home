@@ -186,7 +186,18 @@ export const es = {
     preferences_error: 'No se pudieron guardar las preferencias',
     discover_bali_pass: 'Descubrir Bali Pass',
   },
-  
+
+  // Offer Card
+  offer_card: {
+    image_coming_soon: 'Imagen próximamente',
+    login_and_get_pass: 'Inicia sesión y obtén tu Bali\'Pass',
+    access_full_details: 'Accede a los detalles completos de las ofertas',
+    login: 'Iniciar sesión',
+    view_offer: 'Ver oferta',
+    call: 'Llamar',
+    navigation: 'Navegación',
+  },
+
   // Languages
   languages: {
     fr: 'Français',

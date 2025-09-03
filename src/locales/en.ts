@@ -186,7 +186,18 @@ export const en = {
     preferences_error: 'Unable to save preferences',
     discover_bali_pass: 'Discover Bali Pass',
   },
-  
+
+  // Offer Card
+  offer_card: {
+    image_coming_soon: 'Image coming soon',
+    login_and_get_pass: 'Sign in and get your Bali\'Pass',
+    access_full_details: 'Access full offer details',
+    login: 'Sign in',
+    view_offer: 'View offer',
+    call: 'Call',
+    navigation: 'Navigation',
+  },
+
   // Languages
   languages: {
     fr: 'Français',

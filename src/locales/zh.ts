@@ -186,7 +186,18 @@ export const zh = {
     preferences_error: '无法保存偏好设置',
     discover_bali_pass: '探索巴厘岛通行证',
   },
-  
+
+  // Offer Card
+  offer_card: {
+    image_coming_soon: '图片即将推出',
+    login_and_get_pass: '登录并获取您的巴厘通行证',
+    access_full_details: '访问完整优惠详情',
+    login: '登录',
+    view_offer: '查看优惠',
+    call: '拨打电话',
+    navigation: '导航',
+  },
+
   // Languages
   languages: {
     fr: 'Français',

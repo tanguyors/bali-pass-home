@@ -186,7 +186,18 @@ export const fr = {
     preferences_error: 'Impossible de sauvegarder les préférences',
     discover_bali_pass: 'Découvrir Bali\'Pass',
   },
-  
+
+  // Offer Card
+  offer_card: {
+    image_coming_soon: 'Image à venir',
+    login_and_get_pass: 'Connectez-vous et obtenez votre Bali\'Pass',
+    access_full_details: 'Accédez aux détails complets des offres',
+    login: 'Se connecter',
+    view_offer: 'Voir l\'offre',
+    call: 'Appeler',
+    navigation: 'Navigation',
+  },
+
   // Languages
   languages: {
     fr: 'Français',

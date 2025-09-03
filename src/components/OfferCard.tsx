@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Offer } from '@/hooks/useOffers';
 import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface OfferCardProps {
   offer: Offer;
@@ -20,6 +21,7 @@ interface UserPass {
 
 export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps) {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [imageError, setImageError] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [userPass, setUserPass] = useState<UserPass | null>(null);
@@ -106,17 +108,17 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
           <div className="absolute inset-0 bg-black/20 z-10 flex items-center justify-center">
             <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 mx-4 text-center">
               <p className="text-sm font-medium text-gray-800 mb-2">
-                Connectez-vous et obtenez votre Bali'Pass
+                {t('offer_card.login_and_get_pass')}
               </p>
               <p className="text-xs text-gray-600 mb-3">
-                Accédez aux détails complets des offres
+                {t('offer_card.access_full_details')}
               </p>
               <Button
                 size="sm"
                 onClick={() => navigate('/auth')}
                 className="text-xs"
               >
-                Se connecter
+                {t('offer_card.login')}
               </Button>
             </div>
           </div>
@@ -133,7 +135,7 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
               />
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-primary/20 to-lagoon/20 flex items-center justify-center">
-                <span className="text-xs text-muted-foreground">Image à venir</span>
+                <span className="text-xs text-muted-foreground">{t('offer_card.image_coming_soon')}</span>
               </div>
             )}
 
@@ -198,7 +200,7 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
                 disabled={shouldBlur}
                 className="text-xs px-3 h-7 flex-1 disabled:opacity-50"
               >
-                Voir l'offre
+                {t('offer_card.view_offer')}
               </Button>
               
               {offer.partner.phone && (
@@ -208,7 +210,7 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
                   onClick={handleCall}
                   disabled={shouldBlur}
                   className="w-7 h-7 p-0 disabled:opacity-50"
-                  title="Appeler"
+                  title={t('offer_card.call')}
                 >
                   <Phone className="w-3 h-3" />
                 </Button>
@@ -221,7 +223,7 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
                   onClick={handleNavigation}
                   disabled={shouldBlur}
                   className="w-7 h-7 p-0 disabled:opacity-50"
-                  title="Navigation"
+                  title={t('offer_card.navigation')}
                 >
                   <Navigation className="w-3 h-3" />
                 </Button>
@@ -240,17 +242,17 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
         <div className="absolute inset-0 bg-black/20 z-10 flex items-center justify-center">
           <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 mx-4 text-center">
             <p className="text-sm font-medium text-gray-800 mb-2">
-              Connectez-vous et obtenez votre Bali'Pass
+              {t('offer_card.login_and_get_pass')}
             </p>
             <p className="text-xs text-gray-600 mb-3">
-              Accédez aux détails complets des offres
+              {t('offer_card.access_full_details')}
             </p>
             <Button
               size="sm"
               onClick={() => navigate('/auth')}
               className="text-xs"
             >
-              Se connecter
+              {t('offer_card.login')}
             </Button>
           </div>
         </div>
@@ -266,7 +268,7 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-primary/20 to-lagoon/20 flex items-center justify-center">
-            <span className="text-sm text-muted-foreground">Image à venir</span>
+            <span className="text-sm text-muted-foreground">{t('offer_card.image_coming_soon')}</span>
           </div>
         )}
 
@@ -340,7 +342,7 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
             disabled={shouldBlur}
             className="text-xs px-3 h-8 flex-1 disabled:opacity-50"
           >
-            Voir l'offre
+            {t('offer_card.view_offer')}
           </Button>
           
           {offer.partner.address && (
@@ -350,7 +352,7 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
               onClick={handleNavigation}
               disabled={shouldBlur}
               className="w-8 h-8 p-0 disabled:opacity-50"
-              title="Navigation"
+              title={t('offer_card.navigation')}
             >
               <Navigation className="w-3 h-3" />
             </Button>
