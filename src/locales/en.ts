@@ -118,6 +118,7 @@ export const en = {
     use_error: 'An error occurred while using the offer.',
     use_offer: 'Use offer',
     already_used: 'Already used',
+    already_used_desc: 'This offer has already been used and cannot be reused.',
     used_offer: 'You have used the offer',
   },
   

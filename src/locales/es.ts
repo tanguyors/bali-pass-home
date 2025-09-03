@@ -118,6 +118,7 @@ export const es = {
     use_error: 'Ocurrió un error al usar la oferta.',
     use_offer: 'Usar oferta',
     already_used: 'Ya utilizada',
+    already_used_desc: 'Esta oferta ya ha sido utilizada y no se puede reutilizar.',
     used_offer: 'Has usado la oferta',
   },
   

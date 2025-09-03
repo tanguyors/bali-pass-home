@@ -319,6 +319,24 @@ export default function OfferDetails() {
 
       setIsUsing(true);
 
+      // Vérifier si l'offre a déjà été utilisée
+      const { data: existingRedemption } = await supabase
+        .from('redemptions')
+        .select('id')
+        .eq('pass_id', userPass.id)
+        .eq('offer_id', offer.id)
+        .maybeSingle();
+
+      if (existingRedemption) {
+        toast({
+          title: t('offer.already_used'),
+          description: t('offer.already_used_desc'),
+          variant: "destructive",
+        });
+        setIsUsing(false);
+        return;
+      }
+
       // Créer la redemption après scan réussi
       const { error } = await supabase
         .from('redemptions')

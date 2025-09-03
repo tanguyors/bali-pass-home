@@ -120,6 +120,7 @@ export const fr = {
     use_error: 'Une erreur s\'est produite lors de l\'utilisation de l\'offre.',
     use_offer: 'Utiliser l\'offre',
     already_used: 'Déjà utilisée',
+    already_used_desc: 'Cette offre a déjà été utilisée et ne peut pas être réutilisée.',
     used_offer: 'Vous avez utilisé l\'offre',
   },
   

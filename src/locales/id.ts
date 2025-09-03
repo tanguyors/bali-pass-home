@@ -118,6 +118,7 @@ export const id = {
     use_error: 'Terjadi kesalahan saat menggunakan penawaran.',
     use_offer: 'Gunakan penawaran',
     already_used: 'Sudah digunakan',
+    already_used_desc: 'Penawaran ini telah digunakan dan tidak dapat digunakan lagi.',
     used_offer: 'Anda telah menggunakan penawaran',
   },
   

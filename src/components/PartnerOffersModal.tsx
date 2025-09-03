@@ -53,6 +53,23 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
         return;
       }
 
+      // Vérifier si l'offre a déjà été utilisée
+      const { data: existingRedemption } = await supabase
+        .from('redemptions')
+        .select('id')
+        .eq('pass_id', userPass.id)
+        .eq('offer_id', offerId)
+        .maybeSingle();
+
+      if (existingRedemption) {
+        toast({
+          title: t('offer.already_used'),
+          description: t('offer.already_used_desc'),
+          variant: "destructive",
+        });
+        return;
+      }
+
       // Créer la rédemption
       const { error } = await supabase
         .from('redemptions')

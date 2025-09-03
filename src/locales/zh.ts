@@ -118,6 +118,7 @@ export const zh = {
     use_error: '使用优惠时发生错误。',
     use_offer: '使用优惠',
     already_used: '已使用',
+    already_used_desc: '此优惠已被使用，无法重复使用。',
     used_offer: '您已使用优惠',
   },
   
