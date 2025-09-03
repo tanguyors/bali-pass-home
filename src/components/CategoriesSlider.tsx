@@ -38,7 +38,19 @@ export function CategoriesSlider() {
     try {
       const { data, error } = await supabase
         .from('categories')
-        .select('id, name, slug, icon')
+        .select(`
+          id, 
+          name, 
+          slug, 
+          icon,
+          offers!inner(
+            id,
+            is_active,
+            partners!inner(
+              status
+            )
+          )
+        `)
         .order('name', { ascending: true });
       
       if (error) {
@@ -47,12 +59,22 @@ export function CategoriesSlider() {
       }
       
       if (data) {
-        // Enhance categories with offers count and gradients
-        const categoriesWithExtras: CategoryWithOffers[] = data.map((category, index) => ({
-          ...category,
-          offers_count: Math.floor(Math.random() * 15) + 3, // 3-17 offers
-          gradient: gradientPalette[index % gradientPalette.length]
-        }));
+        // Enhance categories with real offers count and gradients
+        const categoriesWithExtras: CategoryWithOffers[] = data.map((category, index) => {
+          // Count only active offers from approved partners
+          const activeOffers = category.offers?.filter(offer => 
+            offer.is_active && offer.partners?.status === 'approved'
+          ) || [];
+          
+          return {
+            id: category.id,
+            name: category.name,
+            slug: category.slug,
+            icon: category.icon,
+            offers_count: activeOffers.length,
+            gradient: gradientPalette[index % gradientPalette.length]
+          };
+        }).filter(category => category.offers_count > 0); // Only show categories with offers
         
         setCategories(categoriesWithExtras);
       }
