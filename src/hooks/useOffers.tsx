@@ -73,11 +73,12 @@ export function useOffers() {
     }
   }, []);
 
-  // Fetch offers
   const fetchOffers = useCallback(async (reset = false) => {
     try {
       setLoading(true);
       setError(null);
+
+      console.log('🔍 Fetching offers with filters:', filters);
 
       let query = supabase
         .from('offers')
@@ -121,9 +122,12 @@ export function useOffers() {
       }
 
       if (data) {
+        console.log('📊 Raw offers fetched:', data.length);
+        
         // Apply city filter if specified
         let filteredData = data;
         if (filters.city) {
+          console.log('🏙️ Applying city filter:', filters.city);
           // First fetch the partners in the specified city
           const { data: cityPartners } = await supabase
             .from('partners')
@@ -132,9 +136,11 @@ export function useOffers() {
             .eq('status', 'approved');
           
           const partnerIds = cityPartners?.map(p => p.id) || [];
+          console.log('🏢 Partners in city:', partnerIds.length);
           filteredData = data.filter(offer => 
             offer.partner && partnerIds.includes(offer.partner.id)
           );
+          console.log('🎯 Offers after city filter:', filteredData.length);
         }
 
         // Calculate distances if geolocation is available
@@ -157,7 +163,7 @@ export function useOffers() {
         // Apply sorting with VIP priority by default
         filteredOffers.sort((a, b) => {
           // If no filters are applied (default state), prioritize featured offers
-          const isDefaultState = !filters.category && !searchQuery && filters.sortBy === 'relevance';
+          const isDefaultState = !filters.category && !filters.city && !searchQuery && filters.sortBy === 'relevance';
           
           if (isDefaultState) {
             // Featured offers first
@@ -182,6 +188,8 @@ export function useOffers() {
               return 0;
           }
         });
+
+        console.log('✅ Final filtered offers:', filteredOffers.length);
 
         if (reset) {
           setOffers(filteredOffers);
