@@ -122,28 +122,18 @@ export const FilterSheet: React.FC<FilterSheetProps> = ({
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex-shrink-0 p-4 pb-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <SlidersHorizontal className="w-4 h-4 text-primary" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-bold">{t('filter.title')}</h2>
-                  {getActiveFiltersCount() > 0 && (
-                    <p className="text-xs text-muted-foreground">
-                      {getActiveFiltersCount()} {t('filter.active_filters')}
-                    </p>
-                  )}
-                </div>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                <SlidersHorizontal className="w-4 h-4 text-primary" />
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="w-8 h-8 rounded-full"
-              >
-                <X className="w-4 h-4" />
-              </Button>
+              <div>
+                <h2 className="text-lg font-bold">{t('filter.title')}</h2>
+                {getActiveFiltersCount() > 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    {getActiveFiltersCount()} {t('filter.active_filters')}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 
