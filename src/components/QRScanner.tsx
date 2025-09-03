@@ -27,10 +27,7 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   const { toast } = useToast();
 
   useEffect(() => {
-    logger.debug("QRScanner useEffect triggered", { isOpen });
-    
     if (isOpen) {
-      logger.debug("QRScanner is opening");
       setScanned(false);
       setManualInput("");
       setHasPermission(null);
@@ -48,25 +45,20 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
         stopCamera();
       };
     } else {
-      logger.debug("QRScanner is closing");
       stopCamera();
       return () => {}; // Return empty cleanup function for else branch
     }
   }, [isOpen]); // Only depend on isOpen
 
   const startCamera = async () => {
-    logger.debug("startCamera called");
-    
     // Vérifier si on est dans un environnement natif
     if (Capacitor.isNativePlatform()) {
-      logger.debug("Native platform detected");
       setHasPermission(true);
       return;
     }
 
     // Utiliser l'API web pour le navigateur
     try {
-      logger.debug("Requesting camera access");
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: 'environment',
@@ -74,11 +66,8 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
           height: { ideal: 720 }
         }
       });
-
-      logger.debug("Camera stream obtained");
       
       if (videoRef.current) {
-        logger.debug("Setting video source");
         videoRef.current.srcObject = stream;
         
         // Propriétés nécessaires pour Safari mobile
@@ -86,11 +75,8 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
         videoRef.current.muted = true;
         videoRef.current.autoplay = true;
         
-        logger.debug("Video element properties set");
-        
         // Attendre que la vidéo soit prête
         videoRef.current.onloadedmetadata = () => {
-          logger.debug("Video metadata loaded");
           setHasPermission(true);
           setIsScanning(true);
           startScanning();
@@ -98,7 +84,6 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
         
         // Fallback
         setTimeout(() => {
-          logger.debug("Fallback: setting permission to true");
           setHasPermission(true);
           setIsScanning(true);
           startScanning();
@@ -126,7 +111,6 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   };
 
   const startScanning = () => {
-    logger.debug("Starting QR code scanning");
     intervalRef.current = setInterval(() => {
       scanQRCode();
     }, 100); // Scan toutes les 100ms
@@ -153,11 +137,6 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
     });
 
     if (code) {
-      logger.debug("QR CODE DÉTECTÉ", { 
-        rawData: code.data,
-        cleanedData: code.data.trim().replace(/[\r\n\t\s]/g, '')
-      });
-      
       // Nettoyer les données scannées
       const cleanedData = code.data.trim().replace(/[\r\n\t\s]/g, '');
       
@@ -197,8 +176,6 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
 
   const stopCamera = () => {
     if (!isScanning && !intervalRef.current) return; // Early exit if already stopped
-    
-    logger.debug("Stopping camera and scanning");
     
     // Arrêter le scanning
     if (intervalRef.current) {
