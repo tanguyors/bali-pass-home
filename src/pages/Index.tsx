@@ -11,6 +11,7 @@ import { FinalCTABanner } from "@/components/FinalCTABanner";
 import { BottomNavigation } from "@/components/BottomNavigation";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
 import { PassSummarySection } from "@/components/PassSummarySection";
+import { LanguageSelector } from "@/components/LanguageSelector";
 import { supabase } from "@/integrations/supabase/client";
 import { User, Session } from "@supabase/supabase-js";
 
@@ -94,6 +95,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Language Selector - Fixed at top right */}
+      <div className="fixed top-4 right-4 z-50">
+        <LanguageSelector />
+      </div>
+      
       {/* Main Content */}
       <main className="pb-20">
         {/* Conditional Hero Section */}
