@@ -65,13 +65,8 @@ export function HeroNoPass() {
       
       {/* Content positioned at bottom */}
       <div className="relative z-10 flex flex-col justify-end h-full p-6 text-white">
-        {/* Top chips with pricing */}
+        {/* Top chips without pricing for connected users */}
         <div className="flex flex-wrap gap-2 mb-8">
-          {getSettingValue('pass_price') && (
-            <div className="bg-primary/90 backdrop-blur-sm rounded-full px-3 py-1.5 text-xs font-medium">
-              {getSettingValue('pass_price')}
-            </div>
-          )}
           {getSettingValue('validity_period') && (
             <div className="bg-white/25 backdrop-blur-sm rounded-full px-3 py-1.5 text-xs font-medium">
               {getSettingValue('validity_period')}
