@@ -48,12 +48,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const fetchUserData = async (userId: string) => {
     try {
+      console.log('AuthContext: Starting fetchUserData for:', userId);
+      
       // Fetch profile
+      console.log('AuthContext: Fetching profile...');
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('*')
         .eq('user_id', userId)
         .single();
+
+      console.log('AuthContext: Profile result:', { profileData, profileError });
 
       if (profileError && profileError.code !== 'PGRST116') {
         logger.error('Error fetching profile', profileError);
@@ -62,6 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       // Fetch active pass
+      console.log('AuthContext: Fetching pass...');
       const { data: passData, error: passError } = await supabase
         .from('passes')
         .select('*')
@@ -71,12 +77,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .limit(1)
         .single();
 
+      console.log('AuthContext: Pass result:', { passData, passError });
+
       if (passError && passError.code !== 'PGRST116') {
         logger.error('Error fetching pass', passError);
       } else {
         setUserPass(passData);
       }
+      
+      console.log('AuthContext: fetchUserData completed successfully');
     } catch (error) {
+      console.error('AuthContext: Error in fetchUserData', error);
       logger.error('Error in fetchUserData', error);
     }
   };
@@ -92,7 +103,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const initAuth = async () => {
       try {
+        console.log('AuthContext: Starting auth initialization');
         const { data: { session: initialSession } } = await supabase.auth.getSession();
+        console.log('AuthContext: Got session', !!initialSession);
         
         if (!mounted) return;
         
@@ -100,12 +113,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(initialSession?.user ?? null);
         
         if (initialSession?.user) {
+          console.log('AuthContext: Fetching user data for:', initialSession.user.id);
           await fetchUserData(initialSession.user.id);
+          console.log('AuthContext: User data fetched');
         }
       } catch (error) {
+        console.error('AuthContext: Error initializing auth', error);
         logger.error('Error initializing auth', error);
       } finally {
         if (mounted) {
+          console.log('AuthContext: Setting loading to false');
           setLoading(false);
         }
       }
