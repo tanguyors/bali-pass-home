@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { FiltersType } from '@/hooks/useOffers';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface SearchHeaderProps {
   searchQuery: string;
@@ -37,6 +38,8 @@ export function SearchHeader({
   resultsCount,
   userLocation
 }: SearchHeaderProps) {
+  const { t } = useTranslation();
+  
   const activeFiltersCount = [
     filters.category,
     filters.priceRange,
@@ -54,7 +57,7 @@ export function SearchHeader({
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input 
-            placeholder="Rechercher une offre ou un partenaire…"
+            placeholder={t('explorer.search_placeholder')}
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             className="pl-10 pr-4 h-10 rounded-full border-border bg-background shadow-sm"
@@ -125,7 +128,7 @@ export function SearchHeader({
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Toutes les catégories</SelectItem>
+                <SelectItem value="all">{t('explorer.all_categories')}</SelectItem>
                 {categories.map((category) => (
                   <SelectItem key={category.id} value={category.id}>
                     <span className="flex items-center gap-2">
@@ -147,15 +150,15 @@ export function SearchHeader({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="relevance">Pertinence</SelectItem>
+                <SelectItem value="relevance">{t('explorer.relevance')}</SelectItem>
                 <SelectItem value="distance" disabled={!userLocation}>
                   <span className="flex items-center gap-2">
                     <MapPin className="w-3 h-3" />
-                    Distance
+                    {t('explorer.distance')}
                   </span>
                 </SelectItem>
-                <SelectItem value="price">Prix</SelectItem>
-                <SelectItem value="newest">Plus récentes</SelectItem>
+                <SelectItem value="price">{t('explorer.price')}</SelectItem>
+                <SelectItem value="newest">{t('explorer.newest')}</SelectItem>
               </SelectContent>
             </Select>
 
@@ -176,7 +179,7 @@ export function SearchHeader({
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Toutes distances</SelectItem>
+                  <SelectItem value="all">{t('explorer.all_distances')}</SelectItem>
                   <SelectItem value="5">5 km</SelectItem>
                   <SelectItem value="10">10 km</SelectItem>
                   <SelectItem value="25">25 km</SelectItem>
@@ -198,7 +201,7 @@ export function SearchHeader({
                 })}
                 className="h-8 px-3 rounded-full text-xs text-muted-foreground hover:text-foreground"
               >
-                Effacer
+                {t('explorer.clear')}
               </Button>
             )}
           </div>
@@ -208,8 +211,8 @@ export function SearchHeader({
       {/* Results count */}
       <div className="px-4 py-2 bg-muted/20 border-t border-border">
         <p className="text-xs text-muted-foreground">
-          {resultsCount} {resultsCount <= 1 ? 'offre trouvée' : 'offres trouvées'}
-          {searchQuery && ` pour "${searchQuery}"`}
+          {resultsCount} {resultsCount <= 1 ? t('explorer.offer_found') : t('explorer.offers_found')}
+          {searchQuery && ` ${t('explorer.search_for')} "${searchQuery}"`}
         </p>
       </div>
     </div>

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { Loader2 } from 'lucide-react';
 import { OfferCard } from './OfferCard';
 import { Offer } from '@/hooks/useOffers';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface OffersListProps {
   offers: Offer[];
@@ -23,6 +24,7 @@ export function OffersList({
   error 
 }: OffersListProps) {
   const observer = useRef<IntersectionObserver>();
+  const { t } = useTranslation();
   
   const lastOfferElementRef = useCallback((node: HTMLDivElement) => {
     if (loading) return;
@@ -45,7 +47,7 @@ export function OffersList({
           onClick={() => window.location.reload()}
           className="text-primary hover:underline"
         >
-          Réessayer
+          {t('explorer.retry')}
         </button>
       </div>
     );
@@ -58,10 +60,10 @@ export function OffersList({
           <span className="text-2xl">🔍</span>
         </div>
         <h3 className="text-lg font-semibold text-foreground mb-2">
-          Aucune offre trouvée
+          {t('explorer.no_offers_found')}
         </h3>
         <p className="text-muted-foreground max-w-sm mx-auto">
-          Essayez de modifier vos critères de recherche ou vos filtres pour trouver plus d'offres.
+          {t('explorer.try_different_filters')}
         </p>
       </div>
     );
@@ -96,7 +98,7 @@ export function OffersList({
         <div className="flex justify-center py-8">
           <div className="flex items-center gap-2 text-muted-foreground">
             <Loader2 className="w-4 h-4 animate-spin" />
-            <span className="text-sm">Chargement des offres...</span>
+            <span className="text-sm">{t('explorer.loading_offers_text')}</span>
           </div>
         </div>
       )}
@@ -105,7 +107,7 @@ export function OffersList({
       {!loading && !hasMore && offers.length > 0 && (
         <div className="text-center py-8">
           <p className="text-muted-foreground text-sm">
-            Vous avez vu toutes les offres disponibles
+            {t('explorer.all_offers_viewed')}
           </p>
         </div>
       )}

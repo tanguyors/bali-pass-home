@@ -154,7 +154,7 @@ const Explorer = () => {
       {locationError && (
         <div className="px-4 py-2 bg-orange-50 border-b border-orange-200">
           <p className="text-xs text-orange-600">
-            📍 Location not available. Proximity features are disabled.
+            {t('explorer.location_not_available')}
           </p>
         </div>
       )}
