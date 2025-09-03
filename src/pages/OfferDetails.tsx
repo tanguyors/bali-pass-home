@@ -476,15 +476,6 @@ export default function OfferDetails() {
                   <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
                     {offer.partner.name}
                   </h3>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Star className="w-5 h-5 text-amber-400 fill-current" />
-                    <span className="text-lg font-semibold text-slate-900 dark:text-white">
-                      {(Math.random() * 1.5 + 3.5).toFixed(1)}
-                    </span>
-                    <span className="text-slate-500 dark:text-slate-400">
-                      ({Math.floor(Math.random() * 200) + 50} {t('offer_details.reviews')})
-                    </span>
-                  </div>
                 </div>
               </div>
 
