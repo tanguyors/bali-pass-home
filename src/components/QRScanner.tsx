@@ -34,19 +34,25 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
       setScanned(false);
       setManualInput("");
       setHasPermission(null);
+      setIsScanning(false);
+      
       // Délai pour s'assurer que le DOM est prêt
-      setTimeout(() => {
-        startCamera();
+      const timer = setTimeout(() => {
+        if (isOpen) { // Double check isOpen is still true
+          startCamera();
+        }
       }, 100);
+      
+      return () => {
+        clearTimeout(timer);
+        stopCamera();
+      };
     } else {
       logger.debug("QRScanner is closing");
       stopCamera();
+      return () => {}; // Return empty cleanup function for else branch
     }
-
-    return () => {
-      stopCamera();
-    };
-  }, [isOpen]);
+  }, [isOpen]); // Only depend on isOpen
 
   const startCamera = async () => {
     logger.debug("startCamera called");
@@ -190,6 +196,8 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   };
 
   const stopCamera = () => {
+    if (!isScanning && !intervalRef.current) return; // Early exit if already stopped
+    
     logger.debug("Stopping camera and scanning");
     
     // Arrêter le scanning
@@ -206,6 +214,7 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
     }
     
     setIsScanning(false);
+    setHasPermission(null);
   };
 
   const handleManualSubmit = () => {
