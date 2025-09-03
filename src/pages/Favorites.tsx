@@ -7,9 +7,11 @@ import { Badge } from '@/components/ui/badge';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { useOfferFavorites } from '@/hooks/useOfferFavorites';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Favorites: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { favorites, loading, removeFromFavorites } = useOfferFavorites();
 
   if (loading) {
@@ -107,7 +109,7 @@ const Favorites: React.FC = () => {
                       {favorite.offer?.category && (
                         <div className="flex items-center gap-1 text-sm text-muted-foreground mb-2">
                           <span>{favorite.offer.category.icon}</span>
-                          <span>{favorite.offer.category.name}</span>
+                          <span>{t(`category_names.${favorite.offer.category.name}`) || favorite.offer.category.name}</span>
                         </div>
                       )}
                       

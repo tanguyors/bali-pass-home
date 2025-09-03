@@ -94,7 +94,7 @@ export const SimpleFilter: React.FC<SimpleFilterProps> = ({
               <div className="relative flex items-center gap-2">
                 <span className="text-lg filter drop-shadow-sm">{category.icon}</span>
                 <span className="font-semibold text-xs leading-tight flex-1 text-left">
-                  {category.name}
+                  {t(`category_names.${category.name}`) || category.name}
                 </span>
               </div>
               {selectedCategory === category.id && (

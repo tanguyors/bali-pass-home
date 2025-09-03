@@ -103,7 +103,7 @@ export function CategoriesSlider() {
                 
                 {/* Category name */}
                 <span className="text-xs font-semibold text-white text-center leading-tight px-1">
-                  {category.name}
+                  {t(`category_names.${category.name}`) || category.name}
                 </span>
               </div>
               

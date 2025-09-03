@@ -279,7 +279,7 @@ export const FilterSheet: React.FC<FilterSheetProps> = ({
                         {categories.map((category) => (
                           <FilterChip
                             key={category.id}
-                            label={category.name}
+                            label={t(`category_names.${category.name}`) || category.name}
                             icon={category.icon || '📄'}
                             isSelected={false}
                             onClick={() => setTempFilters(prev => ({ ...prev, category: category.id }))}

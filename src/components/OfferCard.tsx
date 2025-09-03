@@ -168,7 +168,7 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
               
               {offer.category && (
                 <Badge variant="secondary" className="text-xs ml-2 flex-shrink-0">
-                  {offer.category.icon} {offer.category.name}
+                  {offer.category.icon} {t(`category_names.${offer.category.name}`) || offer.category.name}
                 </Badge>
               )}
             </div>

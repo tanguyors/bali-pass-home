@@ -48,7 +48,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
           {categories.map((category) => (
             <FilterChip
               key={category.id}
-              label={category.name}
+              label={t(`category_names.${category.name}`) || category.name}
               icon={category.icon}
               isSelected={selectedCategory === category.id}
               onClick={() => onCategoryChange(category.id)}

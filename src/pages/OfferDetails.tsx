@@ -431,7 +431,7 @@ export default function OfferDetails() {
               {offer.category.icon && (
                 <span className="text-lg">{offer.category.icon}</span>
               )}
-              <span className="text-sm text-primary font-medium">{offer.category.name}</span>
+              <span className="text-sm text-primary font-medium">{t(`category_names.${offer.category.name}`) || offer.category.name}</span>
             </div>
             <h1 className="text-2xl font-bold text-foreground leading-tight">
               {offer.title}

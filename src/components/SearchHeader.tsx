@@ -122,7 +122,7 @@ export function SearchHeader({
                 <SelectValue placeholder="Catégorie">
                   {selectedCategory && (
                     <span className="flex items-center gap-1">
-                      {selectedCategory.icon} {selectedCategory.name}
+                      {selectedCategory.icon} {t(`category_names.${selectedCategory.name}`) || selectedCategory.name}
                     </span>
                   )}
                 </SelectValue>
@@ -132,7 +132,7 @@ export function SearchHeader({
                 {categories.map((category) => (
                   <SelectItem key={category.id} value={category.id}>
                     <span className="flex items-center gap-2">
-                      {category.icon} {category.name}
+                      {category.icon} {t(`category_names.${category.name}`) || category.name}
                     </span>
                   </SelectItem>
                 ))}

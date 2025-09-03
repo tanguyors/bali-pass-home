@@ -312,4 +312,20 @@ export const en = {
     id: 'Bahasa Indonesia',
     zh: '中文',
   },
+
+  // Categories translations
+  category_names: {
+    'Activités': 'Activities',
+    'Bien-être': 'Wellness',
+    'Culture': 'Culture',
+    'Excursions': 'Excursions',
+    'Famille': 'Family',
+    'Mobilité': 'Mobility',
+    'Nightlife': 'Nightlife',
+    'Restauration': 'Dining',
+    'Shopping': 'Shopping',
+    'Travailleur': 'Digital Nomad',
+    'Villa & Hostel': 'Villa & Hostel',
+    'Water Sports': 'Water Sports',
+  },
 };
