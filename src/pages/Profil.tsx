@@ -175,7 +175,7 @@ const Profil: React.FC = () => {
           .eq('user_id', user.id);
         
         // Update the app language immediately
-        setLanguage(value as 'en' | 'fr' | 'id');
+        setLanguage(value as 'en' | 'fr' | 'es' | 'id' | 'zh');
       }
       
       toast({
@@ -426,7 +426,9 @@ const Profil: React.FC = () => {
                   <SelectContent>
                     <SelectItem value="en">🇺🇸 English</SelectItem>
                     <SelectItem value="fr">🇫🇷 Français</SelectItem>
-                    <SelectItem value="id">🇮🇩 Indonesia</SelectItem>
+                    <SelectItem value="es">🇪🇸 Español</SelectItem>
+                    <SelectItem value="id">🇮🇩 Bahasa Indonesia</SelectItem>
+                    <SelectItem value="zh">🇨🇳 中文</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -470,13 +472,13 @@ const Profil: React.FC = () => {
           <CardContent className="p-6">
             <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
               <div className="w-2 h-6 bg-gradient-to-b from-purple-500 to-purple-400 rounded-full"></div>
-              Préférences
+              {t('profile.preferences')}
             </h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
                 <div className="flex items-center gap-3">
                   <Bell className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm">Notifications push</span>
+                  <span className="text-sm">{t('profile.push_notifications')}</span>
                 </div>
                 <Switch
                   checked={preferences.push_notifications}
@@ -487,7 +489,7 @@ const Profil: React.FC = () => {
               <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
                 <div className="flex items-center gap-3">
                   <Mail className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm">Alertes email</span>
+                  <span className="text-sm">{t('profile.email_notifications')}</span>
                 </div>
                 <Switch
                   checked={preferences.email_notifications}
@@ -504,14 +506,14 @@ const Profil: React.FC = () => {
           <CardContent className="p-6">
             <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
               <div className="w-2 h-6 bg-gradient-to-b from-orange-500 to-orange-400 rounded-full"></div>
-              Support & Aide
+              {t('profile.support')}
             </h3>
             <div className="space-y-2">
               <SupportLink href="https://help.balipass.com" external>
                 <div className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/30 transition-colors duration-200">
                   <div className="flex items-center gap-3">
                     <HelpCircle className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm">Centre d'aide</span>
+                    <span className="text-sm">{t('profile.help_center')}</span>
                   </div>
                   <ChevronRight className="w-4 h-4 text-muted-foreground" />
                 </div>
@@ -520,7 +522,7 @@ const Profil: React.FC = () => {
                 <div className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/30 transition-colors duration-200">
                   <div className="flex items-center gap-3">
                     <MessageCircle className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm">Contact support</span>
+                    <span className="text-sm">{t('profile.contact_support')}</span>
                   </div>
                   <ChevronRight className="w-4 h-4 text-muted-foreground" />
                 </div>
@@ -538,7 +540,7 @@ const Profil: React.FC = () => {
               onClick={handleSignOut}
             >
               <LogOut className="w-4 h-4 mr-2" />
-              Se déconnecter
+              {t('profile.sign_out')}
             </Button>
           </CardContent>
         </Card>
