@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -32,9 +32,13 @@ export const useOfferFavorites = () => {
   const [favorites, setFavorites] = useState<OfferFavorite[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const fetchingRef = useRef(false); // Prevent double fetching
 
   const fetchFavorites = useCallback(async () => {
+    if (fetchingRef.current) return; // Prevent duplicate calls
+    
     try {
+      fetchingRef.current = true;
       if (!user) {
         setFavorites([]);
         setLoading(false);
@@ -89,6 +93,7 @@ export const useOfferFavorites = () => {
         });
       } finally {
         setLoading(false);
+        fetchingRef.current = false;
       }
     }, [user, toast]);
 
@@ -129,13 +134,8 @@ export const useOfferFavorites = () => {
   }, [user, toast, fetchFavorites]);
 
   useEffect(() => {
-    if (user) {
-      fetchFavorites();
-    } else {
-      setFavorites([]);
-      setLoading(false);
-    }
-  }, [user]);
+    fetchFavorites();
+  }, [user]); // Only depend on user changes
 
   return {
     favorites,

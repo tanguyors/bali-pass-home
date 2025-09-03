@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useGeolocation } from './useGeolocation';
@@ -53,9 +53,15 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
     maxDistance: null,
   });
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const favoritesRef = useRef<Set<string>>(new Set());
   
   const { calculateDistance } = useGeolocation();
   const pageSize = 20;
+
+  // Update ref when favorites change
+  useEffect(() => {
+    favoritesRef.current = favorites;
+  }, [favorites]);
 
   // Fetch user favorites
   const fetchFavorites = useCallback(async () => {
@@ -153,7 +159,7 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
         const currentLng = userLongitude;
         
         const offersWithDistance = filteredData.map(offer => {
-          const currentFavorites = favorites; // Capture current favorites state
+          const currentFavorites = favoritesRef.current; // Use ref to avoid dependency cycle
           return {
             ...offer,
             distance: (currentLat && currentLng && offer.partner?.lat && offer.partner?.lng)
@@ -218,7 +224,7 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
     } finally {
       setLoading(false);
     }
-  }, [searchQuery, filters.category, filters.city, filters.sortBy, filters.maxDistance, page, userLatitude, userLongitude, calculateDistance, pageSize, favorites]); // Added favorites back
+  }, [searchQuery, filters.category, filters.city, filters.sortBy, filters.maxDistance, page, userLatitude, userLongitude, calculateDistance, pageSize]); // Removed favorites to prevent infinite loop
 
   // Toggle favorite
   const toggleFavorite = useCallback(async (offerId: string) => {
@@ -273,12 +279,8 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
 
   // Effects
   useEffect(() => {
-    if (user) {
-      fetchFavorites();
-    } else {
-      setFavorites(new Set());
-    }
-  }, [user]); // Only depend on user
+    fetchFavorites();
+  }, [user]); // Only depend on user changes
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -287,7 +289,7 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
     }, 300); // Debounce search
 
     return () => clearTimeout(timeoutId);
-  }, [searchQuery, filters.category, filters.city, filters.sortBy, filters.maxDistance, userLatitude, userLongitude]); // Fixed dependencies
+  }, [searchQuery, filters.category, filters.city, filters.sortBy, filters.maxDistance, userLatitude, userLongitude]); // Remove fetchOffers dependency
 
   return {
     offers,
