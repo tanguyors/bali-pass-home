@@ -26,69 +26,54 @@ export const SimpleFilter: React.FC<SimpleFilterProps> = ({
   const { t } = useLanguage();
 
   return (
-    <div className={`bg-background ${className}`}>
-      {/* Simple Title */}
-      <div className="px-4 py-4 bg-muted/30">
-        <h2 className="text-xl font-bold text-center text-foreground mb-2">
-          {t('simple_filter.what_are_you_looking_for')}
+    <div className={`bg-background border-b border-border ${className}`}>
+      {/* Section Header */}
+      <div className="px-4 pt-6 pb-4">
+        <h2 className="text-xl font-bold text-foreground mb-1">
+          {t('filter.filter_by_category')}
         </h2>
-        <p className="text-center text-muted-foreground text-sm">
-          {offersCount} {offersCount <= 1 ? t('simple_filter.offer_available') : t('simple_filter.offers_available')}
+        <p className="text-sm text-muted-foreground">
+          {offersCount} {offersCount === 1 ? t('simple_filter.offer_available') : t('simple_filter.offers_available')}
         </p>
       </div>
 
-      {/* Big Category Buttons */}
-      <div className="p-4 space-y-3">
-        {/* All Categories Button */}
-        <Button
-          onClick={() => onCategoryChange(null)}
-          variant={!selectedCategory ? "default" : "outline"}
-          className={`w-full h-16 text-left justify-start gap-4 text-lg font-semibold ${
-            !selectedCategory 
-              ? 'bg-primary text-primary-foreground border-2 border-primary shadow-lg' 
-              : 'bg-card hover:bg-muted border-2 border-muted'
-          }`}
-        >
-          <span className="text-2xl">🏷️</span>
-          <div className="text-left">
-            <div className="font-bold">{t('simple_filter.all_offers')}</div>
-            <div className="text-sm opacity-80">{t('simple_filter.see_everything')}</div>
-          </div>
-        </Button>
-
-        {/* Individual Category Buttons */}
-        {categories.map((category) => (
-          <Button
-            key={category.id}
-            onClick={() => onCategoryChange(category.id)}
-            variant={selectedCategory === category.id ? "default" : "outline"}
-            className={`w-full h-16 text-left justify-start gap-4 text-lg font-semibold ${
-              selectedCategory === category.id 
-                ? 'bg-primary text-primary-foreground border-2 border-primary shadow-lg' 
-                : 'bg-card hover:bg-muted border-2 border-muted'
+      {/* Category Grid */}
+      <div className="px-4 pb-6">
+        <div className="grid grid-cols-2 gap-3">
+          {/* All Categories Button */}
+          <button
+            onClick={() => onCategoryChange(null)}
+            className={`p-4 rounded-xl border-2 transition-all duration-200 flex items-center gap-3 ${
+              !selectedCategory
+                ? 'bg-primary text-primary-foreground border-primary shadow-md'
+                : 'bg-background text-foreground border-border hover:border-primary/50 hover:bg-muted/50'
             }`}
           >
-            <span className="text-2xl">{category.icon}</span>
-            <div className="text-left">
-              <div className="font-bold">{category.name}</div>
-              <div className="text-sm opacity-80">{t('simple_filter.discover')} {category.name.toLowerCase()}</div>
-            </div>
-          </Button>
-        ))}
-      </div>
-
-      {/* Clear Selection */}
-      {selectedCategory && (
-        <div className="px-4 pb-4">
-          <Button
-            onClick={() => onCategoryChange(null)}
-            variant="ghost"
-            className="w-full h-12 text-muted-foreground hover:text-foreground"
-          >
-            ✕ {t('simple_filter.clear_selection')}
-          </Button>
+            <span className="text-xl">📂</span>
+            <span className="font-medium text-left flex-1">
+              {t('filter.all_categories')}
+            </span>
+          </button>
+          
+          {/* Individual Category Buttons */}
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => onCategoryChange(category.id)}
+              className={`p-4 rounded-xl border-2 transition-all duration-200 flex items-center gap-3 ${
+                selectedCategory === category.id
+                  ? 'bg-primary text-primary-foreground border-primary shadow-md'
+                  : 'bg-background text-foreground border-border hover:border-primary/50 hover:bg-muted/50'
+              }`}
+            >
+              <span className="text-xl">{category.icon}</span>
+              <span className="font-medium text-left flex-1">
+                {category.name}
+              </span>
+            </button>
+          ))}
         </div>
-      )}
+      </div>
     </div>
   );
 };
