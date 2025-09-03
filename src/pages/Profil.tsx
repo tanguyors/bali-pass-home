@@ -146,18 +146,36 @@ const Profil: React.FC = () => {
   };
 
   const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast({
-        title: t('common.error'),
-        description: t('profile.logout_error'),
-        variant: "destructive",
-      });
-    } else {
+    try {
+      // Clear local session first
+      setSession(null);
+      setUser(null);
+      
+      // Then attempt server logout
+      const { error } = await supabase.auth.signOut();
+      
+      // Even if server logout fails, we still consider it a success since local state is cleared
+      if (error && !error.message.includes('session_not_found')) {
+        console.warn('Logout error (non-critical):', error);
+        toast({
+          title: t('common.error'),
+          description: t('profile.logout_error'),
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      // Success message and navigation
       toast({
         title: t('profile.logout_success'),
         description: t('profile.see_you_soon'),
       });
+      navigate('/');
+    } catch (error) {
+      console.error('Unexpected logout error:', error);
+      // Still clear local state and navigate
+      setSession(null);
+      setUser(null);
       navigate('/');
     }
   };
