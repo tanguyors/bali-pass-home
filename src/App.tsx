@@ -7,6 +7,7 @@ import { LanguageProvider } from "./contexts/LanguageContext";
 import Index from "./pages/Index";
 import Explorer from "./pages/Explorer";
 import MonPass from "./pages/MonPass";
+import PassHistory from "./pages/PassHistory";
 import Auth from "./pages/Auth";
 import Profil from "./pages/Profil";
 import OfferDetails from "./pages/OfferDetails";
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/explorer" element={<Explorer />} />
             <Route path="/mon-pass" element={<MonPass />} />
+            <Route path="/pass-history" element={<PassHistory />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/profil" element={<Profil />} />
             <Route path="/offer/:id" element={<OfferDetails />} />

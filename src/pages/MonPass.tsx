@@ -484,8 +484,12 @@ const MonPass: React.FC = () => {
                 ))}
                 
                 {redemptions.length > 3 && (
-                  <Button variant="ghost" className="w-full mt-4">
-                    View full history
+                  <Button 
+                    variant="ghost" 
+                    className="w-full mt-4"
+                    onClick={() => navigate('/pass-history')}
+                  >
+                    {t('profile.view_full_history')}
                   </Button>
                 )}
               </div>
