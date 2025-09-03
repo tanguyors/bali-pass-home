@@ -217,7 +217,7 @@ const Auth: React.FC = () => {
                       <Input
                         id="signin-email"
                         type="email"
-                        placeholder="tanguycomptepro@gmail.com"
+                        placeholder="votre@email.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="h-14 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-primary/20 focus:border-primary transition-all duration-300"
@@ -297,7 +297,7 @@ const Auth: React.FC = () => {
                       <Input
                         id="signup-email"
                         type="email"
-                        placeholder="tanguycomptepro@gmail.com"
+                        placeholder="votre@email.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="h-12 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-primary/20 focus:border-primary transition-all duration-300"
