@@ -19,7 +19,8 @@ import {
   Clock,
   Star,
   Award,
-  ChevronRight
+  ChevronRight,
+  Heart
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { BottomNavigation } from '@/components/BottomNavigation';
@@ -27,6 +28,7 @@ import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageSelector } from '@/components/LanguageSelector';
+import { useOfferFavorites } from '@/hooks/useOfferFavorites';
 
 interface Pass {
   id: string;
@@ -70,7 +72,7 @@ const MonPass: React.FC = () => {
   const [pass, setPass] = useState<Pass | null>(null);
   const [redemptions, setRedemptions] = useState<Redemption[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [totalSavings, setTotalSavings] = useState<number>(0);
+  const { favorites } = useOfferFavorites();
 
   // Auth state management
   useEffect(() => {
@@ -166,12 +168,6 @@ const MonPass: React.FC = () => {
           }
         }));
         setRedemptions(formattedRedemptions);
-
-        // Calculate total savings
-        const savings = formattedRedemptions.reduce((total, redemption) => {
-          return total + (redemption.offer.value_number || 0);
-        }, 0);
-        setTotalSavings(savings);
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -432,23 +428,70 @@ const MonPass: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Savings Summary */}
-        <Card className="shadow-lg border-0 bg-gradient-to-br from-emerald-50/50 to-emerald-100/30 border-emerald-200/50">
+        {/* My Favorites */}
+        <Card className="shadow-lg border-0 bg-gradient-to-br from-red-50/50 to-red-100/30 border-red-200/50">
           <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="font-bold text-lg text-emerald-800 mb-1">{t('profile.my_savings')}</h3>
-                <p className="text-3xl font-bold text-emerald-700">
-                  {totalSavings > 0 ? `${totalSavings}%` : '0%'}
-                </p>
-                <p className="text-sm text-emerald-600">
-                  {redemptions.length} {t('profile.uses')}
+                <h3 className="font-bold text-lg text-red-800 mb-1">{t('favorites.title')}</h3>
+                <p className="text-sm text-red-600">
+                  {favorites.length} {favorites.length === 1 ? t('simple_filter.offer_available') : t('simple_filter.offers_available')}
                 </p>
               </div>
-              <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-400 rounded-full flex items-center justify-center">
-                <TrendingUp className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-400 rounded-full flex items-center justify-center">
+                <Heart className="w-8 h-8 text-white fill-current" />
               </div>
             </div>
+            
+            {favorites.length === 0 ? (
+              <div className="text-center py-4">
+                <p className="text-sm text-red-600 mb-3">{t('favorites.no_favorites')}</p>
+                <Button 
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate('/explorer')}
+                  className="border-red-200 text-red-700 hover:bg-red-50"
+                >
+                  {t('explorer.discover_offers')}
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {favorites.slice(0, 2).map((favorite) => (
+                  <div 
+                    key={favorite.id} 
+                    className="flex items-center justify-between p-3 rounded-lg bg-white/50 cursor-pointer hover:bg-white/70 transition-colors"
+                    onClick={() => navigate(`/offer/${favorite.offer_id}`)}
+                  >
+                    <div className="flex items-center gap-3 flex-1">
+                      <div className="w-10 h-10 bg-gradient-to-br from-red-500/10 to-red-500/5 rounded-full flex items-center justify-center">
+                        <Heart className="w-5 h-5 text-red-500 fill-current" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm text-red-800 truncate">
+                          {favorite.offer?.title || 'Offre'}
+                        </p>
+                        <p className="text-xs text-red-600 truncate">
+                          {favorite.offer?.partner?.name || 'Partenaire'}
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-red-400 flex-shrink-0" />
+                  </div>
+                ))}
+                
+                {favorites.length > 2 && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    className="w-full mt-3 text-red-700 hover:bg-red-50"
+                    onClick={() => navigate('/favorites')}
+                  >
+                    {t('favorites.view_all')} ({favorites.length})
+                  </Button>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
 
