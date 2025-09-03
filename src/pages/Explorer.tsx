@@ -48,7 +48,7 @@ const Explorer = () => {
     setFilters,
     toggleFavorite,
     loadMore,
-  } = useOffers();
+  } = useOffers(latitude, longitude);
 
   // Fetch categories and cities
   useEffect(() => {

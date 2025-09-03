@@ -37,7 +37,7 @@ export interface FiltersType {
   maxDistance: number | null;
 }
 
-export function useOffers() {
+export function useOffers(userLatitude?: number | null, userLongitude?: number | null) {
   const [offers, setOffers] = useState<Offer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -145,16 +145,23 @@ export function useOffers() {
         }
 
         // Calculate distances if geolocation is available
+        const currentLat = userLatitude ?? latitude;
+        const currentLng = userLongitude ?? longitude;
+        
         console.log('🗺️ Calcul des distances', { 
-          userLat: latitude, 
-          userLng: longitude, 
+          userLat: currentLat, 
+          userLng: currentLng, 
+          paramLat: userLatitude,
+          paramLng: userLongitude,
+          hookLat: latitude,
+          hookLng: longitude,
           offersCount: filteredData.length 
         });
         
         const offersWithDistance = filteredData.map(offer => ({
           ...offer,
-          distance: (latitude && longitude && offer.partner?.lat && offer.partner?.lng)
-            ? calculateDistance(latitude, longitude, offer.partner.lat, offer.partner.lng)
+          distance: (currentLat && currentLng && offer.partner?.lat && offer.partner?.lng)
+            ? calculateDistance(currentLat, currentLng, offer.partner.lat, offer.partner.lng)
             : undefined,
           isFavorite: favorites.has(offer.id),
         }));
@@ -170,11 +177,11 @@ export function useOffers() {
 
         // Apply distance filter
         let filteredOffers = offersWithDistance;
-        if (filters.maxDistance && latitude && longitude) {
+        if (filters.maxDistance && currentLat && currentLng) {
           console.log('🗺️ Application du filtre de distance', {
             maxDistance: filters.maxDistance,
             beforeFilter: offersWithDistance.length,
-            userLocation: { latitude, longitude }
+            userLocation: { latitude: currentLat, longitude: currentLng }
           });
           
           filteredOffers = offersWithDistance.filter(offer => 
@@ -234,7 +241,7 @@ export function useOffers() {
     } finally {
       setLoading(false);
     }
-  }, [searchQuery, filters, page, latitude, longitude, calculateDistance, favorites, pageSize]);
+  }, [searchQuery, filters, page, userLatitude, userLongitude, latitude, longitude, calculateDistance, favorites, pageSize]);
 
   // Toggle favorite
   const toggleFavorite = useCallback(async (offerId: string) => {
