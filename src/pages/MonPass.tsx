@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { User, Session } from '@supabase/supabase-js';
+import React, { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,6 +25,7 @@ import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Pass {
   id: string;
@@ -53,79 +53,28 @@ interface Redemption {
   };
 }
 
-interface Profile {
-  name: string | null;
-  first_name: string | null;
-  last_name: string | null;
-}
-
 const MonPass: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useLanguage();
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [pass, setPass] = useState<Pass | null>(null);
+  const { user, userPass: pass, profile, loading } = useAuth();
   const [redemptions, setRedemptions] = useState<Redemption[]>([]);
-  const [profile, setProfile] = useState<Profile | null>(null);
   const [totalSavings, setTotalSavings] = useState<number>(0);
 
-  // Auth state management
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }
-    );
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  // Fetch user data when authenticated
-  useEffect(() => {
+  // Fetch redemptions when user changes
+  React.useEffect(() => {
     if (user) {
-      fetchUserData();
+      fetchRedemptions();
+    } else {
+      setRedemptions([]);
+      setTotalSavings(0);
     }
   }, [user]);
 
-  const fetchUserData = async () => {
+  const fetchRedemptions = async () => {
     if (!user) return;
 
     try {
-      // Fetch user profile
-      const { data: profileData } = await supabase
-        .from('profiles')
-        .select('name, first_name, last_name')
-        .eq('user_id', user.id)
-        .single();
-
-      if (profileData) {
-        setProfile(profileData);
-      }
-
-      // Fetch active pass
-      const { data: passData } = await supabase
-        .from('passes')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('status', 'active')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      if (passData) {
-        setPass(passData);
-      }
-
       // Fetch redemptions with partner and offer details
       const { data: redemptionsData } = await supabase
         .from('redemptions')
@@ -173,7 +122,7 @@ const MonPass: React.FC = () => {
         setTotalSavings(savings);
       }
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      console.error('Error fetching redemptions:', error);
     }
   };
 
