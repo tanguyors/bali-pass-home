@@ -39,27 +39,39 @@ export function FeaturedOffers() {
   const [userPass, setUserPass] = useState<UserPass | null>(null);
 
   useEffect(() => {
-    fetchFeaturedOffers();
+    let mounted = true;
+    
+    const initializeComponent = async () => {
+      await fetchFeaturedOffers();
+      
+      if (!mounted) return;
+      
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchUserPass(session.user.id);
+      }
+    };
+
+    initializeComponent();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
+        if (!mounted) return;
+        
         setUser(session?.user ?? null);
         if (session?.user) {
-          fetchUserPass(session.user.id);
+          await fetchUserPass(session.user.id);
         } else {
           setUserPass(null);
         }
       }
     );
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchUserPass(session.user.id);
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const fetchUserPass = async (userId: string) => {

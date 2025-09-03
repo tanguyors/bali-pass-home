@@ -31,7 +31,18 @@ export function CategoriesSlider() {
   ];
 
   useEffect(() => {
-    fetchCategories();
+    let mounted = true;
+    
+    const loadCategories = async () => {
+      if (!mounted) return;
+      await fetchCategories();
+    };
+    
+    loadCategories();
+    
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const fetchCategories = async () => {

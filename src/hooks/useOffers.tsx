@@ -72,7 +72,7 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
     } catch (error) {
       logger.error('Error fetching favorites', error);
     }
-  }, []);
+  }, []); // No dependencies to avoid loops
 
   const fetchOffers = useCallback(async (reset = false) => {
     try {
@@ -148,13 +148,16 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
         const currentLat = userLatitude;
         const currentLng = userLongitude;
         
-        const offersWithDistance = filteredData.map(offer => ({
-          ...offer,
-          distance: (currentLat && currentLng && offer.partner?.lat && offer.partner?.lng)
-            ? calculateDistance(currentLat, currentLng, offer.partner.lat, offer.partner.lng)
-            : undefined,
-          isFavorite: favorites.has(offer.id),
-        }));
+        const offersWithDistance = filteredData.map(offer => {
+          const currentFavorites = favorites; // Capture current favorites state
+          return {
+            ...offer,
+            distance: (currentLat && currentLng && offer.partner?.lat && offer.partner?.lng)
+              ? calculateDistance(currentLat, currentLng, offer.partner.lat, offer.partner.lng)
+              : undefined,
+            isFavorite: currentFavorites.has(offer.id),
+          };
+        });
 
         // Apply distance filter
         let filteredOffers = offersWithDistance;
@@ -211,7 +214,7 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
     } finally {
       setLoading(false);
     }
-  }, [searchQuery, filters, page, userLatitude, userLongitude, calculateDistance, favorites, pageSize]);
+  }, [searchQuery, filters.category, filters.city, filters.sortBy, filters.maxDistance, page, userLatitude, userLongitude, calculateDistance, pageSize]); // Removed favorites from dependencies
 
   // Toggle favorite
   const toggleFavorite = useCallback(async (offerId: string) => {
@@ -268,7 +271,7 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
   // Effects
   useEffect(() => {
     fetchFavorites();
-  }, [fetchFavorites]);
+  }, []); // No dependencies to avoid loops
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -277,14 +280,16 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
     }, 300); // Debounce search
 
     return () => clearTimeout(timeoutId);
-  }, [searchQuery, filters, userLatitude, userLongitude]);
+  }, [searchQuery, filters.category, filters.city, filters.sortBy, filters.maxDistance, userLatitude, userLongitude]); // Fixed dependencies
 
-  // Update favorites in offers when favorites change
+  // Update favorites in offers when favorites change - but only if offers exist
   useEffect(() => {
-    setOffers(prev => prev.map(offer => ({
-      ...offer,
-      isFavorite: favorites.has(offer.id)
-    })));
+    if (offers.length > 0) {
+      setOffers(prev => prev.map(offer => ({
+        ...offer,
+        isFavorite: favorites.has(offer.id)
+      })));
+    }
   }, [favorites]);
 
   return {
