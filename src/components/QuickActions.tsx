@@ -20,7 +20,8 @@ export function QuickActions({ hasActivePass = false }: QuickActionsProps) {
   };
 
   const actions = [
-    {
+    // Scanner QR - uniquement pour les utilisateurs avec pass actif
+    ...(hasActivePass ? [{
       icon: QrCode,
       title: t('action.scan_qr'),
       subtitle: t('toast.scan_qr'),
@@ -31,7 +32,7 @@ export function QuickActions({ hasActivePass = false }: QuickActionsProps) {
       action: () => {
         setShowScanner(true);
       }
-    },
+    }] : []),
     {
       icon: Heart,
       title: t('nav.favorites'),
