@@ -1,50 +1,15 @@
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { usePassSettings } from "@/hooks/usePassSettings";
 import { CreditCard } from "lucide-react";
 import baliHeroImage from "@/assets/bali-hero.jpg";
 import { useNavigate } from "react-router-dom";
 import { LanguageSelector } from "@/components/LanguageSelector";
-
-interface PassSettings {
-  setting_key: string;
-  setting_value: string;
-}
-
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export function HeroUnauthenticated() {
   const { t } = useLanguage();
-  const [passSettings, setPassSettings] = useState<PassSettings[]>([]);
-  const [ctaText, setCtaText] = useState("Obtenir le Bali'Pass");
+  const { settings: passSettings } = usePassSettings();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    fetchPassSettings();
-  }, []);
-
-  const fetchPassSettings = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('pass_settings')
-        .select('setting_key, setting_value');
-      
-      if (error) {
-        console.error('Error fetching pass settings:', error);
-        return;
-      }
-      
-      if (data) {
-        setPassSettings(data);
-        const ctaSetting = data.find(setting => setting.setting_key === 'cta_text');
-        if (ctaSetting) {
-          setCtaText(ctaSetting.setting_value);
-        }
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
 
   const getSettingValue = (key: string, defaultValue: string = '') => {
     const setting = passSettings.find(s => s.setting_key === key);

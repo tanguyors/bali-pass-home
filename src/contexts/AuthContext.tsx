@@ -46,64 +46,63 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isAuthenticated = !!user;
   const hasActivePass = !!userPass && new Date(userPass.expires_at) > new Date();
 
-  const fetchUserData = async (userId: string) => {
-    try {
-      // Set a timeout for database queries
-      const fetchWithTimeout = async (query: any, label: string) => {
-        return Promise.race([
-          query,
-          new Promise((_, reject) => 
-            setTimeout(() => reject(new Error(`${label} timeout`)), 10000)
-          )
-        ]);
-      };
-      
-      // Fetch profile with timeout
-      try {
-        const { data: profileData, error: profileError } = await fetchWithTimeout(
-          supabase
-            .from('profiles')
-            .select('*')
-            .eq('user_id', userId)
-            .maybeSingle(),
-          'Profile fetch'
-        );
+  let fetchingData = false;
 
+  const fetchUserData = async (userId: string) => {
+    if (fetchingData) return; // Éviter les appels simultanés
+    fetchingData = true;
+
+    try {
+      // Fetch profile et pass en parallèle sans timeouts
+      const [profileResult, passResult] = await Promise.allSettled([
+        supabase
+          .from('profiles')
+          .select('*')
+          .eq('user_id', userId)
+          .maybeSingle(),
+        supabase
+          .from('passes')
+          .select('*')
+          .eq('user_id', userId)
+          .eq('status', 'active')
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle()
+      ]);
+
+      // Traiter les résultats du profil
+      if (profileResult.status === 'fulfilled') {
+        const { data: profileData, error: profileError } = profileResult.value;
         if (profileError) {
           logger.error('Error fetching profile', profileError);
+          setProfile(null);
         } else {
           setProfile(profileData);
         }
-      } catch (profileTimeout) {
-        console.error('AuthContext: Profile fetch timeout');
+      } else {
+        logger.error('Profile fetch failed', profileResult.reason);
         setProfile(null);
       }
 
-      // Fetch active pass with timeout
-      try {
-        const { data: passData, error: passError } = await fetchWithTimeout(
-          supabase
-            .from('passes')
-            .select('*')
-            .eq('user_id', userId)
-            .eq('status', 'active')
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .maybeSingle(),
-          'Pass fetch'
-        );
-
+      // Traiter les résultats du pass
+      if (passResult.status === 'fulfilled') {
+        const { data: passData, error: passError } = passResult.value;
         if (passError) {
           logger.error('Error fetching pass', passError);
+          setUserPass(null);
         } else {
           setUserPass(passData);
         }
-      } catch (passTimeout) {
-        console.error('AuthContext: Pass fetch timeout');
+      } else {
+        logger.error('Pass fetch failed', passResult.reason);
         setUserPass(null);
       }
     } catch (error) {
       logger.error('Error in fetchUserData', error);
+      setProfile(null);
+      setUserPass(null);
+    } finally {
+      fetchingData = false;
     }
   };
 

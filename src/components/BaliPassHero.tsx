@@ -1,49 +1,17 @@
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { usePassSettings } from "@/hooks/usePassSettings";
 import { ArrowRight, CreditCard } from "lucide-react";
 import baliHeroImage from "@/assets/bali-hero.jpg";
 
-interface PassSettings {
-  setting_key: string;
-  setting_value: string;
-}
-
 export function BaliPassHero() {
-  const [passSettings, setPassSettings] = useState<PassSettings[]>([]);
-  const [ctaText, setCtaText] = useState("Obtenir le Bali'Pass");
-
-  useEffect(() => {
-    fetchPassSettings();
-  }, []);
-
-  const fetchPassSettings = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('pass_settings')
-        .select('setting_key, setting_value');
-      
-      if (error) {
-        console.error('Error fetching pass settings:', error);
-        return;
-      }
-      
-      if (data) {
-        setPassSettings(data);
-        const ctaSetting = data.find(setting => setting.setting_key === 'cta_text');
-        if (ctaSetting) {
-          setCtaText(ctaSetting.setting_value);
-        }
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
+  const { settings: passSettings } = usePassSettings();
 
   const getSettingValue = (key: string, defaultValue: string = '') => {
     const setting = passSettings.find(s => s.setting_key === key);
     return setting ? setting.setting_value : defaultValue;
   };
+
+  const ctaText = getSettingValue('cta_text', "Obtenir le Bali'Pass");
 
   return (
     <div className="relative h-[45vh] min-h-80 overflow-hidden rounded-b-3xl">

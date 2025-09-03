@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { usePassSettings } from "@/hooks/usePassSettings";
 import { DollarSign, Gift } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { logger } from "@/lib/logger";
 
 interface PricingData {
   price?: string;
@@ -13,8 +11,25 @@ interface PricingData {
 
 export function PricingHighlight() {
   const { t } = useLanguage();
-  const [pricingData, setPricingData] = useState<PricingData>({});
-  const [loading, setLoading] = useState(true);
+  const { settings, loading } = usePassSettings(['pass_price', 'savings_amount', 'pass_currency', 'availability_status']);
+
+  const pricingData: PricingData = {};
+  settings.forEach(setting => {
+    switch (setting.setting_key) {
+      case 'pass_price':
+        pricingData.price = setting.setting_value;
+        break;
+      case 'savings_amount':
+        pricingData.max_savings = setting.setting_value;
+        break;
+      case 'pass_currency':
+        pricingData.currency = setting.setting_value;
+        break;
+      case 'availability_status':
+        pricingData.availability_status = setting.setting_value;
+        break;
+    }
+  });
 
   const formatPrice = (cents: string, currency: string = 'usd') => {
     const value = parseInt(cents) / 100;
@@ -26,52 +41,6 @@ export function PricingHighlight() {
     const value = parseInt(cents) / 100;
     const currencySymbol = currency === 'usd' ? '$' : '€';
     return `${currencySymbol}${value.toLocaleString()}`;
-  };
-
-  useEffect(() => {
-    fetchPricingData();
-  }, []);
-
-  const fetchPricingData = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('pass_settings')
-        .select('setting_key, setting_value')
-        .in('setting_key', ['pass_price', 'savings_amount', 'pass_currency', 'availability_status']);
-      
-      if (error) {
-        logger.error('Error fetching pricing data', error);
-        return;
-      }
-      
-      if (data) {
-        const pricing: PricingData = {};
-        data.forEach(setting => {
-          switch (setting.setting_key) {
-            case 'pass_price':
-              pricing.price = setting.setting_value;
-              break;
-            case 'savings_amount':
-              pricing.max_savings = setting.setting_value;
-              break;
-            case 'pass_currency':
-              pricing.currency = setting.setting_value;
-              break;
-            case 'availability_status':
-              pricing.availability_status = setting.setting_value;
-              break;
-          }
-        });
-        
-        logger.debug('Pricing data loaded', pricing);
-        setPricingData(pricing);
-      }
-    } catch (error) {
-      logger.error('Error in fetchPricingData', error);
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
