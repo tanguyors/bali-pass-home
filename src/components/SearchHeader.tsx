@@ -42,7 +42,7 @@ export function SearchHeader({
   
   const activeFiltersCount = [
     filters.category,
-    filters.priceRange,
+    filters.city,
     filters.maxDistance,
     filters.sortBy !== 'relevance' ? filters.sortBy : null
   ].filter(Boolean).length;
@@ -157,7 +157,7 @@ export function SearchHeader({
                     {t('explorer.distance')}
                   </span>
                 </SelectItem>
-                <SelectItem value="price">{t('explorer.price')}</SelectItem>
+                <SelectItem value="discount">{t('explorer.price')}</SelectItem>
                 <SelectItem value="newest">{t('explorer.newest')}</SelectItem>
               </SelectContent>
             </Select>
@@ -195,7 +195,7 @@ export function SearchHeader({
                 size="sm"
                 onClick={() => onFiltersChange({
                   category: null,
-                  priceRange: null,
+                  city: null,
                   sortBy: 'relevance',
                   maxDistance: null,
                 })}

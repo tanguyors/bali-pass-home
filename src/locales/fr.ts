@@ -199,6 +199,7 @@ export const fr = {
     discover_bali_pass: 'Découvrir Bali\'Pass',
   },
 
+
   // Offer Card
   offer_card: {
     image_coming_soon: 'Image à venir',
@@ -266,6 +267,7 @@ export const fr = {
     clear_all: 'Tout effacer',
     apply_filters: 'Appliquer les filtres',
     active_filters: 'filtre(s) actif(s)',
+    clear: 'Effacer',
   },
   
   // Languages

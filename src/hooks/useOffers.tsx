@@ -30,8 +30,8 @@ export interface Offer {
 
 export interface FiltersType {
   category: string | null;
-  priceRange: [number, number] | null;
-  sortBy: 'relevance' | 'distance' | 'price' | 'newest';
+  city: string | null;
+  sortBy: 'relevance' | 'distance' | 'discount' | 'newest';
   maxDistance: number | null;
 }
 
@@ -44,7 +44,7 @@ export function useOffers() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<FiltersType>({
     category: null,
-    priceRange: null,
+    city: null,
     sortBy: 'relevance',
     maxDistance: null,
   });
@@ -88,7 +88,7 @@ export function useOffers() {
           value_text,
           promo_type,
           value_number,
-          partner:partners(id, name, address, phone, photos, lat, lng),
+          partner:partners(id, name, address, phone, photos, lat, lng, city_id),
           category:categories(id, name, icon)
         `)
         .eq('is_active', true);
@@ -102,6 +102,8 @@ export function useOffers() {
       if (filters.category) {
         query = query.eq('category_id', filters.category);
       }
+
+      // Note: City filter will be applied after data fetching since we need to join with partners
 
       // Pagination
       const currentPage = reset ? 0 : page;
@@ -117,8 +119,24 @@ export function useOffers() {
       }
 
       if (data) {
+        // Apply city filter if specified
+        let filteredData = data;
+        if (filters.city) {
+          // First fetch the partners in the specified city
+          const { data: cityPartners } = await supabase
+            .from('partners')
+            .select('id')
+            .eq('city_id', filters.city)
+            .eq('status', 'approved');
+          
+          const partnerIds = cityPartners?.map(p => p.id) || [];
+          filteredData = data.filter(offer => 
+            offer.partner && partnerIds.includes(offer.partner.id)
+          );
+        }
+
         // Calculate distances if geolocation is available
-        const offersWithDistance = data.map(offer => ({
+        const offersWithDistance = filteredData.map(offer => ({
           ...offer,
           distance: (latitude && longitude && offer.partner?.lat && offer.partner?.lng)
             ? calculateDistance(latitude, longitude, offer.partner.lat, offer.partner.lng)
@@ -141,10 +159,10 @@ export function useOffers() {
               if (a.distance === undefined) return 1;
               if (b.distance === undefined) return -1;
               return a.distance - b.distance;
-            case 'price':
-              const aPrice = a.value_number || 0;
-              const bPrice = b.value_number || 0;
-              return bPrice - aPrice;
+            case 'discount':
+              const aDiscount = a.value_number || 0;
+              const bDiscount = b.value_number || 0;
+              return bDiscount - aDiscount;
             case 'newest':
               return b.id.localeCompare(a.id);
             case 'relevance':

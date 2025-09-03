@@ -145,8 +145,8 @@ const Explorer = () => {
     // Apply filters to the useOffers hook
     setFilters({
       category: newFilters.category || null,
-      priceRange: null,
-      sortBy: newFilters.sortBy as "relevance" | "newest" | "distance" | "price",
+      city: newFilters.city || null,
+      sortBy: newFilters.sortBy as "relevance" | "newest" | "distance" | "discount",
       maxDistance: newFilters.distance || null,
     });
   };
