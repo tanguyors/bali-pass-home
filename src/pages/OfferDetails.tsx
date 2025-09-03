@@ -418,7 +418,7 @@ export default function OfferDetails() {
           
           {/* Discount Badge */}
           {offer.value_text && (
-            <div className="absolute top-4 left-4 px-3 py-2 rounded-full text-white text-sm font-bold shadow-sm bg-red-500">
+            <div className="absolute top-4 left-4 px-4 py-2 rounded-full text-white text-sm font-bold backdrop-blur-sm border border-white/20 bg-gradient-to-r from-primary via-primary/90 to-primary/80 shadow-lg">
               {offer.value_text}
             </div>
           )}
