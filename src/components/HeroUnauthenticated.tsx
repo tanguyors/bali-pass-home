@@ -32,9 +32,15 @@ export function HeroUnauthenticated() {
       {/* Bottom gradient overlay only */}
       <div className="absolute inset-0 gradient-overlay-bottom" />
       
-      {/* Language Selector - Top Right */}
-      <div className="absolute top-4 right-4 z-20">
-        <LanguageSelector variant="mobile" className="bg-white/10 backdrop-blur-md border-white/20 text-white" />
+      {/* Language Selector - Top Right with safe-area handling */}
+      <div
+        className="absolute right-4 z-20"
+        style={{ top: "calc(env(safe-area-inset-top, 0px) + 8px)" }}
+      >
+        <LanguageSelector
+          variant="mobile"
+          className="bg-white/10 backdrop-blur-md border-white/20 text-white"
+        />
       </div>
       
       {/* Content positioned center */}

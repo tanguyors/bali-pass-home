@@ -6,6 +6,7 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Capacitor } from "@capacitor/core";
+import { BarcodeScanner } from "@capacitor-mlkit/barcode-scanning";
 import { Camera as CapCamera, CameraResultType, CameraSource } from "@capacitor/camera";
 import jsQR from "jsqr";
 import { logger } from "@/lib/logger";
@@ -51,9 +52,38 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   }, [isOpen]); // Only depend on isOpen
 
   const startCamera = async () => {
-    // Vérifier si on est dans un environnement natif
-    if (Capacitor.isNativePlatform()) {
-      setHasPermission(true);
+    // iOS natif: utiliser le scanner MLKit
+    if (Capacitor.getPlatform() === 'ios') {
+      try {
+        const support = await BarcodeScanner.isSupported();
+        if (!support.supported) {
+          toast({ title: "Scanner non supporté", description: "Le scanner n'est pas supporté sur cet appareil.", variant: "destructive" });
+          setHasPermission(false);
+          return;
+        }
+
+        const perm = await BarcodeScanner.requestPermissions();
+        if (perm.camera !== 'granted') {
+          toast({ title: "Autorisation requise", description: "Veuillez autoriser l'accès à la caméra.", variant: "destructive" });
+          setHasPermission(false);
+          return;
+        }
+
+        setHasPermission(true);
+        setIsScanning(true);
+
+        const { barcodes } = await BarcodeScanner.scan();
+        const value = barcodes?.[0]?.rawValue?.trim();
+        if (value) {
+          handleScanResult(value);
+        } else {
+          setIsScanning(false);
+        }
+      } catch (err) {
+        console.error('Erreur scanner iOS:', err);
+        toast({ title: "Erreur scanner", description: "Impossible de démarrer le scanner.", variant: "destructive" });
+        setHasPermission(false);
+      }
       return;
     }
 
