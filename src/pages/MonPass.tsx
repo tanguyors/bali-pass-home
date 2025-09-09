@@ -320,8 +320,11 @@ const MonPass: React.FC = () => {
   // Authenticated with active pass - full content
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
-      {/* Language Selector - Fixed at top right */}
-      <div className="fixed top-4 right-4 z-50">
+      {/* Language Selector - Floating bottom right */}
+      <div
+        className="fixed right-4 z-50"
+        style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 88px)" }}
+      >
         <LanguageSelector />
       </div>
       <div className="p-4 pb-24 space-y-6">
@@ -361,38 +364,7 @@ const MonPass: React.FC = () => {
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <Card className="shadow-lg border-0 bg-card/60 backdrop-blur-sm">
-          <CardContent className="p-6">
-            <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-              <div className="w-2 h-6 bg-gradient-to-b from-primary to-primary/60 rounded-full"></div>
-              {t('profile.quick_actions')}
-            </h3>
-            <div className="grid grid-cols-2 gap-4">
-              <Button 
-                variant="ghost" 
-                className="flex flex-col items-center gap-3 h-auto py-6 hover:bg-primary/5 transition-all duration-300 group"
-                onClick={handleScanPartner}
-              >
-                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <QrCode className="w-6 h-6 text-emerald-600" />
-                </div>
-                <span className="text-sm font-medium">{t('profile.scan_partner')}</span>
-              </Button>
-              
-              <Button 
-                variant="ghost" 
-                className="flex flex-col items-center gap-3 h-auto py-6 hover:bg-primary/5 transition-all duration-300 group"
-                onClick={() => navigate('/explorer')}
-              >
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500/10 to-blue-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <Search className="w-6 h-6 text-blue-600" />
-                </div>
-                <span className="text-sm font-medium">{t('profile.view_offers')}</span>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Quick Actions removed as requested */}
 
         {/* Favorites Section */}
         <Card className="shadow-lg border-0 bg-card/60 backdrop-blur-sm">

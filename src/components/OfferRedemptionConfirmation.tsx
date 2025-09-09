@@ -35,7 +35,7 @@ export const OfferRedemptionConfirmation: React.FC<OfferRedemptionConfirmationPr
   const { user } = useAuth();
 
   const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleDateString('fr-FR', {
+    return new Date(dateString).toLocaleDateString('en-US', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric'
@@ -43,7 +43,7 @@ export const OfferRedemptionConfirmation: React.FC<OfferRedemptionConfirmationPr
   };
 
   const formatTime = (dateString: string): string => {
-    return new Date(dateString).toLocaleTimeString('fr-FR', {
+    return new Date(dateString).toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit'
@@ -74,10 +74,10 @@ export const OfferRedemptionConfirmation: React.FC<OfferRedemptionConfirmationPr
               <CheckCircle className="w-8 h-8 text-white" />
             </div>
             <h2 className="text-xl font-bold text-emerald-800 mb-1">
-              {t('redemption.success_title')} 
+              Offer used successfully!
             </h2>
             <p className="text-sm text-emerald-600">
-              {t('redemption.show_to_merchant')}
+              Show this screen to the merchant
             </p>
           </div>
 
@@ -88,7 +88,7 @@ export const OfferRedemptionConfirmation: React.FC<OfferRedemptionConfirmationPr
               <div className="flex items-center gap-2 mb-2">
                 <User className="w-4 h-4 text-emerald-600" />
                 <span className="text-sm font-medium text-emerald-800">
-                  {user?.email || 'utilisateur@exemple.com'}
+                  {user?.email || t('common.loading')}
                 </span>
               </div>
               
@@ -125,7 +125,7 @@ export const OfferRedemptionConfirmation: React.FC<OfferRedemptionConfirmationPr
             {/* Validation status */}
             <div className="text-center mb-6">
               <Badge className="bg-emerald-600 hover:bg-emerald-600 text-white px-6 py-2 text-sm font-bold rounded-full">
-                ✓ {t('redemption.offer_validated')}
+                ✓ OFFER VALIDATED
               </Badge>
             </div>
 
@@ -134,7 +134,7 @@ export const OfferRedemptionConfirmation: React.FC<OfferRedemptionConfirmationPr
               onClick={onClose}
               className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-2xl shadow-lg transition-all duration-200"
             >
-              {t('common.close')}
+              Close
             </Button>
           </div>
         </div>

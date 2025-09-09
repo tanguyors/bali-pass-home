@@ -29,6 +29,7 @@ export const en = {
     learn_more: 'Learn more',
     close: 'Close',
     approved: 'Approved',
+    locale: 'en-US',
   },
   
   // Auth
@@ -213,6 +214,29 @@ export const en = {
     scan_qr: 'Scan the partner\'s QR code',
   },
 
+  // Scanner strings
+  scanner: {
+    camera_error_title: 'Camera error',
+    camera_error_default: 'Unable to access the camera.',
+    camera_error_permission: 'Please allow camera access.',
+    camera_error_not_found: 'No camera detected.',
+    photo_taken: 'Photo captured',
+    manual_prompt: 'Please enter the code manually for now.',
+    photo_error: 'Unable to take the photo.',
+    init_title: 'Initialization',
+    init_desc: 'Preparing the camera to scan QR codes',
+    unavailable_title: 'Scanner unavailable',
+    manual_title: 'Enter the partner code manually',
+    manual_placeholder: 'PARTNER_XXXXX',
+    capture_instruction: 'Capture the partner\'s QR code',
+    capture_button: 'Capture',
+    point_instruction: 'Point the camera at the partner\'s QR code',
+    searching: 'Searching...',
+    manual_or: 'Or enter the code manually',
+    validating: 'Validating code...',
+    validating_desc: 'Checking in progress',
+  },
+
   // Pass Summary
   pass_summary: {
     my_pass: 'My Pass',
@@ -364,5 +388,12 @@ export const en = {
     'Travailleur': 'Digital Nomad',
     'Villa & Hostel': 'Villa & Hostel',
     'Water Sports': 'Water Sports',
+  },
+
+  // Redemption confirmation
+  redemption: {
+    success_title: 'Offer used successfully!',
+    show_to_merchant: 'Show this screen to the merchant',
+    offer_validated: 'OFFER VALIDATED',
   },
 };

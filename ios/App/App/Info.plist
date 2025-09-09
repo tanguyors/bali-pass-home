@@ -33,23 +33,16 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Cette application utilise la caméra pour scanner les codes QR des offres Bali'Pass.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Cette application utilise votre localisation pour vous montrer les offres à proximité.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Cette application utilise votre localisation pour vous montrer les offres à proximité.</string>
 </dict>
 </plist>

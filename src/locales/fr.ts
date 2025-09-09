@@ -28,6 +28,8 @@ export const fr = {
     at: 'chez',
     photos: 'Photos',
     learn_more: 'En savoir plus',
+    close: 'Fermer',
+    locale: 'fr-FR',
   },
   
   // Auth
@@ -213,6 +215,29 @@ export const fr = {
   // Toast messages
   toast: {
     scan_qr: 'Scannez le QR code du partenaire',
+  },
+
+  // Scanner strings
+  scanner: {
+    camera_error_title: "Erreur caméra",
+    camera_error_default: "Impossible d'accéder à la caméra.",
+    camera_error_permission: "Veuillez autoriser l'accès à la caméra.",
+    camera_error_not_found: "Aucune caméra détectée.",
+    photo_taken: "Photo prise",
+    manual_prompt: "Veuillez saisir le code manuellement pour le moment.",
+    photo_error: "Impossible de prendre la photo.",
+    init_title: "Initialisation",
+    init_desc: "Préparation de la caméra pour scanner les codes QR",
+    unavailable_title: "Scanner indisponible",
+    manual_title: "Saisissez manuellement le code partenaire",
+    manual_placeholder: "PARTNER_XXXXX",
+    capture_instruction: "Capturez le code QR du partenaire",
+    capture_button: "Capturer",
+    point_instruction: "Pointez la caméra vers le QR code du partenaire",
+    searching: "Recherche en cours...",
+    manual_or: "Ou saisissez le code manuellement",
+    validating: "Validation du code...",
+    validating_desc: "Vérification en cours",
   },
 
   // Pass Summary

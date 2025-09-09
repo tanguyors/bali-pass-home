@@ -6,7 +6,10 @@ import type {
 } from "@/components/ui/toast"
 
 const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 1000000
+// After a toast has been dismissed (closed), wait this long before removing it from DOM
+const TOAST_REMOVE_DELAY = 400
+// Auto-dismiss delay for all toasts (ms)
+const TOAST_AUTO_DISMISS = 4000
 
 type ToasterToast = ToastProps & {
   id: string
@@ -160,6 +163,11 @@ function toast({ ...props }: Toast) {
       },
     },
   })
+
+  // Auto-dismiss all toasts after a short delay
+  setTimeout(() => {
+    dismiss()
+  }, TOAST_AUTO_DISMISS)
 
   return {
     id: id,

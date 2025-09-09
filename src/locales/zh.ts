@@ -29,6 +29,7 @@ export const zh = {
     learn_more: '了解更多',
     close: '关闭',
     approved: '已批准',
+    locale: 'zh-CN',
   },
   
   // Auth
@@ -213,6 +214,29 @@ export const zh = {
     scan_qr: '扫描合作伙伴的二维码',
   },
 
+  // Scanner strings
+  scanner: {
+    camera_error_title: '相机错误',
+    camera_error_default: '无法访问相机。',
+    camera_error_permission: '请允许访问相机。',
+    camera_error_not_found: '未检测到相机。',
+    photo_taken: '照片已拍摄',
+    manual_prompt: '目前请手动输入代码。',
+    photo_error: '无法拍摄照片。',
+    init_title: '初始化',
+    init_desc: '准备相机以扫描二维码',
+    unavailable_title: '扫描器不可用',
+    manual_title: '请手动输入合作伙伴代码',
+    manual_placeholder: 'PARTNER_XXXXX',
+    capture_instruction: '拍摄合作伙伴的二维码',
+    capture_button: '拍摄',
+    point_instruction: '将相机对准合作伙伴二维码',
+    searching: '搜索中…',
+    manual_or: '或手动输入代码',
+    validating: '正在验证代码…',
+    validating_desc: '检查进行中',
+  },
+
   // Pass Summary
   pass_summary: {
     my_pass: '我的通行证',
@@ -364,5 +388,12 @@ export const zh = {
     'Travailleur': '工作者',
     'Villa & Hostel': '别墅与旅馆',
     'Water Sports': '水上运动',
+  },
+
+  // Redemption confirmation
+  redemption: {
+    success_title: '优惠使用成功！',
+    show_to_merchant: '向商家显示此屏幕',
+    offer_validated: '优惠已验证',
   },
 };

@@ -29,6 +29,7 @@ export const id = {
     learn_more: 'Pelajari lebih lanjut',
     close: 'Tutup',
     approved: 'Disetujui',
+    locale: 'id-ID',
   },
   
   // Auth
@@ -213,6 +214,29 @@ export const id = {
     scan_qr: 'Pindai kode QR mitra',
   },
 
+  // Scanner strings
+  scanner: {
+    camera_error_title: 'Kesalahan kamera',
+    camera_error_default: 'Tidak dapat mengakses kamera.',
+    camera_error_permission: 'Harap izinkan akses kamera.',
+    camera_error_not_found: 'Kamera tidak ditemukan.',
+    photo_taken: 'Foto diambil',
+    manual_prompt: 'Untuk saat ini, masukkan kode secara manual.',
+    photo_error: 'Tidak dapat mengambil foto.',
+    init_title: 'Inisialisasi',
+    init_desc: 'Menyiapkan kamera untuk memindai kode QR',
+    unavailable_title: 'Pemindai tidak tersedia',
+    manual_title: 'Masukkan kode mitra secara manual',
+    manual_placeholder: 'PARTNER_XXXXX',
+    capture_instruction: 'Ambil kode QR mitra',
+    capture_button: 'Ambil',
+    point_instruction: 'Arahkan kamera ke kode QR mitra',
+    searching: 'Mencari...',
+    manual_or: 'Atau masukkan kode secara manual',
+    validating: 'Memvalidasi kode...',
+    validating_desc: 'Pemeriksaan sedang berlangsung',
+  },
+
   // Pass Summary
   pass_summary: {
     my_pass: 'Pass Saya',
@@ -364,5 +388,12 @@ export const id = {
     'Travailleur': 'Pekerja digital',
     'Villa & Hostel': 'Villa & Hostel',
     'Water Sports': 'Olahraga air',
+  },
+
+  // Redemption confirmation
+  redemption: {
+    success_title: 'Penawaran berhasil digunakan!',
+    show_to_merchant: 'Tunjukkan layar ini kepada pedagang',
+    offer_validated: 'PENAWARAN DIVALIDASI',
   },
 };

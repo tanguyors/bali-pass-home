@@ -32,10 +32,10 @@ export function HeroUnauthenticated() {
       {/* Bottom gradient overlay only */}
       <div className="absolute inset-0 gradient-overlay-bottom" />
       
-      {/* Language Selector - Top Right with safe-area handling */}
+      {/* Language Selector - Floating bottom right above content */}
       <div
         className="absolute right-4 z-20"
-        style={{ top: "calc(env(safe-area-inset-top, 0px) + 8px)" }}
+        style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 88px)" }}
       >
         <LanguageSelector
           variant="mobile"

@@ -37,6 +37,8 @@ import { SupportLink } from '@/components/SupportLink';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageSelector } from '@/components/LanguageSelector';
+import { QRScanner } from '@/components/QRScanner';
+import { PartnerOffersModal } from '@/components/PartnerOffersModal';
 
 interface UserPreferences {
   push_notifications: boolean;
@@ -46,6 +48,8 @@ interface UserPreferences {
 
 const Profil: React.FC = () => {
   const { user, profile, userPass: pass, loading, setProfile } = useAuth();
+  const [showScanner, setShowScanner] = useState(false);
+  const [scannedPartner, setScannedPartner] = useState<any>(null);
   const [preferences, setPreferences] = useState<UserPreferences>({
     push_notifications: false,
     email_notifications: false,
@@ -198,8 +202,11 @@ const Profil: React.FC = () => {
   if (!user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
-        {/* Language Selector - Fixed at top right */}
-        <div className="fixed top-4 right-4 z-50">
+        {/* Language Selector - Floating bottom right */}
+        <div
+          className="fixed right-4 z-50"
+          style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 88px)" }}
+        >
           <LanguageSelector />
         </div>
         <div className="flex-1 p-4">
@@ -250,8 +257,11 @@ const Profil: React.FC = () => {
   // Authenticated profile content
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
-      {/* Language Selector - Fixed at top right */}
-      <div className="fixed top-4 right-4 z-50">
+      {/* Language Selector - Floating bottom right */}
+      <div
+        className="fixed right-4 z-50"
+        style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 88px)" }}
+      >
         <LanguageSelector />
       </div>
       <div className="p-4 pb-24 space-y-6">
@@ -279,10 +289,7 @@ const Profil: React.FC = () => {
                   {getPassStatusLabel()}
                 </Badge>
               </div>
-              <EditProfileDialog 
-                profile={profile} 
-                onProfileUpdate={(updatedProfile) => setProfile(updatedProfile)}
-              />
+              {/* Edit profile disabled as requested */}
             </div>
           </div>
         </div>
@@ -321,12 +328,7 @@ const Profil: React.FC = () => {
               <Button 
                 variant="ghost" 
                 className="flex flex-col items-center gap-3 h-auto py-4 hover:bg-primary/5 transition-all duration-300 group"
-                onClick={() => {
-                  toast({
-                    title: t('toast.scan_qr'),
-                    description: t('toast.qr_feature_coming'),
-                  });
-                }}
+                onClick={() => setShowScanner(true)}
               >
                 <div className="w-12 h-12 bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <QrCode className="w-6 h-6 text-emerald-600" />
@@ -416,39 +418,7 @@ const Profil: React.FC = () => {
           </Card>
         )}
 
-        {/* Settings */}
-        <Card className="shadow-lg border-0 bg-card/60 backdrop-blur-sm">
-          <CardContent className="p-6">
-            <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-              <div className="w-2 h-6 bg-gradient-to-b from-purple-500 to-purple-400 rounded-full"></div>
-              {t('profile.preferences')}
-            </h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                <div className="flex items-center gap-3">
-                  <Bell className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm">{t('profile.push_notifications')}</span>
-                </div>
-                <Switch
-                  checked={preferences.push_notifications}
-                  onCheckedChange={(checked) => updatePreference('push_notifications', checked)}
-                  disabled={updating}
-                />
-              </div>
-              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                <div className="flex items-center gap-3">
-                  <Mail className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm">{t('profile.email_notifications')}</span>
-                </div>
-                <Switch
-                  checked={preferences.email_notifications}
-                  onCheckedChange={(checked) => updatePreference('email_notifications', checked)}
-                  disabled={updating}
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Settings removed as requested */}
 
         {/* Support */}
         <Card className="shadow-lg border-0 bg-card/60 backdrop-blur-sm">
@@ -458,16 +428,35 @@ const Profil: React.FC = () => {
               {t('profile.support')}
             </h3>
             <div className="space-y-2">
-              <SupportLink href="https://help.balipass.com" external>
+              {/* Help center removed as requested */}
+              <SupportLink href="https://passbali.com/privacy" external>
                 <div className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/30 transition-colors duration-200">
                   <div className="flex items-center gap-3">
-                    <HelpCircle className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm">{t('profile.help_center')}</span>
+                    <FileText className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm">Politique de confidentialité</span>
                   </div>
                   <ChevronRight className="w-4 h-4 text-muted-foreground" />
                 </div>
               </SupportLink>
-              <SupportLink href="mailto:support@balipass.com" external>
+              <SupportLink href="https://passbali.com/legal" external>
+                <div className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/30 transition-colors duration-200">
+                  <div className="flex items-center gap-3">
+                    <FileText className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm">Conditions d’utilisation</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                </div>
+              </SupportLink>
+              <SupportLink href="https://passbali.com/delete-account" external>
+                <div className="flex items-center justify-between p-3 rounded-lg transition-colors duration-200">
+                  <div className="flex items-center gap-3">
+                    <Shield className="w-4 h-4 text-red-500" />
+                    <span className="text-sm text-red-600">Supprimer mon compte</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                </div>
+              </SupportLink>
+              <SupportLink href="mailto:contact@rupagency.com" external>
                 <div className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/30 transition-colors duration-200">
                   <div className="flex items-center gap-3">
                     <MessageCircle className="w-4 h-4 text-muted-foreground" />
@@ -497,6 +486,23 @@ const Profil: React.FC = () => {
 
       <FloatingActionButton />
       <BottomNavigation />
+
+      {/* QR Scanner Modal */}
+      <QRScanner
+        isOpen={showScanner}
+        onClose={() => setShowScanner(false)}
+        onScanSuccess={(partnerData) => {
+          setScannedPartner(partnerData);
+          setShowScanner(false);
+        }}
+      />
+
+      {/* Partner Offers Modal */}
+      <PartnerOffersModal
+        isOpen={!!scannedPartner}
+        onClose={() => setScannedPartner(null)}
+        partner={scannedPartner}
+      />
     </div>
   );
 };

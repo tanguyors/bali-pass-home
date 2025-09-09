@@ -29,6 +29,7 @@ export const es = {
     learn_more: 'Saber más',
     close: 'Cerrar',
     approved: 'Aprobado',
+    locale: 'es-ES',
   },
   
   // Auth
@@ -213,6 +214,29 @@ export const es = {
     scan_qr: 'Escanea el código QR del socio',
   },
 
+  // Scanner strings
+  scanner: {
+    camera_error_title: 'Error de cámara',
+    camera_error_default: 'No se puede acceder a la cámara.',
+    camera_error_permission: 'Por favor, permite el acceso a la cámara.',
+    camera_error_not_found: 'No se detectó ninguna cámara.',
+    photo_taken: 'Foto tomada',
+    manual_prompt: 'Por ahora, introduce el código manualmente.',
+    photo_error: 'No se puede tomar la foto.',
+    init_title: 'Inicialización',
+    init_desc: 'Preparando la cámara para escanear códigos QR',
+    unavailable_title: 'Escáner no disponible',
+    manual_title: 'Introduce el código del socio manualmente',
+    manual_placeholder: 'PARTNER_XXXXX',
+    capture_instruction: 'Captura el código QR del socio',
+    capture_button: 'Capturar',
+    point_instruction: 'Apunta la cámara al código QR del socio',
+    searching: 'Buscando...',
+    manual_or: 'O introduce el código manualmente',
+    validating: 'Validando código...',
+    validating_desc: 'Comprobación en curso',
+  },
+
   // Pass Summary
   pass_summary: {
     my_pass: 'Mi Pase',
@@ -364,5 +388,12 @@ export const es = {
     'Travailleur': 'Nómada digital',
     'Villa & Hostel': 'Villa y Hostal',
     'Water Sports': 'Deportes acuáticos',
+  },
+
+  // Redemption confirmation
+  redemption: {
+    success_title: '¡Oferta utilizada exitosamente!',
+    show_to_merchant: 'Muestra esta pantalla al comerciante',
+    offer_validated: 'OFERTA VALIDADA',
   },
 };

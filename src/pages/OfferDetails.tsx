@@ -360,11 +360,12 @@ export default function OfferDetails() {
       }
 
       // Préparer les données de confirmation
+      const { data: { user } } = await supabase.auth.getUser();
       const confirmationData = {
         offer: offer,
         partner: offer.partner,
-        userEmail: 'amaury.ledeuc@hotmail.fr', // Email par défaut
-        redemptionTime: new Date().toLocaleString('fr-FR', {
+        userEmail: user?.email || 'utilisateur@exemple.com',
+        redemptionTime: new Date().toLocaleString('en-US', {
           day: '2-digit',
           month: '2-digit', 
           year: 'numeric',
@@ -445,13 +446,16 @@ export default function OfferDetails() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
-      {/* Language Selector - Fixed at top right */}
-      <div className="fixed top-4 right-4 z-50">
+      {/* Language Selector - Floating bottom right */}
+      <div
+        className="fixed right-4 z-50"
+        style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 88px)" }}
+      >
         <LanguageSelector />
       </div>
       
       {/* Modern Header */}
-      <div className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-700/50">
+      <div className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-700/50 safe-top">
         <div className="flex items-center justify-between h-16 px-6">
           <Button
             variant="ghost"

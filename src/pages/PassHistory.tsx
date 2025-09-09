@@ -114,8 +114,11 @@ const PassHistory: React.FC = () => {
     return null;
   }
   return <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
-      {/* Language Selector - Fixed at top right */}
-      <div className="fixed top-4 right-4 z-50">
+      {/* Language Selector - Floating bottom right */}
+      <div
+        className="fixed right-4 z-50"
+        style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 88px)" }}
+      >
         <LanguageSelector />
       </div>
       <div className="p-4 pb-24 space-y-6">

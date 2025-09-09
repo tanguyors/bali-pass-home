@@ -146,10 +146,10 @@ const Explorer = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Language Selector - Fixed at top right with safe-area handling */}
+      {/* Language Selector - Floating bottom right above content/navigation */}
       <div
         className="fixed right-4 z-50"
-        style={{ top: "calc(env(safe-area-inset-top, 0px) + 8px)" }}
+        style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 88px)" }}
       >
         <LanguageSelector />
       </div>
@@ -164,11 +164,11 @@ const Explorer = () => {
       )}
       
       {/* Main Content */}
-      <main className="pb-20">
+      <main className="pb-20 safe-top">
         {/* Header Section */}
         <div className="px-4 pt-6 pb-4 bg-background">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-foreground mb-2">
+            <h1 className="text-2xl font-bold text-foreground mb-2 safe-top-margin">
               {isNearbyMode ? t('explorer.nearby_offers') : t('explorer.discover_offers')}
             </h1>
             {isNearbyMode && (

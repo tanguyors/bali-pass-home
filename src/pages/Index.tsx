@@ -28,10 +28,10 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Language Selector - Fixed at top right with safe-area handling */}
+      {/* Language Selector - Floating bottom right above content/navigation */}
       <div
         className="fixed right-4 z-50"
-        style={{ top: "calc(env(safe-area-inset-top, 0px) + 8px)" }}
+        style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 88px)" }}
       >
         <LanguageSelector />
       </div>

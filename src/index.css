@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Safe area utilities for iOS Dynamic Island / notches */
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.safe-top-margin {
+  margin-top: env(safe-area-inset-top);
+}
+.safe-bottom-margin {
+  margin-bottom: env(safe-area-inset-bottom);
+}
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */

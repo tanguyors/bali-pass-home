@@ -98,11 +98,12 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
       const usedOffer = partner.activeOffers?.find((offer: any) => offer.id === offerId);
 
       // Préparer les données de confirmation
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
       const confirmationData = {
         offer: usedOffer || { title: offerTitle },
         partner: partner,
-        userEmail: 'amaury.ledeuc@hotmail.fr',
-        redemptionTime: new Date().toLocaleString('fr-FR', {
+        userEmail: currentUser?.email || 'utilisateur@exemple.com',
+        redemptionTime: new Date().toLocaleString('en-US', {
           day: '2-digit',
           month: '2-digit', 
           year: 'numeric',
@@ -248,10 +249,10 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
             {/* Titre */}
             <div>
               <h2 className="text-xl font-bold text-green-600 mb-2">
-                Offre utilisée avec succès !
+                Offer used successfully!
               </h2>
               <p className="text-gray-600">
-                Montrez cet écran au commerçant
+                Show this screen to the merchant
               </p>
             </div>
 
@@ -295,7 +296,7 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
 
                 {/* Badge de validation */}
                 <div className="bg-green-600 text-white text-center py-3 rounded-xl font-semibold">
-                  ✓ OFFRE VALIDÉE
+                  ✓ OFFER VALIDATED
                 </div>
               </div>
             )}
@@ -308,7 +309,7 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
               }}
               className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold"
             >
-              Fermer
+              Close
             </Button>
           </div>
         </DialogContent>
