@@ -447,7 +447,7 @@ const Profil: React.FC = () => {
                   <ChevronRight className="w-4 h-4 text-muted-foreground" />
                 </div>
               </SupportLink>
-              <SupportLink href="https://passbali.com/delete-account" external>
+              <SupportLink href="https://passbali.com/account" external>
                 <div className="flex items-center justify-between p-3 rounded-lg transition-colors duration-200">
                   <div className="flex items-center gap-3">
                     <Shield className="w-4 h-4 text-red-500" />
