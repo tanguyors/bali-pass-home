@@ -259,9 +259,9 @@ const MonPass: React.FC = () => {
         <div className="p-4 space-y-6">
           <div className="text-center">
             <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-              {t('auth.sign_in')}
+              {t('pass.discover_pass_title')}
             </h1>
-            <p className="text-muted-foreground">{t('mon_pass.access_exclusive_discounts')}</p>
+            <p className="text-muted-foreground">{t('pass.discover_pass_subtitle')}</p>
           </div>
           
           <Card className="shadow-2xl border-0 bg-gradient-to-br from-primary via-primary/90 to-primary/70 text-white">
@@ -297,10 +297,10 @@ const MonPass: React.FC = () => {
           <div className="space-y-3">
             <Button 
               className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg text-lg font-semibold"
-              onClick={() => navigate('/auth')}
+              onClick={() => window.open('https://passbali.com/', '_blank')}
             >
               <LogIn className="w-5 h-5 mr-2" />
-              {t('auth.sign_in')}
+              {t('pass.discover_our_pass')}
             </Button>
             <Button 
               variant="outline" 
