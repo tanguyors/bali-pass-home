@@ -41,8 +41,8 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Cette application utilise la caméra pour scanner les codes QR des offres Bali'Pass.</string>
+	<string>This application uses the camera to scan Bali'Pass offer QR codes.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Cette application utilise votre localisation pour vous montrer les offres à proximité.</string>
+	<string>This application uses your location to show you nearby offers.</string>
 </dict>
 </plist>

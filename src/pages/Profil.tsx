@@ -56,6 +56,7 @@ const Profil: React.FC = () => {
     language: 'en'
   });
   const [updating, setUpdating] = useState(false);
+  const [deletingAccount, setDeletingAccount] = useState(false);
   
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -104,6 +105,49 @@ const Profil: React.FC = () => {
       setTimeout(() => {
         navigate('/');
       }, 100);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+    
+    setDeletingAccount(true);
+    
+    try {
+      toast({
+        title: "Génération du lien sécurisé...",
+        description: "Veuillez patienter pendant la génération de votre lien d'authentification.",
+      });
+
+      // Call the Edge Function to generate auth token
+      const { data, error } = await supabase.functions.invoke('generate-auth-token');
+      
+      if (error) {
+        console.error('Error generating auth token:', error);
+        throw new Error(error.message || 'Erreur lors de la génération du token');
+      }
+
+      if (data?.url) {
+        // Open the URL with the pre-authentication token
+        window.open(data.url, '_blank');
+        
+        toast({
+          title: "Lien sécurisé généré",
+          description: "Vous avez été redirigé vers la page de suppression de compte avec authentification automatique.",
+        });
+      } else {
+        throw new Error('URL de suppression non générée');
+      }
+      
+    } catch (error) {
+      console.error('Delete account error:', error);
+      toast({
+        title: "Erreur",
+        description: error instanceof Error ? error.message : "Impossible de générer le lien de suppression. Veuillez réessayer.",
+        variant: "destructive",
+      });
+    } finally {
+      setDeletingAccount(false);
     }
   };
 
@@ -447,15 +491,25 @@ const Profil: React.FC = () => {
                   <ChevronRight className="w-4 h-4 text-muted-foreground" />
                 </div>
               </SupportLink>
-              <SupportLink href="https://passbali.com/account" external>
-                <div className="flex items-center justify-between p-3 rounded-lg transition-colors duration-200">
+              <button
+                onClick={handleDeleteAccount}
+                disabled={deletingAccount}
+                className="w-full text-left"
+              >
+                <div className="flex items-center justify-between p-3 rounded-lg hover:bg-red-50 transition-colors duration-200">
                   <div className="flex items-center gap-3">
                     <Shield className="w-4 h-4 text-red-500" />
-                    <span className="text-sm text-red-600">Supprimer mon compte</span>
+                    <span className="text-sm text-red-600">
+                      {deletingAccount ? "Génération du lien..." : "Supprimer mon compte"}
+                    </span>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                  {deletingAccount ? (
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-500"></div>
+                  ) : (
+                    <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                  )}
                 </div>
-              </SupportLink>
+              </button>
               <SupportLink href="mailto:contact@rupagency.com" external>
                 <div className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/30 transition-colors duration-200">
                   <div className="flex items-center gap-3">
