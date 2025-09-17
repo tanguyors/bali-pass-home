@@ -65,7 +65,7 @@ serve(async (req) => {
       JSON.stringify({ 
         token: tempToken,
         expires_at: new Date(payload.exp * 1000).toISOString(),
-        url: `https://passbali.com/account/delete?token=${tempToken}`
+        url: `https://passbali.com/delete-account?token=${tempToken}`
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
