@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pass'Bali iOS Icons</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f0f0f0; }
+        .icon-container { display: inline-block; margin: 10px; text-align: center; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        canvas { border: 1px solid #ddd; border-radius: 8px; }
+        .download-btn { margin-top: 5px; padding: 5px 10px; background: #007AFF; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .download-btn:hover { background: #0056CC; }
+        h1 { color: #2E7D32; }
+    </style>
+</head>
+<body>
+    <h1>🏛️ Pass'Bali iOS App Icons</h1>
+    <p>Clique sur "Télécharger" pour chaque icône, puis installe-les dans ton projet iOS.</p>
+    
+    <div id="icons"></div>
+    
+    <script>
+        const sizes = [
+            { size: 1024, name: "App Store" },
+            { size: 180, name: "iPhone 6 Plus" },
+            { size: 167, name: "iPad Pro" },
+            { size: 152, name: "iPad" },
+            { size: 120, name: "iPhone" },
+            { size: 87, name: "iPhone 6 Plus" },
+            { size: 80, name: "iPad" },
+            { size: 76, name: "iPad" },
+            { size: 60, name: "iPhone" },
+            { size: 58, name: "iPhone 6 Plus" },
+            { size: 40, name: "iPhone" },
+            { size: 29, name: "iPhone" }
+        ];
+
+        function createIcon(size) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Background gradient (green to darker green)
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#2E7D32');
+            gradient.addColorStop(1, '#1B5E20');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Add rounded corners (iOS style)
+            ctx.globalCompositeOperation = 'destination-in';
+            ctx.beginPath();
+            ctx.roundRect(0, 0, size, size, size * 0.2);
+            ctx.fill();
+            ctx.globalCompositeOperation = 'source-over';
+            
+            if (size >= 120) {
+                // Draw temple gate for larger icons
+                drawTempleGate(ctx, size);
+            } else {
+                // Draw "PB" text for smaller icons
+                drawPBText(ctx, size);
+            }
+            
+            return canvas;
+        }
+        
+        function drawTempleGate(ctx, size) {
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const gateWidth = size * 0.6;
+            const gateHeight = size * 0.5;
+            
+            ctx.strokeStyle = '#FFD700';
+            ctx.lineWidth = Math.max(2, size * 0.02);
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            // Main arch
+            ctx.beginPath();
+            ctx.arc(centerX, centerY + gateHeight * 0.3, gateWidth * 0.3, Math.PI, 0, false);
+            ctx.stroke();
+            
+            // Left pillar
+            ctx.beginPath();
+            ctx.moveTo(centerX - gateWidth * 0.4, centerY - gateHeight * 0.2);
+            ctx.lineTo(centerX - gateWidth * 0.4, centerY + gateHeight * 0.4);
+            ctx.stroke();
+            
+            // Right pillar
+            ctx.beginPath();
+            ctx.moveTo(centerX + gateWidth * 0.4, centerY - gateHeight * 0.2);
+            ctx.lineTo(centerX + gateWidth * 0.4, centerY + gateHeight * 0.4);
+            ctx.stroke();
+            
+            // Top roof elements
+            ctx.beginPath();
+            ctx.moveTo(centerX - gateWidth * 0.3, centerY - gateHeight * 0.2);
+            ctx.lineTo(centerX, centerY - gateHeight * 0.4);
+            ctx.lineTo(centerX + gateWidth * 0.3, centerY - gateHeight * 0.2);
+            ctx.stroke();
+        }
+        
+        function drawPBText(ctx, size) {
+            ctx.fillStyle = '#FFD700';
+            ctx.font = `bold ${size * 0.4}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('PB', size / 2, size / 2);
+        }
+        
+        function downloadIcon(canvas, filename) {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        // Generate all icons
+        sizes.forEach(iconSize => {
+            const container = document.createElement('div');
+            container.className = 'icon-container';
+            
+            const canvas = createIcon(iconSize.size);
+            container.appendChild(canvas);
+            
+            const label = document.createElement('div');
+            label.textContent = `${iconSize.size}x${iconSize.size} - ${iconSize.name}`;
+            container.appendChild(label);
+            
+            const downloadBtn = document.createElement('button');
+            downloadBtn.className = 'download-btn';
+            downloadBtn.textContent = 'Télécharger';
+            downloadBtn.onclick = () => downloadIcon(canvas, `AppIcon-${iconSize.size}.png`);
+            container.appendChild(downloadBtn);
+            
+            document.getElementById('icons').appendChild(container);
+        });
+    </script>
+</body>
+</html>

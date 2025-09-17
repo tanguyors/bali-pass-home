@@ -14,6 +14,14 @@ const config: CapacitorConfig = {
       style: "LIGHT",
       backgroundColor: "#1A936F"
     }
+  },
+  android: {
+    signingConfig: {
+      keystorePath: 'android/app/balipass-release-key.keystore',
+      keystorePassword: 'balipass2024',
+      keystoreKeyAlias: 'balipass',
+      keystoreKeyPassword: 'balipass2024'
+    }
   }
 };
 

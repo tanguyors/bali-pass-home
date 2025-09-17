@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="167" height="167" viewBox="0 0 167 167" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2E7D32;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1B5E20;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="167" height="167" rx="33.4" fill="url(#bg)"/>
+  <g stroke="#FFD700" stroke-width="3.34" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Main arch -->
+    <path d="M 33.4 108.55 A 30.06 30.06 0 0 1 133.6 108.55"/>
+    <!-- Left pillar -->
+    <line x1="43.42" y1="66.8" x2="43.42" y2="116.89999999999999"/>
+    <!-- Right pillar -->
+    <line x1="123.58" y1="66.8" x2="123.58" y2="116.89999999999999"/>
+    <!-- Top roof -->
+    <path d="M 58.449999999999996 66.8 L 83.5 50.1 L 108.55 66.8"/>
+  </g>
+</svg>

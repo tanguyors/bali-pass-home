@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pass'Bali App Icon Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .icon-preview { display: inline-block; margin: 10px; text-align: center; }
+        .icon { border: 1px solid #ccc; margin: 5px; }
+        canvas { border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h1>Pass'Bali App Icons Generator</h1>
+    <div id="icons"></div>
+    
+    <script>
+        const sizes = [
+            { size: 1024, name: "App Store" },
+            { size: 180, name: "iPhone 6 Plus" },
+            { size: 167, name: "iPad Pro" },
+            { size: 152, name: "iPad" },
+            { size: 120, name: "iPhone" },
+            { size: 87, name: "iPhone 6 Plus" },
+            { size: 80, name: "iPad" },
+            { size: 76, name: "iPad" },
+            { size: 60, name: "iPhone" },
+            { size: 58, name: "iPhone 6 Plus" },
+            { size: 40, name: "iPhone" },
+            { size: 29, name: "iPhone" }
+        ];
+
+        function createIcon(size) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Background gradient (green to darker green)
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#2E7D32');
+            gradient.addColorStop(1, '#1B5E20');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Add rounded corners
+            ctx.globalCompositeOperation = 'destination-in';
+            ctx.beginPath();
+            ctx.roundRect(0, 0, size, size, size * 0.2);
+            ctx.fill();
+            ctx.globalCompositeOperation = 'source-over';
+            
+            if (size >= 120) {
+                // Draw temple gate for larger icons
+                drawTempleGate(ctx, size);
+            } else {
+                // Draw "PB" text for smaller icons
+                drawPBText(ctx, size);
+            }
+            
+            return canvas;
+        }
+        
+        function drawTempleGate(ctx, size) {
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const gateWidth = size * 0.6;
+            const gateHeight = size * 0.5;
+            
+            ctx.strokeStyle = '#FFD700';
+            ctx.lineWidth = size * 0.02;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            // Main arch
+            ctx.beginPath();
+            ctx.arc(centerX, centerY + gateHeight * 0.3, gateWidth * 0.3, Math.PI, 0, false);
+            ctx.stroke();
+            
+            // Left pillar
+            ctx.beginPath();
+            ctx.moveTo(centerX - gateWidth * 0.4, centerY - gateHeight * 0.2);
+            ctx.lineTo(centerX - gateWidth * 0.4, centerY + gateHeight * 0.4);
+            ctx.stroke();
+            
+            // Right pillar
+            ctx.beginPath();
+            ctx.moveTo(centerX + gateWidth * 0.4, centerY - gateHeight * 0.2);
+            ctx.lineTo(centerX + gateWidth * 0.4, centerY + gateHeight * 0.4);
+            ctx.stroke();
+            
+            // Top roof elements
+            ctx.beginPath();
+            ctx.moveTo(centerX - gateWidth * 0.3, centerY - gateHeight * 0.2);
+            ctx.lineTo(centerX, centerY - gateHeight * 0.4);
+            ctx.lineTo(centerX + gateWidth * 0.3, centerY - gateHeight * 0.2);
+            ctx.stroke();
+        }
+        
+        function drawPBText(ctx, size) {
+            ctx.fillStyle = '#FFD700';
+            ctx.font = `bold ${size * 0.4}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('PB', size / 2, size / 2);
+        }
+        
+        // Generate all icons
+        sizes.forEach(iconSize => {
+            const container = document.createElement('div');
+            container.className = 'icon-preview';
+            
+            const canvas = createIcon(iconSize.size);
+            container.appendChild(canvas);
+            
+            const label = document.createElement('div');
+            label.textContent = `${iconSize.size}x${iconSize.size} - ${iconSize.name}`;
+            container.appendChild(label);
+            
+            document.getElementById('icons').appendChild(container);
+        });
+    </script>
+</body>
+</html>
