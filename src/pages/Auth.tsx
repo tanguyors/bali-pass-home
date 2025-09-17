@@ -241,36 +241,33 @@ const Auth: React.FC = () => {
                         </Button>
                       </div>
                     </div>
-                    <Button 
-                      type="submit" 
-                      className="w-full h-14 bg-gradient-to-r from-primary via-primary to-secondary hover:from-primary/90 hover:via-primary/90 hover:to-secondary/90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? (
-                        <div className="flex items-center gap-2">
-                          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                          {t('auth.signing_in')}
-                        </div>
-                      ) : (
-                        t('auth.sign_in')
-                      )}
-                    </Button>
+                    <div className="grid grid-cols-2 gap-4">
+                      <Button 
+                        type="submit" 
+                        className="h-14 bg-gradient-to-r from-primary via-primary to-secondary hover:from-primary/90 hover:via-primary/90 hover:to-secondary/90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                        disabled={isLoading}
+                      >
+                        {isLoading ? (
+                          <div className="flex items-center gap-2">
+                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                            {t('auth.signing_in')}
+                          </div>
+                        ) : (
+                          t('auth.sign_in')
+                        )}
+                      </Button>
+                      
+                      <Button 
+                        type="button"
+                        variant="outline"
+                        className="h-14 rounded-xl border-primary/20 hover:bg-primary/5 text-primary font-semibold"
+                        onClick={() => window.open('https://passbali.com/auth', '_blank')}
+                      >
+                        {t('auth.create_account')}
+                      </Button>
+                    </div>
                   </form>
                 </TabsContent>
-                
-                {/* Sign Up Redirect */}
-                <div className="mt-6 text-center">
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-                    {t('auth.no_account_yet')}
-                  </p>
-                  <Button 
-                    variant="outline"
-                    className="w-full h-12 rounded-xl border-primary/20 hover:bg-primary/5 text-primary font-semibold"
-                    onClick={() => window.open('https://passbali.com/auth', '_blank')}
-                  >
-                    {t('auth.create_account')}
-                  </Button>
-                </div>
               </Tabs>
             </div>
           </CardContent>
