@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { usePassSettings } from "@/hooks/usePassSettings";
-import { CreditCard } from "lucide-react";
+import { LogIn } from "lucide-react";
 import baliHeroImage from "@/assets/bali-hero.jpg";
 import { useNavigate } from "react-router-dom";
 import { LanguageSelector } from "@/components/LanguageSelector";
@@ -16,8 +16,8 @@ export function HeroUnauthenticated() {
     return setting ? setting.setting_value : defaultValue;
   };
 
-  const handleGetPass = () => {
-    window.open('https://passbali.com/', '_blank');
+  const handleSignIn = () => {
+    navigate('/auth');
   };
 
   return (
@@ -77,10 +77,10 @@ export function HeroUnauthenticated() {
             <Button 
             variant="hero" 
             className="w-full flex items-center justify-center gap-3"
-            onClick={handleGetPass}
+            onClick={handleSignIn}
           >
-            <CreditCard className="w-5 h-5" />
-            {t('hero.get_your_pass')}
+            <LogIn className="w-5 h-5" />
+            {t('auth.sign_in')}
           </Button>
         </div>
       </div>

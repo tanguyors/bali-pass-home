@@ -6,8 +6,8 @@ export function FinalCTABanner() {
   const navigate = useNavigate();
   const { t } = useLanguage();
 
-  const handleGetPass = () => {
-    window.open('https://passbali.com/', '_blank');
+  const handleSignIn = () => {
+    navigate('/auth');
   };
 
   return (
@@ -23,9 +23,9 @@ export function FinalCTABanner() {
         <Button 
           variant="pillWhite" 
           className="w-full h-12"
-          onClick={handleGetPass}
+          onClick={handleSignIn}
         >
-          {t('pass.get_pass')}
+          {t('auth.sign_in')}
         </Button>
       </div>
     </div>

@@ -11,7 +11,7 @@ import {
   QrCode, 
   History, 
   BarChart3, 
-  CreditCard,
+  LogIn,
   Search,
   Gift,
   CheckCircle,
@@ -208,7 +208,7 @@ const MonPass: React.FC = () => {
             <Card className="w-full max-w-sm shadow-xl border-0 bg-card/60 backdrop-blur-sm">
               <CardContent className="p-8 text-center">
                 <div className="w-20 h-20 bg-gradient-to-br from-primary to-primary/60 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <CreditCard className="w-10 h-10 text-white" />
+                  <LogIn className="w-10 h-10 text-white" />
                 </div>
                 <h2 className="text-2xl font-bold mb-3 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
                   {t('pass.my_pass')}
@@ -259,7 +259,7 @@ const MonPass: React.FC = () => {
         <div className="p-4 space-y-6">
           <div className="text-center">
             <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-              {t('pass.get_pass')}
+              {t('auth.sign_in')}
             </h1>
             <p className="text-muted-foreground">{t('mon_pass.access_exclusive_discounts')}</p>
           </div>
@@ -297,10 +297,10 @@ const MonPass: React.FC = () => {
           <div className="space-y-3">
             <Button 
               className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg text-lg font-semibold"
-              onClick={() => window.open('https://passbali.com/', '_blank')}
+              onClick={() => navigate('/auth')}
             >
-              <CreditCard className="w-5 h-5 mr-2" />
-              {t('pass.get_pass')}
+              <LogIn className="w-5 h-5 mr-2" />
+              {t('auth.sign_in')}
             </Button>
             <Button 
               variant="outline" 

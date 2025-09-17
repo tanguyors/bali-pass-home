@@ -1,21 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { usePassSettings } from "@/hooks/usePassSettings";
-import { CreditCard, ArrowRight } from "lucide-react";
+import { LogIn, ArrowRight } from "lucide-react";
 import baliHeroImage from "@/assets/bali-hero.jpg";
+import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { logger } from "@/lib/logger";
 
 export function HeroNoPass() {
   const { t } = useLanguage();
   const { settings: passSettings } = usePassSettings();
+  const navigate = useNavigate();
 
   const getSettingValue = (key: string, defaultValue: string = '') => {
     const setting = passSettings.find(s => s.setting_key === key);
     return setting ? setting.setting_value : defaultValue;
   };
 
-  const handleBuyPass = () => {
-    window.open('https://passbali.com/', '_blank');
+  const handleSignIn = () => {
+    navigate('/auth');
   };
 
   const handleViewOffers = () => {
@@ -53,7 +55,7 @@ export function HeroNoPass() {
         
         {/* Headlines with text shadow */}
         <h1 className="text-mobile-hero font-bold mb-3 text-shadow-strong">
-          {t('pass.get_pass')}
+          {t('auth.sign_in')}
         </h1>
         <p className="text-mobile-subtitle mb-6 opacity-95 text-shadow">
           {t('pass.exclusive_discounts')}
@@ -64,10 +66,10 @@ export function HeroNoPass() {
           <Button 
             variant="hero" 
             className="w-full flex items-center justify-center gap-3"
-            onClick={handleBuyPass}
+            onClick={handleSignIn}
           >
-            <CreditCard className="w-5 h-5" />
-            {t('pass.get_pass')}
+            <LogIn className="w-5 h-5" />
+            {t('auth.sign_in')}
           </Button>
           
           <Button 
