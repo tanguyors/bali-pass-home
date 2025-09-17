@@ -78,6 +78,9 @@ export const en = {
     valid_12_months: 'Valid for 12 months',
     support_24_7: '24/7 customer support',
     discover_offers: 'Discover offers',
+    discover_our_pass: 'Discover our pass',
+    discover_pass_title: 'Discover your Bali\'Pass',
+    discover_pass_subtitle: 'Access exclusive discounts from our partners',
   },
   
   // Hero

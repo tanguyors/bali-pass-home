@@ -1,13 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function FinalCTABanner() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { user } = useAuth();
 
-  const handleSignIn = () => {
-    navigate('/auth');
+  const handleAction = () => {
+    if (user) {
+      // User is logged in but has no pass, redirect to pass purchase
+      window.open('https://passbali.com/', '_blank');
+    } else {
+      // User is not logged in, go to auth page
+      navigate('/auth');
+    }
   };
 
   return (
@@ -23,9 +31,9 @@ export function FinalCTABanner() {
         <Button 
           variant="pillWhite" 
           className="w-full h-12"
-          onClick={handleSignIn}
+          onClick={handleAction}
         >
-          {t('auth.sign_in')}
+          {user ? t('pass.discover_our_pass') : t('auth.sign_in')}
         </Button>
       </div>
     </div>

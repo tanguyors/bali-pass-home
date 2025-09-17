@@ -78,6 +78,9 @@ export const fr = {
     valid_12_months: 'Valable 12 mois',
     support_24_7: 'Support client 24/7',
     discover_offers: 'Découvrir les offres',
+    discover_our_pass: 'Découvrir notre pass',
+    discover_pass_title: 'Découvrez votre Pass\'Bali',
+    discover_pass_subtitle: 'Accédez à des réductions exclusives chez nos partenaires',
     available_offers: 'Offres disponibles',
   },
   

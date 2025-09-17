@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { usePassSettings } from "@/hooks/usePassSettings";
-import { LogIn, ArrowRight } from "lucide-react";
+import { ExternalLink, ArrowRight } from "lucide-react";
 import baliHeroImage from "@/assets/bali-hero.jpg";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -16,8 +16,8 @@ export function HeroNoPass() {
     return setting ? setting.setting_value : defaultValue;
   };
 
-  const handleSignIn = () => {
-    navigate('/auth');
+  const handleDiscoverPass = () => {
+    window.open('https://passbali.com/', '_blank');
   };
 
   const handleViewOffers = () => {
@@ -55,10 +55,10 @@ export function HeroNoPass() {
         
         {/* Headlines with text shadow */}
         <h1 className="text-mobile-hero font-bold mb-3 text-shadow-strong">
-          {t('auth.sign_in')}
+          {t('pass.discover_pass_title')}
         </h1>
         <p className="text-mobile-subtitle mb-6 opacity-95 text-shadow">
-          {t('pass.exclusive_discounts')}
+          {t('pass.discover_pass_subtitle')}
         </p>
         
         {/* CTA Buttons */}
@@ -66,10 +66,10 @@ export function HeroNoPass() {
           <Button 
             variant="hero" 
             className="w-full flex items-center justify-center gap-3"
-            onClick={handleSignIn}
+            onClick={handleDiscoverPass}
           >
-            <LogIn className="w-5 h-5" />
-            {t('auth.sign_in')}
+            <ExternalLink className="w-5 h-5" />
+            {t('pass.discover_our_pass')}
           </Button>
           
           <Button 

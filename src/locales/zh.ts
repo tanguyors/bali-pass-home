@@ -78,6 +78,9 @@ export const zh = {
     valid_12_months: '有效期12个月',
     support_24_7: '24/7客户支持',
     discover_offers: '发现优惠',
+    discover_our_pass: '发现我们的通行证',
+    discover_pass_title: '发现您的巴厘岛通行证',
+    discover_pass_subtitle: '享受我们合作伙伴的专属折扣',
   },
   
   // Hero

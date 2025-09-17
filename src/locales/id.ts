@@ -78,6 +78,9 @@ export const id = {
     valid_12_months: 'Berlaku selama 12 bulan',
     support_24_7: 'Dukungan pelanggan 24/7',
     discover_offers: 'Temukan penawaran',
+    discover_our_pass: 'Temukan pass kami',
+    discover_pass_title: 'Temukan Bali\'Pass Anda',
+    discover_pass_subtitle: 'Akses diskon eksklusif dari mitra kami',
   },
   
   // Hero
