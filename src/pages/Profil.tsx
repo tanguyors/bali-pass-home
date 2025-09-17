@@ -113,6 +113,9 @@ const Profil: React.FC = () => {
     
     setDeletingAccount(true);
     
+    // Ouvrir immédiatement une fenêtre vierge (iOS Safari friendly)
+    const deleteWindow = window.open('about:blank', '_blank');
+    
     try {
       toast({
         title: t('profile.generating_secure_link'),
@@ -128,19 +131,34 @@ const Profil: React.FC = () => {
       }
 
       if (data?.url) {
-        // Open the URL with the pre-authentication token
-        window.open(data.url, '_blank');
-        
-        toast({
-          title: t('profile.secure_link_generated'),
-          description: t('profile.redirected_to_deletion_page'),
-        });
+        // Rediriger la fenêtre déjà ouverte vers l'URL de suppression
+        if (deleteWindow && !deleteWindow.closed) {
+          deleteWindow.location.href = data.url;
+          
+          toast({
+            title: t('profile.secure_link_generated'),
+            description: t('profile.redirected_to_deletion_page'),
+          });
+        } else {
+          // Fallback : redirection dans la même fenêtre si popup bloqué
+          window.location.href = data.url;
+        }
       } else {
+        // Fermer la fenêtre vide si pas d'URL générée
+        if (deleteWindow && !deleteWindow.closed) {
+          deleteWindow.close();
+        }
         throw new Error(t('profile.deletion_url_not_generated'));
       }
       
     } catch (error) {
       console.error('Delete account error:', error);
+      
+      // Fermer la fenêtre vide en cas d'erreur
+      if (deleteWindow && !deleteWindow.closed) {
+        deleteWindow.close();
+      }
+      
       toast({
         title: t('common.error'),
         description: error instanceof Error ? error.message : t('profile.deletion_link_error'),
