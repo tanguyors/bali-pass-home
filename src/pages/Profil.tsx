@@ -115,8 +115,8 @@ const Profil: React.FC = () => {
     
     try {
       toast({
-        title: "Génération du lien sécurisé...",
-        description: "Veuillez patienter pendant la génération de votre lien d'authentification.",
+        title: t('profile.generating_secure_link'),
+        description: t('profile.please_wait_link_generation'),
       });
 
       // Call the Edge Function to generate auth token
@@ -124,7 +124,7 @@ const Profil: React.FC = () => {
       
       if (error) {
         console.error('Error generating auth token:', error);
-        throw new Error(error.message || 'Erreur lors de la génération du token');
+        throw new Error(error.message || t('profile.token_generation_error'));
       }
 
       if (data?.url) {
@@ -132,18 +132,18 @@ const Profil: React.FC = () => {
         window.open(data.url, '_blank');
         
         toast({
-          title: "Lien sécurisé généré",
-          description: "Vous avez été redirigé vers la page de suppression de compte avec authentification automatique.",
+          title: t('profile.secure_link_generated'),
+          description: t('profile.redirected_to_deletion_page'),
         });
       } else {
-        throw new Error('URL de suppression non générée');
+        throw new Error(t('profile.deletion_url_not_generated'));
       }
       
     } catch (error) {
       console.error('Delete account error:', error);
       toast({
-        title: "Erreur",
-        description: error instanceof Error ? error.message : "Impossible de générer le lien de suppression. Veuillez réessayer.",
+        title: t('common.error'),
+        description: error instanceof Error ? error.message : t('profile.deletion_link_error'),
         variant: "destructive",
       });
     } finally {
@@ -500,7 +500,7 @@ const Profil: React.FC = () => {
                   <div className="flex items-center gap-3">
                     <Shield className="w-4 h-4 text-red-500" />
                     <span className="text-sm text-red-600">
-                      {deletingAccount ? "Génération du lien..." : "Supprimer mon compte"}
+                      {deletingAccount ? t('profile.generating_link') : t('profile.delete_account')}
                     </span>
                   </div>
                   {deletingAccount ? (
