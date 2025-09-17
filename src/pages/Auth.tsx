@@ -182,8 +182,8 @@ const Auth: React.FC = () => {
             <div className="bg-gradient-to-br from-primary via-primary/90 to-secondary p-8 text-center relative overflow-hidden">
               <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]"></div>
               <div className="relative z-10">
-                <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
-                  <span className="text-4xl">🌴</span>
+                <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 p-3">
+                  <img src="/app-icon.png" alt="BaliPass" className="w-full h-full object-contain" />
                 </div>
                 <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Pass Bali</h1>
                 <p className="text-white/90 text-sm font-medium">{t('pass.your_privilege_pass')}</p>
