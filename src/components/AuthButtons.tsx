@@ -11,7 +11,7 @@ export function AuthButtons() {
   };
 
   const handleSignUp = () => {
-    navigate('/auth');
+    window.open('https://passbali.com/auth', '_blank');
   };
 
   return (

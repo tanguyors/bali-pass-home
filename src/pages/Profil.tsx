@@ -233,7 +233,7 @@ const Profil: React.FC = () => {
                   <Button 
                     variant="outline" 
                     className="w-full border-primary/20 hover:bg-primary/5 transition-all duration-300" 
-                    onClick={() => navigate('/auth')}
+                    onClick={() => window.open('https://passbali.com/auth', '_blank')}
                   >
                     {t('auth.create_account')}
                   </Button>
