@@ -192,83 +192,69 @@ const Auth: React.FC = () => {
 
             {/* Form Section */}
             <div className="p-8">
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                {/* Modern Tab Selector */}
-                <TabsList className="grid w-full grid-cols-1 mb-8 bg-slate-100 dark:bg-slate-800 rounded-2xl p-1 h-14">
-                  <TabsTrigger 
-                    value="signin" 
-                    className="rounded-xl text-sm font-semibold h-12 data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:text-primary dark:data-[state=active]:bg-slate-700 transition-all duration-300"
+              {/* Sign In Form */}
+              <form onSubmit={handleSignIn} className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="signin-email" className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t('common.email')}</Label>
+                  <Input
+                    id="signin-email"
+                    type="email"
+                    placeholder="votre@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="h-14 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-primary/20 focus:border-primary transition-all duration-300"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="signin-password" className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t('common.password')}</Label>
+                  <div className="relative">
+                    <Input
+                      id="signin-password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="h-14 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-primary/20 focus:border-primary pr-12 transition-all duration-300"
+                      required
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-1 top-1 h-12 w-12 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeOffIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
+                    </Button>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <Button 
+                    type="submit" 
+                    className="h-14 bg-gradient-to-r from-primary via-primary to-secondary hover:from-primary/90 hover:via-primary/90 hover:to-secondary/90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                    disabled={isLoading}
                   >
-                    {t('auth.sign_in')}
-                  </TabsTrigger>
-                </TabsList>
-                
-                {/* Sign In Form */}
-                <TabsContent value="signin" className="space-y-6 animate-fade-in">
-                  <form onSubmit={handleSignIn} className="space-y-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="signin-email" className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t('common.email')}</Label>
-                      <Input
-                        id="signin-email"
-                        type="email"
-                        placeholder="votre@email.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="h-14 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-primary/20 focus:border-primary transition-all duration-300"
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="signin-password" className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t('common.password')}</Label>
-                      <div className="relative">
-                        <Input
-                          id="signin-password"
-                          type={showPassword ? "text" : "password"}
-                          placeholder="••••••••"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          className="h-14 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-primary/20 focus:border-primary pr-12 transition-all duration-300"
-                          required
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="absolute right-1 top-1 h-12 w-12 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          {showPassword ? <EyeOffIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
-                        </Button>
+                    {isLoading ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        {t('auth.signing_in')}
                       </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <Button 
-                        type="submit" 
-                        className="h-14 bg-gradient-to-r from-primary via-primary to-secondary hover:from-primary/90 hover:via-primary/90 hover:to-secondary/90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
-                        disabled={isLoading}
-                      >
-                        {isLoading ? (
-                          <div className="flex items-center gap-2">
-                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                            {t('auth.signing_in')}
-                          </div>
-                        ) : (
-                          t('auth.sign_in')
-                        )}
-                      </Button>
-                      
-                      <Button 
-                        type="button"
-                        variant="outline"
-                        className="h-14 rounded-xl border-primary/20 hover:bg-primary/5 text-primary font-semibold"
-                        onClick={() => window.open('https://passbali.com/auth', '_blank')}
-                      >
-                        {t('auth.create_account')}
-                      </Button>
-                    </div>
-                  </form>
-                </TabsContent>
-              </Tabs>
+                    ) : (
+                      t('auth.sign_in')
+                    )}
+                  </Button>
+                  
+                  <Button 
+                    type="button"
+                    variant="outline"
+                    className="h-14 rounded-xl border-primary/20 hover:bg-primary/5 text-primary font-semibold"
+                    onClick={() => window.open('https://passbali.com/auth', '_blank')}
+                  >
+                    {t('auth.create_account')}
+                  </Button>
+                </div>
+              </form>
             </div>
           </CardContent>
         </Card>
