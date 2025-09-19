@@ -1,0 +1,15 @@
+/* Camera permission */
+"NSCameraUsageDescription" = "此应用程序使用摄像头扫描合作伙伴优惠和促销的二维码。";
+
+/* Location permission */
+"NSLocationWhenInUseUsageDescription" = "此应用程序使用您的位置向您显示巴厘岛附近的优惠和景点。";
+
+/* Photo library permission */
+"NSPhotoLibraryUsageDescription" = "此应用程序需要访问您的照片库来分析保存图像中的二维码。";
+
+/* Microphone permission */
+"NSMicrophoneUsageDescription" = "此应用程序在摄像头操作期间可能使用麦克风来扫描二维码。";
+
+/* App display name */
+"CFBundleDisplayName" = "Pass'Bali";
+"CFBundleName" = "Pass'Bali";

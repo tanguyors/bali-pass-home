@@ -1,0 +1,15 @@
+/* Camera permission */
+"NSCameraUsageDescription" = "Aplikasi ini menggunakan kamera untuk memindai kode QR penawaran dan promosi mitra.";
+
+/* Location permission */
+"NSLocationWhenInUseUsageDescription" = "Aplikasi ini menggunakan lokasi Anda untuk menampilkan penawaran dan atraksi terdekat di Bali.";
+
+/* Photo library permission */
+"NSPhotoLibraryUsageDescription" = "Aplikasi ini memerlukan akses ke perpustakaan foto Anda untuk menganalisis kode QR dari gambar yang tersimpan.";
+
+/* Microphone permission */
+"NSMicrophoneUsageDescription" = "Aplikasi ini mungkin menggunakan mikrofon selama operasi kamera untuk memindai kode QR.";
+
+/* App display name */
+"CFBundleDisplayName" = "Pass'Bali";
+"CFBundleName" = "Pass'Bali";

@@ -1,0 +1,15 @@
+/* Camera permission */
+"NSCameraUsageDescription" = "Esta aplicación utiliza la cámara para escanear códigos QR de ofertas y promociones de socios.";
+
+/* Location permission */
+"NSLocationWhenInUseUsageDescription" = "Esta aplicación utiliza su ubicación para mostrarle ofertas y atracciones cercanas en Bali.";
+
+/* Photo library permission */
+"NSPhotoLibraryUsageDescription" = "Esta aplicación necesita acceso a su fototeca para analizar códigos QR de imágenes guardadas.";
+
+/* Microphone permission */
+"NSMicrophoneUsageDescription" = "Esta aplicación puede usar el micrófono durante las operaciones de cámara para escanear códigos QR.";
+
+/* App display name */
+"CFBundleDisplayName" = "Pass'Bali";
+"CFBundleName" = "Pass'Bali";
