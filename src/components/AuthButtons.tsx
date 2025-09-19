@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { openExternalUrl } from "@/lib/browser";
 
 export function AuthButtons() {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ export function AuthButtons() {
   const handleAction = () => {
     if (user) {
       // User is logged in but has no pass, redirect to pass purchase
-      window.open('https://passbali.com/', '_blank');
+      openExternalUrl('https://passbali.com/');
     } else {
       // User is not logged in, go to auth page
       navigate('/auth');
@@ -19,7 +20,7 @@ export function AuthButtons() {
   };
 
   const handleSignUp = () => {
-    window.open('https://passbali.com/auth', '_blank');
+    openExternalUrl('https://passbali.com/auth');
   };
 
   return (
