@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ExternalLink } from 'lucide-react';
+import { openExternalUrl } from '@/lib/browser';
 
 interface SupportLinkProps {
   href: string;
@@ -11,7 +12,7 @@ interface SupportLinkProps {
 export function SupportLink({ href, children, external = false }: SupportLinkProps) {
   const handleClick = () => {
     if (external) {
-      window.open(href, '_blank', 'noopener,noreferrer');
+      openExternalUrl(href);
     } else {
       // For internal links, you could use navigate here
       window.location.href = href;

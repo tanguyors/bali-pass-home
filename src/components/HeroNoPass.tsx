@@ -5,6 +5,7 @@ import baliHeroImage from "@/assets/bali-hero.jpg";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { logger } from "@/lib/logger";
+import { openExternalUrl } from "@/lib/browser";
 
 export function HeroNoPass() {
   const { t } = useLanguage();
@@ -17,7 +18,7 @@ export function HeroNoPass() {
   };
 
   const handleDiscoverPass = () => {
-    window.open('https://passbali.com/', '_blank');
+    openExternalUrl('https://passbali.com/');
   };
 
   const handleViewOffers = () => {

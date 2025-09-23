@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { openExternalUrl } from '@/lib/browser';
 
 const Auth: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -249,7 +250,7 @@ const Auth: React.FC = () => {
                     type="button"
                     variant="outline"
                     className="h-14 rounded-xl border-primary/20 hover:bg-primary/5 text-primary font-semibold"
-                    onClick={() => window.open('https://passbali.com/auth', '_blank')}
+                    onClick={() => openExternalUrl('https://passbali.com/auth')}
                   >
                     {t('auth.create_account')}
                   </Button>

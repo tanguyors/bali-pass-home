@@ -29,7 +29,6 @@ import {
   Settings,
   ChevronRight
 } from 'lucide-react';
-import { Browser } from '@capacitor/browser';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { EditProfileDialog } from '@/components/EditProfileDialog';
@@ -40,6 +39,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { QRScanner } from '@/components/QRScanner';
 import { PartnerOffersModal } from '@/components/PartnerOffersModal';
+import { openExternalUrl } from '@/lib/browser';
 
 interface UserPreferences {
   push_notifications: boolean;
@@ -129,39 +129,12 @@ const Profil: React.FC = () => {
       }
 
       if (data?.url) {
-        // Détecter si on est sur mobile (Capacitor) ou web
-        const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        await openExternalUrl(data.url);
         
-        if (isMobile) {
-          try {
-            // Utiliser Capacitor Browser sur mobile
-            await Browser.open({ 
-              url: data.url,
-              windowName: '_blank' 
-            });
-            
-            toast({
-              title: t('profile.secure_link_generated'),
-              description: t('profile.redirected_to_deletion_page'),
-            });
-          } catch (browserError) {
-            console.log('Capacitor Browser failed, using fallback:', browserError);
-            // Fallback vers window.open si Capacitor Browser échoue
-            window.open(data.url, '_blank') || (window.location.href = data.url);
-          }
-        } else {
-          // Sur web, utiliser window.open
-          const opened = window.open(data.url, '_blank');
-          if (!opened) {
-            // Si popup bloqué, rediriger dans le même onglet
-            window.location.href = data.url;
-          } else {
-            toast({
-              title: t('profile.secure_link_generated'),
-              description: t('profile.redirected_to_deletion_page'),
-            });
-          }
-        }
+        toast({
+          title: t('profile.secure_link_generated'),
+          description: t('profile.redirected_to_deletion_page'),
+        });
       } else {
         throw new Error(t('profile.deletion_url_not_generated'));
       }
@@ -304,7 +277,7 @@ const Profil: React.FC = () => {
                   <Button 
                     variant="outline" 
                     className="w-full border-primary/20 hover:bg-primary/5 transition-all duration-300" 
-                    onClick={() => window.open('https://passbali.com/auth', '_blank')}
+                    onClick={() => openExternalUrl('https://passbali.com/auth')}
                   >
                     {t('auth.create_account')}
                   </Button>

@@ -34,6 +34,7 @@ import { LanguageSelector } from '@/components/LanguageSelector';
 import { useToast } from '@/components/ui/use-toast';
 import { useOfferFavorites } from '@/hooks/useOfferFavorites';
 import { supabase } from '@/integrations/supabase/client';
+import { openExternalUrl } from '@/lib/browser';
 
 interface Pass {
   id: string;
@@ -227,7 +228,7 @@ const MonPass: React.FC = () => {
                   <Button 
                     variant="outline" 
                     className="w-full border-primary/20 hover:bg-primary/5 transition-all duration-300" 
-                    onClick={() => window.open('https://passbali.com/auth', '_blank')}
+                    onClick={() => openExternalUrl('https://passbali.com/auth')}
                   >
                     {t('auth.create_account')}
                   </Button>
@@ -297,7 +298,7 @@ const MonPass: React.FC = () => {
           <div className="space-y-3">
             <Button 
               className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg text-lg font-semibold"
-              onClick={() => window.open('https://passbali.com/', '_blank')}
+              onClick={() => openExternalUrl('https://passbali.com/')}
             >
               <LogIn className="w-5 h-5 mr-2" />
               {t('pass.discover_our_pass')}
