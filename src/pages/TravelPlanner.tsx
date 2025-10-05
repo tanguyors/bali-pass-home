@@ -13,6 +13,7 @@ import { DayTimeline } from "@/components/travel/DayTimeline";
 import { OfferRecommendations } from "@/components/travel/OfferRecommendations";
 import { CreateItineraryModal } from "@/components/travel/CreateItineraryModal";
 import { ItinerarySummary } from "@/components/travel/ItinerarySummary";
+import { ItineraryTemplates } from "@/components/travel/ItineraryTemplates";
 import { useTranslation } from "@/hooks/useTranslation";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { BottomNavigation } from "@/components/BottomNavigation";
@@ -30,6 +31,21 @@ const TravelPlanner = () => {
   
   const { days } = useItineraryDays(selectedItineraryId);
   const selectedDay = days.find(d => d.id === selectedDayId);
+  const { createItinerary } = useItineraries();
+
+  const handleSelectTemplate = async (template: any) => {
+    const startDate = new Date();
+    const endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + template.duration - 1);
+
+    await createItinerary.mutateAsync({
+      title: template.title,
+      description: template.description,
+      start_date: startDate.toISOString().split('T')[0],
+      end_date: endDate.toISOString().split('T')[0],
+      is_active: true
+    });
+  };
 
   if (!user) {
     return <Navigate to="/auth" replace />;
@@ -118,22 +134,7 @@ const TravelPlanner = () => {
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
               </div>
             ) : itineraries.length === 0 ? (
-              <div className="bg-background rounded-2xl p-8 text-center border border-border/50">
-                <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
-                  <MapPin className="w-10 h-10 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold text-foreground mb-3">{t('travelPlanner.noItineraries')}</h3>
-                <p className="text-muted-foreground mb-6 text-sm max-w-sm mx-auto leading-relaxed">
-                  {t('travelPlanner.noItinerariesDesc')}
-                </p>
-                <Button 
-                  onClick={() => setShowCreateModal(true)}
-                  className="w-full max-w-xs mx-auto h-12 bg-primary hover:bg-primary/90 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all"
-                >
-                  <Plus className="mr-2 h-5 w-5" />
-                  {t('travelPlanner.createFirst')}
-                </Button>
-              </div>
+              <ItineraryTemplates onSelectTemplate={handleSelectTemplate} />
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <div className="lg:col-span-3">
