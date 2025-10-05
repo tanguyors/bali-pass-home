@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { OffersList } from '@/components/OffersList';
+import { OffersMap } from '@/components/OffersMap';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { FilterSheet, FilterState } from '@/components/FilterSheet';
 import { SimpleFilter } from '@/components/SimpleFilter';
 import { Button } from '@/components/ui/button';
-import { Grid3X3, List } from 'lucide-react';
+import { Grid3X3, List, Map } from 'lucide-react';
 import { useOffers } from '@/hooks/useOffers';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -27,7 +28,8 @@ interface City {
 
 const Explorer = () => {
   const [searchParams] = useSearchParams();
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const navigate = useNavigate();
+  const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
   const [categories, setCategories] = useState<Category[]>([]);
   const [cities, setCities] = useState<City[]>([]);
   const isNearbyMode = searchParams.get('nearby') === 'true';
@@ -220,23 +222,40 @@ const Explorer = () => {
                 variant={viewMode === 'list' ? "default" : "ghost"}
                 size="sm"
                 onClick={() => setViewMode('list')}
-                className="rounded-none"
+                className="rounded-none border-r border-border"
               >
                 <List className="w-4 h-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'map' ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewMode('map')}
+                className="rounded-none"
+              >
+                <Map className="w-4 h-4" />
               </Button>
             </div>
           </div>
         </div>
         
-        <OffersList
-          offers={offers}
-          loading={loading}
-          hasMore={hasMore}
-          onLoadMore={loadMore}
-          onToggleFavorite={toggleFavorite}
-          viewMode={viewMode}
-          error={error}
-        />
+        {viewMode === 'map' ? (
+          <div className="px-4 py-4">
+            <OffersMap 
+              offers={offers}
+              onOfferClick={(offerId) => navigate(`/offer/${offerId}`)}
+            />
+          </div>
+        ) : (
+          <OffersList
+            offers={offers}
+            loading={loading}
+            hasMore={hasMore}
+            onLoadMore={loadMore}
+            onToggleFavorite={toggleFavorite}
+            viewMode={viewMode}
+            error={error}
+          />
+        )}
       </main>
       
       {/* Floating Action Button */}
