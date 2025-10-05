@@ -91,23 +91,27 @@ const TravelPlanner = () => {
       </div>
 
       <div className="container mx-auto px-4 max-w-7xl pb-24 pt-6">
-            <Card className="p-6 mb-6 shadow-elegant">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <MapPin className="w-8 h-8 text-primary" />
-                  <div>
-                    <h2 className="text-2xl font-bold">{t('travelPlanner.title')}</h2>
-                    <p className="text-muted-foreground">
-                      {t('travelPlanner.subtitle')}
-                    </p>
-                  </div>
+            {/* Mobile-native header */}
+            <div className="bg-background rounded-2xl p-6 mb-6 border border-border/50">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <MapPin className="w-6 h-6 text-primary" />
                 </div>
-                <Button onClick={() => setShowCreateModal(true)} size="lg">
-                  <Plus className="mr-2 h-5 w-5" />
-                  {t('travelPlanner.newItinerary')}
-                </Button>
+                <div className="flex-1">
+                  <h2 className="text-2xl font-bold text-foreground mb-1">{t('travelPlanner.title')}</h2>
+                  <p className="text-sm text-muted-foreground">
+                    {t('travelPlanner.subtitle')}
+                  </p>
+                </div>
               </div>
-            </Card>
+              <Button 
+                onClick={() => setShowCreateModal(true)} 
+                className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all"
+              >
+                <Plus className="mr-2 h-5 w-5" />
+                {t('travelPlanner.newItinerary')}
+              </Button>
+            </div>
 
             {itinerariesLoading ? (
               <div className="flex items-center justify-center py-12">
