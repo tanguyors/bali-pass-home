@@ -159,8 +159,8 @@ const TravelPlanner = () => {
                       </TabsList>
 
                       <TabsContent value="plan" className="mt-0">
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                          <div className="lg:col-span-7">
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                          <div className="lg:col-span-7 space-y-6">
                             <DayTimeline
                               itineraryId={selectedItineraryId}
                               days={days}
@@ -179,11 +179,17 @@ const TravelPlanner = () => {
                                 dayId={selectedDay.id}
                               />
                             ) : (
-                              <Card className="p-8 text-center shadow-elegant">
-                                <p className="text-muted-foreground">
+                              <div className="bg-gradient-to-br from-card to-muted/20 rounded-xl p-12 text-center border border-border/50">
+                                <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
+                                  <CalendarDays className="w-10 h-10 text-primary" />
+                                </div>
+                                <p className="text-lg font-medium text-foreground mb-2">
                                   {t('travelPlanner.selectDay')}
                                 </p>
-                              </Card>
+                                <p className="text-sm text-muted-foreground">
+                                  {t('travelPlanner.selectDayDescription')}
+                                </p>
+                              </div>
                             )}
                           </div>
                         </div>
