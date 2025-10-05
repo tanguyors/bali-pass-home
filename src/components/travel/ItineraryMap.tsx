@@ -2,7 +2,8 @@ import { APIProvider, Map, AdvancedMarker, InfoWindow, useMap } from '@vis.gl/re
 import { useEffect, useMemo, useState } from 'react';
 import { Card } from '../ui/card';
 import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { fr, enUS, es, id as idLocale, zhCN } from 'date-fns/locale';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface PlannedOffer {
   id: string;
@@ -53,7 +54,17 @@ const dayColors = [
   '#85C1E2', // Sky Blue
 ];
 
+const localeMap = {
+  fr: fr,
+  en: enUS,
+  es: es,
+  id: idLocale,
+  zh: zhCN,
+};
+
 export function ItineraryMap({ days, onOfferClick }: ItineraryMapProps) {
+  const { t, language } = useTranslation();
+  const currentLocale = localeMap[language] || fr;
   const [selectedOffer, setSelectedOffer] = useState<{
     offer: PlannedOffer;
     dayIndex: number;
@@ -107,7 +118,7 @@ export function ItineraryMap({ days, onOfferClick }: ItineraryMapProps) {
   if (offersWithLocation.length === 0) {
     return (
       <Card className="relative w-full h-[500px] overflow-hidden border-border/50 flex items-center justify-center">
-        <p className="text-muted-foreground">Aucun lieu planifié avec coordonnées</p>
+        <p className="text-muted-foreground">{t('travelPlanner.noPlannedLocations')}</p>
       </Card>
     );
   }
@@ -116,7 +127,7 @@ export function ItineraryMap({ days, onOfferClick }: ItineraryMapProps) {
     <div className="space-y-4">
       {/* Legend */}
       <Card className="p-4">
-        <h3 className="text-sm font-semibold mb-3">Légende</h3>
+        <h3 className="text-sm font-semibold mb-3">{t('travelPlanner.legend')}</h3>
         <div className="flex flex-wrap gap-3">
           {days.map((day, index) => {
             const hasOffers = day.itinerary_planned_offers && day.itinerary_planned_offers.length > 0;
@@ -129,7 +140,7 @@ export function ItineraryMap({ days, onOfferClick }: ItineraryMapProps) {
                   style={{ backgroundColor: dayColors[index % dayColors.length] }}
                 />
                 <span className="text-xs text-muted-foreground">
-                  Jour {day.day_order} - {format(new Date(day.day_date), 'd MMM', { locale: fr })}
+                  {t('travelPlanner.day')} {day.day_order} - {format(new Date(day.day_date), 'd MMM', { locale: currentLocale })}
                 </span>
               </div>
             );
@@ -144,6 +155,8 @@ export function ItineraryMap({ days, onOfferClick }: ItineraryMapProps) {
             center={center}
             offersWithLocation={offersWithLocation}
             onOfferClick={onOfferClick}
+            currentLocale={currentLocale}
+            t={t}
           />
         </APIProvider>
       </Card>
@@ -151,7 +164,7 @@ export function ItineraryMap({ days, onOfferClick }: ItineraryMapProps) {
   );
 }
 
-function InnerMap({ center, offersWithLocation, onOfferClick }: {
+function InnerMap({ center, offersWithLocation, onOfferClick, currentLocale, t }: {
   center: { lat: number; lng: number };
   offersWithLocation: Array<{
     offer: PlannedOffer;
@@ -161,6 +174,8 @@ function InnerMap({ center, offersWithLocation, onOfferClick }: {
     lng: number;
   }>;
   onOfferClick?: (offerId: string) => void;
+  currentLocale: any;
+  t: any;
 }) {
   const [selectedOffer, setSelectedOffer] = useState<{
     offer: PlannedOffer;
@@ -295,7 +310,7 @@ function InnerMap({ center, offersWithLocation, onOfferClick }: {
                 style={{ backgroundColor: dayColors[selectedOffer.dayIndex % dayColors.length] }}
               />
               <span className="text-xs font-semibold text-gray-600">
-                Jour {selectedOffer.dayIndex + 1} - {format(new Date(selectedOffer.dayDate), 'd MMM', { locale: fr })}
+                {t('travelPlanner.day')} {selectedOffer.dayIndex + 1} - {format(new Date(selectedOffer.dayDate), 'd MMM', { locale: currentLocale })}
               </span>
             </div>
             <h3 className="font-bold text-sm mb-1">{selectedOffer.offer.offers.partners.name}</h3>
