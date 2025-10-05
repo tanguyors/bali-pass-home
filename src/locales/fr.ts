@@ -405,9 +405,9 @@ export const fr = {
     'Nightlife': 'Vie nocturne',
     'Restauration': 'Restauration',
     'Shopping': 'Shopping',
-    'Travailleur': 'Nomade numérique',
-    'Villa & Hostel': 'Villa & Auberge',
     'Water Sports': 'Sports nautiques',
+    'Villa & Hostel': 'Villa & Auberge',
+    'Travailleur': 'Nomade numérique',
   },
 
   // Travel Planner

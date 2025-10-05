@@ -398,9 +398,9 @@ export const id = {
     'Nightlife': 'Kehidupan malam',
     'Restauration': 'Kuliner',
     'Shopping': 'Belanja',
-    'Travailleur': 'Pekerja digital',
+    'Water Sports': 'Olahraga Air',
     'Villa & Hostel': 'Villa & Hostel',
-    'Water Sports': 'Olahraga air',
+    'Travailleur': 'Pekerja digital',
   },
 
   // Redemption confirmation

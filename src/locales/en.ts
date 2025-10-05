@@ -398,9 +398,9 @@ export const en = {
     'Nightlife': 'Nightlife',
     'Restauration': 'Dining',
     'Shopping': 'Shopping',
-    'Travailleur': 'Digital Nomad',
-    'Villa & Hostel': 'Villa & Hostel',
     'Water Sports': 'Water Sports',
+    'Villa & Hostel': 'Villa & Hostel',
+    'Travailleur': 'Digital Nomad',
   },
 
   // Redemption confirmation

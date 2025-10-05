@@ -398,9 +398,9 @@ export const zh = {
     'Nightlife': '夜生活',
     'Restauration': '餐饮',
     'Shopping': '购物',
-    'Travailleur': '工作者',
-    'Villa & Hostel': '别墅与旅馆',
     'Water Sports': '水上运动',
+    'Villa & Hostel': '别墅和旅馆',
+    'Travailleur': '数字游民',
   },
 
   // Redemption confirmation
