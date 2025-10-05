@@ -118,17 +118,22 @@ const TravelPlanner = () => {
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
               </div>
             ) : itineraries.length === 0 ? (
-              <Card className="p-12 text-center shadow-elegant">
-                <MapPin className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="text-xl font-semibold mb-2">{t('travelPlanner.noItineraries')}</h3>
-                <p className="text-muted-foreground mb-6">
+              <div className="bg-background rounded-2xl p-8 text-center border border-border/50">
+                <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
+                  <MapPin className="w-10 h-10 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground mb-3">{t('travelPlanner.noItineraries')}</h3>
+                <p className="text-muted-foreground mb-6 text-sm max-w-sm mx-auto leading-relaxed">
                   {t('travelPlanner.noItinerariesDesc')}
                 </p>
-                <Button onClick={() => setShowCreateModal(true)}>
-                  <Plus className="mr-2 h-4 w-4" />
+                <Button 
+                  onClick={() => setShowCreateModal(true)}
+                  className="w-full max-w-xs mx-auto h-12 bg-primary hover:bg-primary/90 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all"
+                >
+                  <Plus className="mr-2 h-5 w-5" />
                   {t('travelPlanner.createFirst')}
                 </Button>
-              </Card>
+              </div>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <div className="lg:col-span-3">
