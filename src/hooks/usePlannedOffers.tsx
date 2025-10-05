@@ -87,6 +87,7 @@ export function usePlannedOffers(dayId: string | null) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["planned-offers"] });
+      queryClient.invalidateQueries({ queryKey: ["itinerary-days"] });
       toast.success("Offre ajoutée au planning");
     },
     onError: () => {
@@ -108,6 +109,7 @@ export function usePlannedOffers(dayId: string | null) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["planned-offers"] });
+      queryClient.invalidateQueries({ queryKey: ["itinerary-days"] });
       toast.success("Offre mise à jour");
     },
     onError: () => {
@@ -126,6 +128,7 @@ export function usePlannedOffers(dayId: string | null) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["planned-offers"] });
+      queryClient.invalidateQueries({ queryKey: ["itinerary-days"] });
       toast.success("Offre retirée du planning");
     },
     onError: () => {
