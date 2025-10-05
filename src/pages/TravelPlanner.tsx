@@ -90,9 +90,9 @@ const TravelPlanner = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 max-w-7xl pb-24 pt-6">
+      <div className="container mx-auto px-3 sm:px-4 max-w-7xl pb-24 pt-4 sm:pt-6">
             {/* Mobile-native header */}
-            <div className="bg-background rounded-2xl p-6 mb-6 border border-border/50">
+            <div className="bg-background rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 border border-border/50">
               <div className="flex items-start gap-4 mb-4">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <MapPin className="w-6 h-6 text-primary" />
@@ -135,7 +135,7 @@ const TravelPlanner = () => {
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
                 <div className="lg:col-span-3">
                   <ItineraryList
                     itineraries={itineraries}
@@ -159,8 +159,8 @@ const TravelPlanner = () => {
                       </TabsList>
 
                       <TabsContent value="plan" className="mt-0">
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                          <div className="lg:col-span-7 space-y-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8">
+                          <div className="lg:col-span-7 space-y-4 sm:space-y-6">
                             <DayTimeline
                               itineraryId={selectedItineraryId}
                               days={days}
