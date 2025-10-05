@@ -470,5 +470,14 @@ export const zh = {
       passRequiredDescription: '您需要一个有效的巴厘岛通行证才能使用规划功能',
       getPass: '获取通行证',
     },
+    hideMap: '隐藏地图',
+    showMap: '在地图上查看',
+    legend: '图例',
+    noPlannedLocations: '没有带坐标的计划地点',
+    itineraryStatus: {
+      active: '活跃',
+      completed: '已完成',
+      cancelled: '已取消',
+    },
   },
 };

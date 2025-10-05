@@ -470,5 +470,14 @@ export const id = {
       passRequiredDescription: 'Anda memerlukan BaliPass aktif untuk menggunakan perencana',
       getPass: 'Dapatkan Pass',
     },
+    hideMap: 'Sembunyikan peta',
+    showMap: 'Lihat di peta',
+    legend: 'Legenda',
+    noPlannedLocations: 'Tidak ada lokasi yang direncanakan dengan koordinat',
+    itineraryStatus: {
+      active: 'Aktif',
+      completed: 'Selesai',
+      cancelled: 'Dibatalkan',
+    },
   },
 };

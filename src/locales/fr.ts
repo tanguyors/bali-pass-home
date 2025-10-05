@@ -470,6 +470,15 @@ export const fr = {
       passRequiredDescription: 'Vous devez avoir un BaliPass actif pour utiliser le planificateur',
       getPass: 'Obtenir un Pass',
     },
+    hideMap: 'Masquer la carte',
+    showMap: 'Voir sur la carte',
+    legend: 'Légende',
+    noPlannedLocations: 'Aucun lieu planifié avec coordonnées',
+    itineraryStatus: {
+      active: 'Actif',
+      completed: 'Terminé',
+      cancelled: 'Annulé',
+    },
   },
 
   // Redemption confirmation

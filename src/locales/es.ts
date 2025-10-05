@@ -470,5 +470,14 @@ export const es = {
       passRequiredDescription: 'Necesitas un BaliPass activo para usar el planificador',
       getPass: 'Obtener un Pass',
     },
+    hideMap: 'Ocultar mapa',
+    showMap: 'Ver en mapa',
+    legend: 'Leyenda',
+    noPlannedLocations: 'No hay lugares planificados con coordenadas',
+    itineraryStatus: {
+      active: 'Activo',
+      completed: 'Completado',
+      cancelled: 'Cancelado',
+    },
   },
 };
