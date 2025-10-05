@@ -13,12 +13,10 @@ import { DayTimeline } from "@/components/travel/DayTimeline";
 import { OfferRecommendations } from "@/components/travel/OfferRecommendations";
 import { CreateItineraryModal } from "@/components/travel/CreateItineraryModal";
 import { ItinerarySummary } from "@/components/travel/ItinerarySummary";
-import { ItineraryTemplates } from "@/components/travel/ItineraryTemplates";
 import { useTranslation } from "@/hooks/useTranslation";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { BottomNavigation } from "@/components/BottomNavigation";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
-import { supabase } from "@/integrations/supabase/client";
 
 const TravelPlanner = () => {
   const { user } = useAuth();
@@ -30,63 +28,8 @@ const TravelPlanner = () => {
   const [selectedDayId, setSelectedDayId] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   
-  const { days, createDay } = useItineraryDays(selectedItineraryId);
+  const { days } = useItineraryDays(selectedItineraryId);
   const selectedDay = days.find(d => d.id === selectedDayId);
-  const { createItinerary } = useItineraries();
-
-  const handleSelectTemplate = async (template: any) => {
-    const startDate = new Date();
-    const endDate = new Date(startDate);
-    endDate.setDate(endDate.getDate() + template.duration - 1);
-
-    try {
-      // Créer l'itinéraire
-      const newItinerary: any = await createItinerary.mutateAsync({
-        title: template.title,
-        description: template.description,
-        start_date: startDate.toISOString().split('T')[0],
-        end_date: endDate.toISOString().split('T')[0],
-        is_active: true
-      });
-
-      if (!newItinerary || !newItinerary.id) return;
-
-      // Récupérer toutes les villes disponibles
-      const { data: cities, error } = await supabase
-        .from("cities" as any)
-        .select("id, name");
-
-      if (error || !cities) {
-        console.error("Error fetching cities:", error);
-        return;
-      }
-
-      // Créer les jours avec leurs villes
-      for (let i = 0; i < template.days.length; i++) {
-        const templateDay = template.days[i];
-        const dayDate = new Date(startDate);
-        dayDate.setDate(dayDate.getDate() + i);
-
-        // Trouver la ville correspondante
-        const city: any = cities.find((c: any) => c.name === templateDay.cityName);
-
-        if (city && city.id) {
-          await createDay.mutateAsync({
-            itinerary_id: newItinerary.id,
-            day_date: dayDate.toISOString().split('T')[0],
-            day_order: i + 1,
-            city_id: city.id,
-            notes: ""
-          });
-        }
-      }
-
-      // Sélectionner le nouvel itinéraire
-      setSelectedItineraryId(newItinerary.id);
-    } catch (error) {
-      console.error("Error creating itinerary from template:", error);
-    }
-  };
 
   if (!user) {
     return <Navigate to="/auth" replace />;
@@ -175,7 +118,22 @@ const TravelPlanner = () => {
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
               </div>
             ) : itineraries.length === 0 ? (
-              <ItineraryTemplates onSelectTemplate={handleSelectTemplate} />
+              <div className="bg-background rounded-2xl p-8 text-center border border-border/50">
+                <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
+                  <MapPin className="w-10 h-10 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground mb-3">{t('travelPlanner.noItineraries')}</h3>
+                <p className="text-muted-foreground mb-6 text-sm max-w-sm mx-auto leading-relaxed">
+                  {t('travelPlanner.noItinerariesDesc')}
+                </p>
+                <Button 
+                  onClick={() => setShowCreateModal(true)}
+                  className="w-full max-w-xs mx-auto h-12 bg-primary hover:bg-primary/90 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all"
+                >
+                  <Plus className="mr-2 h-5 w-5" />
+                  {t('travelPlanner.createFirst')}
+                </Button>
+              </div>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <div className="lg:col-span-3">

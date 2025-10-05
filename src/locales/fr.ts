@@ -428,11 +428,6 @@ export const fr = {
       summary: 'Récapitulatif',
     },
     newItinerary: 'Nouvel itinéraire',
-    templates: {
-      title: 'Inspirez-vous de nos séjours',
-      subtitle: 'Choisissez un template et personnalisez-le selon vos envies',
-      use: 'Utiliser ce template',
-    },
     createFirst: 'Créer mon premier itinéraire',
     noItineraries: 'Aucun itinéraire',
     noItinerariesDesc: 'Créez votre premier itinéraire pour commencer à planifier votre voyage',
