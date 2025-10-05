@@ -3,7 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useUserPass } from "@/hooks/useUserPass";
 import { Navigate, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { MapPin, Plus, ListChecks, CalendarDays, LogOut, User, Heart, Settings, ShoppingBag, QrCode } from "lucide-react";
+import { MapPin, Plus, ListChecks, CalendarDays, LogOut, User, Heart, Settings, ShoppingBag, QrCode, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,6 +17,8 @@ import { ItinerarySummary } from "@/components/travel/ItinerarySummary";
 import { useTranslation } from "@/hooks/useTranslation";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import BaliPassLogo from "@/components/BaliPassLogo";
+import { BottomNavigation } from "@/components/BottomNavigation";
+import { FloatingActionButton } from "@/components/FloatingActionButton";
 
 const TravelPlanner = () => {
   const { user } = useAuth();
@@ -67,22 +69,40 @@ const TravelPlanner = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-tropical-sand to-tropical-sand/50 py-8 pb-24">
-      <BaliPassLogo />
-      <div className="container mx-auto px-4 max-w-7xl">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-tropical-ocean">{t('travelPlanner.header.title')}</h1>
-            <p className="text-muted-foreground">{t('travelPlanner.header.subtitle')}</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <LanguageSelector variant="default" />
-            <Button variant="outline" onClick={handleSignOut}>
+    <div className="min-h-screen bg-gradient-to-br from-tropical-sand to-tropical-sand/50">
+      {/* Language Selector - Floating bottom right */}
+      <div
+        className="fixed right-4 z-50"
+        style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 88px)" }}
+      >
+        <LanguageSelector />
+      </div>
+
+      {/* Header */}
+      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-xl border-b border-border/50 safe-top">
+        <div className="container mx-auto px-4 max-w-7xl py-4">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate(-1)}
+              className="hover:bg-card/60 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div className="flex-1">
+              <h1 className="text-2xl font-bold text-foreground">{t('travelPlanner.header.title')}</h1>
+              <p className="text-sm text-muted-foreground">{t('travelPlanner.header.subtitle')}</p>
+            </div>
+            <Button variant="outline" size="sm" onClick={handleSignOut}>
               <LogOut className="mr-2 h-4 w-4" />
               {t('nav.signOut')}
             </Button>
           </div>
         </div>
+      </div>
+
+      <div className="container mx-auto px-4 max-w-7xl pb-24 pt-6">
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-6">
@@ -227,6 +247,9 @@ const TravelPlanner = () => {
         open={showCreateModal}
         onOpenChange={setShowCreateModal}
       />
+
+      <FloatingActionButton />
+      <BottomNavigation />
     </div>
   );
 };
