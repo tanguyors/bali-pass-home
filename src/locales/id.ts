@@ -3,6 +3,7 @@ export const id = {
   nav: {
     home: 'Beranda',
     explorer: 'Jelajahi',
+    planner: 'Planner',
     community: 'Komunitas',
     my_pass: 'Pass Saya',
     profile: 'Profil',

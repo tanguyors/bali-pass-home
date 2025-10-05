@@ -3,6 +3,7 @@ export const zh = {
   nav: {
     home: '首页',
     explorer: '探索',
+    planner: '规划',
     community: '社区',
     my_pass: '我的通行证',
     profile: '个人资料',

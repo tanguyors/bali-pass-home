@@ -2,7 +2,8 @@ export const en = {
   // Navigation
   nav: {
     home: 'Home',
-    explorer: 'Explorer',
+    explorer: 'Explore',
+    planner: 'Planner',
     community: 'Community',
     my_pass: 'My Pass',
     profile: 'Profile',

@@ -3,6 +3,7 @@ export const es = {
   nav: {
     home: 'Inicio',
     explorer: 'Explorar',
+    planner: 'Planner',
     community: 'Comunidad',
     my_pass: 'Mi Pase',
     profile: 'Perfil',

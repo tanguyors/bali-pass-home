@@ -3,6 +3,7 @@ export const fr = {
   nav: {
     home: 'Accueil',
     explorer: 'Explorer',
+    planner: 'Planner',
     community: 'Communauté',
     my_pass: 'Mon Pass',
     profile: 'Profil',
