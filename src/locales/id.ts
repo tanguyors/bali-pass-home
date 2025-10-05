@@ -402,6 +402,8 @@ export const id = {
     'Water Sports': 'Olahraga Air',
     'Villa & Hotel': 'Villa & Hotel',
     'Villa & Hostel': 'Villa & Hostel',
+    'accommodation': 'Akomodasi',
+    'Accommodation': 'Akomodasi',
     'Travailleur': 'Pekerja digital',
   },
 

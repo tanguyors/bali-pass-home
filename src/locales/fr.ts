@@ -409,6 +409,8 @@ export const fr = {
     'Water Sports': 'Sports nautiques',
     'Villa & Hotel': 'Villa & Hôtel',
     'Villa & Hostel': 'Villa & Auberge',
+    'accommodation': 'Hébergement',
+    'Accommodation': 'Hébergement',
     'Travailleur': 'Nomade numérique',
   },
 

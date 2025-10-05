@@ -402,6 +402,8 @@ export const zh = {
     'Water Sports': '水上运动',
     'Villa & Hotel': '别墅和酒店',
     'Villa & Hostel': '别墅和旅馆',
+    'accommodation': '住宿',
+    'Accommodation': '住宿',
     'Travailleur': '数字游民',
   },
 
