@@ -94,10 +94,6 @@ const TravelPlanner = () => {
               <h1 className="text-2xl font-bold text-foreground">{t('travelPlanner.header.title')}</h1>
               <p className="text-sm text-muted-foreground">{t('travelPlanner.header.subtitle')}</p>
             </div>
-            <Button variant="outline" size="sm" onClick={handleSignOut}>
-              <LogOut className="mr-2 h-4 w-4" />
-              {t('nav.signOut')}
-            </Button>
           </div>
         </div>
       </div>
