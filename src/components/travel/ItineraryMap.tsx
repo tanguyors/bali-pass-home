@@ -1,5 +1,5 @@
-import { APIProvider, Map, AdvancedMarker, InfoWindow } from '@vis.gl/react-google-maps';
-import { useState } from 'react';
+import { APIProvider, Map, AdvancedMarker, InfoWindow, useMap } from '@vis.gl/react-google-maps';
+import { useEffect, useMemo, useState } from 'react';
 import { Card } from '../ui/card';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -140,72 +140,112 @@ export function ItineraryMap({ days, onOfferClick }: ItineraryMapProps) {
       {/* Map */}
       <Card className="relative w-full h-[500px] overflow-hidden border-border/50">
         <APIProvider apiKey={apiKey}>
-          <Map
-            defaultCenter={center}
-            defaultZoom={11}
-            mapId="balipass-itinerary-map"
-            gestureHandling="greedy"
-            disableDefaultUI={false}
-          >
-            {offersWithLocation.map((item, idx) => {
-              const color = dayColors[item.dayIndex % dayColors.length];
-              
-              return (
-                <AdvancedMarker
-                  key={`${item.offer.id}-${idx}`}
-                  position={{ lat: item.lat, lng: item.lng }}
-                  onClick={() => setSelectedOffer(item)}
-                >
-                  <div
-                    className="w-6 h-6 rounded-full shadow-lg ring-2 ring-white border border-white flex items-center justify-center text-white text-xs font-bold"
-                    style={{ backgroundColor: color }}
-                    aria-label={item.offer.offers.partners.name}
-                  >
-                    {item.dayIndex + 1}
-                  </div>
-                </AdvancedMarker>
-              );
-            })}
-
-            {selectedOffer && (
-              <InfoWindow
-                position={{ 
-                  lat: selectedOffer.offer.offers.partners.lat!, 
-                  lng: selectedOffer.offer.offers.partners.lng! 
-                }}
-                onCloseClick={() => setSelectedOffer(null)}
-              >
-                <div 
-                  className="p-2 cursor-pointer max-w-xs"
-                  onClick={() => {
-                    if (onOfferClick) {
-                      onOfferClick(selectedOffer.offer.offer_id);
-                    }
-                  }}
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <div
-                      className="w-4 h-4 rounded-full ring-1 ring-gray-300"
-                      style={{ backgroundColor: dayColors[selectedOffer.dayIndex % dayColors.length] }}
-                    />
-                    <span className="text-xs font-semibold text-gray-600">
-                      Jour {selectedOffer.dayIndex + 1} - {format(new Date(selectedOffer.dayDate), 'd MMM', { locale: fr })}
-                    </span>
-                  </div>
-                  <h3 className="font-bold text-sm mb-1">{selectedOffer.offer.offers.partners.name}</h3>
-                  <p className="text-xs text-gray-600 mb-1">{selectedOffer.offer.offers.title}</p>
-                  {selectedOffer.offer.planned_time && (
-                    <p className="text-xs text-gray-500">🕐 {selectedOffer.offer.planned_time}</p>
-                  )}
-                  {selectedOffer.offer.notes && (
-                    <p className="text-xs text-gray-500 mt-1 italic">{selectedOffer.offer.notes}</p>
-                  )}
-                </div>
-              </InfoWindow>
-            )}
-          </Map>
+          <InnerMap
+            center={center}
+            offersWithLocation={offersWithLocation}
+            onOfferClick={onOfferClick}
+          />
         </APIProvider>
       </Card>
     </div>
   );
 }
+
+function InnerMap({ center, offersWithLocation, onOfferClick }: {
+  center: { lat: number; lng: number };
+  offersWithLocation: Array<{
+    offer: PlannedOffer;
+    dayIndex: number;
+    dayDate: string;
+    lat: number;
+    lng: number;
+  }>;
+  onOfferClick?: (offerId: string) => void;
+}) {
+  const [selectedOffer, setSelectedOffer] = useState<{
+    offer: PlannedOffer;
+    dayIndex: number;
+    dayDate: string;
+  } | null>(null);
+  const map = useMap("balipass-itinerary-map");
+
+  // Fit bounds to include all markers
+  useEffect(() => {
+    if (!map || offersWithLocation.length === 0) return;
+    const g = (window as any).google;
+    if (!g?.maps) return;
+
+    const bounds = new g.maps.LatLngBounds();
+    offersWithLocation.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
+    // Add padding so markers aren't at the edges
+    map.fitBounds(bounds, 64);
+  }, [map, offersWithLocation.length]);
+
+  return (
+    <Map
+      defaultCenter={center}
+      defaultZoom={11}
+      mapId="balipass-itinerary-map"
+      gestureHandling="greedy"
+      disableDefaultUI={false}
+    >
+      {offersWithLocation.map((item, idx) => {
+        const color = dayColors[item.dayIndex % dayColors.length];
+        
+        return (
+          <AdvancedMarker
+            key={`${item.offer.id}-${idx}`}
+            position={{ lat: item.lat, lng: item.lng }}
+            onClick={() => setSelectedOffer(item)}
+          >
+            <div
+              className="w-6 h-6 rounded-full shadow-lg ring-2 ring-white border border-white flex items-center justify-center text-white text-xs font-bold"
+              style={{ backgroundColor: color }}
+              aria-label={item.offer.offers.partners.name}
+            >
+              {item.dayIndex + 1}
+            </div>
+          </AdvancedMarker>
+        );
+      })}
+
+      {selectedOffer && (
+        <InfoWindow
+          position={{ 
+            lat: selectedOffer.offer.offers.partners.lat!, 
+            lng: selectedOffer.offer.offers.partners.lng! 
+          }}
+          onCloseClick={() => setSelectedOffer(null)}
+        >
+          <div 
+            className="p-2 cursor-pointer max-w-xs"
+            onClick={() => {
+              if (onOfferClick) {
+                onOfferClick(selectedOffer.offer.offer_id);
+              }
+            }}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <div
+                className="w-4 h-4 rounded-full ring-1 ring-gray-300"
+                style={{ backgroundColor: dayColors[selectedOffer.dayIndex % dayColors.length] }}
+              />
+              <span className="text-xs font-semibold text-gray-600">
+                Jour {selectedOffer.dayIndex + 1} - {format(new Date(selectedOffer.dayDate), 'd MMM', { locale: fr })}
+              </span>
+            </div>
+            <h3 className="font-bold text-sm mb-1">{selectedOffer.offer.offers.partners.name}</h3>
+            <p className="text-xs text-gray-600 mb-1">{selectedOffer.offer.offers.title}</p>
+            {selectedOffer.offer.planned_time && (
+              <p className="text-xs text-gray-500">🕐 {selectedOffer.offer.planned_time}</p>
+            )}
+            {selectedOffer.offer.notes && (
+              <p className="text-xs text-gray-500 mt-1 italic">{selectedOffer.offer.notes}</p>
+            )}
+          </div>
+        </InfoWindow>
+      )}
+    </Map>
+  );
+}
+
