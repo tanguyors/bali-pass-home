@@ -398,6 +398,7 @@ export const fr = {
   category_names: {
     'Activités': 'Activités',
     'Bien-être': 'Bien-être',
+    'Co-Working': 'Co-Working',
     'Culture': 'Culture',
     'Excursions': 'Excursions',
     'Famille': 'Famille',
@@ -406,6 +407,7 @@ export const fr = {
     'Restauration': 'Restauration',
     'Shopping': 'Shopping',
     'Water Sports': 'Sports nautiques',
+    'Villa & Hotel': 'Villa & Hôtel',
     'Villa & Hostel': 'Villa & Auberge',
     'Travailleur': 'Nomade numérique',
   },

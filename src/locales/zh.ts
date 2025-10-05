@@ -391,6 +391,7 @@ export const zh = {
   category_names: {
     'Activités': '活动',
     'Bien-être': '健康',
+    'Co-Working': '联合办公',
     'Culture': '文化',
     'Excursions': '旅游',
     'Famille': '家庭',
@@ -399,6 +400,7 @@ export const zh = {
     'Restauration': '餐饮',
     'Shopping': '购物',
     'Water Sports': '水上运动',
+    'Villa & Hotel': '别墅和酒店',
     'Villa & Hostel': '别墅和旅馆',
     'Travailleur': '数字游民',
   },

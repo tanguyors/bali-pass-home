@@ -391,6 +391,7 @@ export const id = {
   category_names: {
     'Activités': 'Aktivitas',
     'Bien-être': 'Kesehatan',
+    'Co-Working': 'Co-Working',
     'Culture': 'Budaya',
     'Excursions': 'Wisata',
     'Famille': 'Keluarga',
@@ -399,6 +400,7 @@ export const id = {
     'Restauration': 'Kuliner',
     'Shopping': 'Belanja',
     'Water Sports': 'Olahraga Air',
+    'Villa & Hotel': 'Villa & Hotel',
     'Villa & Hostel': 'Villa & Hostel',
     'Travailleur': 'Pekerja digital',
   },
