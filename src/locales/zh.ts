@@ -459,7 +459,7 @@ export const zh = {
     dayOrder: '日期顺序',
     notes: '备注',
     notesPlaceholder: '为这一天添加备注...',
-    titlePlaceholder: '例如：我的巴厘岛之旅',
+    titlePlaceholder: 'Ex: Mon voyage à Bali',
     descriptionPlaceholder: '您的行程描述...',
     description: '描述',
     startDate: '开始日期',

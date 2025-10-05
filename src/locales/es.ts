@@ -459,7 +459,7 @@ export const es = {
     dayOrder: 'Orden del día',
     notes: 'Notas',
     notesPlaceholder: 'Agregar notas para este día...',
-    titlePlaceholder: 'Ej.: Mi viaje a Bali',
+    titlePlaceholder: 'Ex: Mon voyage à Bali',
     descriptionPlaceholder: 'Descripción de tu itinerario...',
     description: 'Descripción',
     startDate: 'Fecha de inicio',

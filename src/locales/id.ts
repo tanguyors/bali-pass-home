@@ -459,7 +459,7 @@ export const id = {
     dayOrder: 'Urutan hari',
     notes: 'Catatan',
     notesPlaceholder: 'Tambahkan catatan untuk hari ini...',
-    titlePlaceholder: 'Contoh: Perjalanan saya ke Bali',
+    titlePlaceholder: 'Ex: Mon voyage à Bali',
     descriptionPlaceholder: 'Deskripsi itinerari Anda...',
     description: 'Deskripsi',
     startDate: 'Tanggal mulai',

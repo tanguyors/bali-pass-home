@@ -459,7 +459,7 @@ export const en = {
     dayOrder: 'Day order',
     notes: 'Notes',
     notesPlaceholder: 'Add notes for this day...',
-    titlePlaceholder: 'E.g.: My trip to Bali',
+    titlePlaceholder: 'Ex: Mon voyage à Bali',
     descriptionPlaceholder: 'Description of your itinerary...',
     description: 'Description',
     startDate: 'Start date',
