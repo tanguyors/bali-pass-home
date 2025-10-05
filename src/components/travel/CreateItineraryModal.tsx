@@ -34,6 +34,8 @@ export function CreateItineraryModal({ open, onOpenChange }: CreateItineraryModa
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
+  const [startDateOpen, setStartDateOpen] = useState(false);
+  const [endDateOpen, setEndDateOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,7 +88,7 @@ export function CreateItineraryModal({ open, onOpenChange }: CreateItineraryModa
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>{t('travelPlanner.startDate')}</Label>
-              <Popover>
+              <Popover open={startDateOpen} onOpenChange={setStartDateOpen}>
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="w-full justify-start text-left">
                     <CalendarIcon className="mr-2 h-4 w-4" />
@@ -97,8 +99,12 @@ export function CreateItineraryModal({ open, onOpenChange }: CreateItineraryModa
                   <Calendar
                     mode="single"
                     selected={startDate}
-                    onSelect={setStartDate}
+                    onSelect={(date) => {
+                      setStartDate(date);
+                      setStartDateOpen(false);
+                    }}
                     locale={currentLocale}
+                    className="pointer-events-auto"
                   />
                 </PopoverContent>
               </Popover>
@@ -106,7 +112,7 @@ export function CreateItineraryModal({ open, onOpenChange }: CreateItineraryModa
 
             <div className="space-y-2">
               <Label>{t('travelPlanner.endDate')}</Label>
-              <Popover>
+              <Popover open={endDateOpen} onOpenChange={setEndDateOpen}>
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="w-full justify-start text-left">
                     <CalendarIcon className="mr-2 h-4 w-4" />
@@ -117,9 +123,13 @@ export function CreateItineraryModal({ open, onOpenChange }: CreateItineraryModa
                   <Calendar
                     mode="single"
                     selected={endDate}
-                    onSelect={setEndDate}
+                    onSelect={(date) => {
+                      setEndDate(date);
+                      setEndDateOpen(false);
+                    }}
                     disabled={(date) => startDate ? date < startDate : false}
                     locale={currentLocale}
+                    className="pointer-events-auto"
                   />
                 </PopoverContent>
               </Popover>
