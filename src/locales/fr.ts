@@ -474,6 +474,9 @@ export const fr = {
     showMap: 'Voir sur la carte',
     legend: 'Légende',
     noPlannedLocations: 'Aucun lieu planifié avec coordonnées',
+    share: 'Partager',
+    copied: 'Copié',
+    linkCopied: 'Lien copié dans le presse-papier',
     itineraryStatus: {
       active: 'Actif',
       completed: 'Terminé',

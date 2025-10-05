@@ -474,6 +474,9 @@ export const es = {
     showMap: 'Ver en mapa',
     legend: 'Leyenda',
     noPlannedLocations: 'No hay lugares planificados con coordenadas',
+    share: 'Compartir',
+    copied: 'Copiado',
+    linkCopied: 'Enlace copiado al portapapeles',
     itineraryStatus: {
       active: 'Activo',
       completed: 'Completado',

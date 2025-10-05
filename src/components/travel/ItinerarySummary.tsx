@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { format } from "date-fns";
 import { fr, enUS, es, id as idLocale, zhCN } from "date-fns/locale";
-import { MapPin, Calendar, Map as MapIcon } from "lucide-react";
+import { MapPin, Calendar, Map as MapIcon, Share2, Check } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { type Itinerary } from "@/hooks/useItineraries";
 import { type ItineraryDay } from "@/hooks/useItineraryDays";
@@ -10,6 +10,7 @@ import { ItineraryMap } from "./ItineraryMap";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 interface ItinerarySummaryProps {
   itinerary: Itinerary;
@@ -29,6 +30,7 @@ export function ItinerarySummary({ itinerary, days }: ItinerarySummaryProps) {
   const currentLocale = localeMap[language] || fr;
   const navigate = useNavigate();
   const [showMap, setShowMap] = useState(true);
+  const [copied, setCopied] = useState(false);
 
   // Prepare days with offers for the map
   const daysWithOffers = days.map(day => ({
@@ -36,10 +38,42 @@ export function ItinerarySummary({ itinerary, days }: ItinerarySummaryProps) {
     itinerary_planned_offers: day.itinerary_planned_offers || []
   }));
 
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/itinerary/${itinerary.id}`;
+    
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      toast.success(t('travelPlanner.linkCopied') || 'Lien copié !');
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      toast.error(t('common.error') || 'Erreur');
+    }
+  };
+
   return (
     <div className="space-y-6">
-      {/* Map view toggle */}
-      <div className="flex justify-end">
+      {/* Map view toggle and Share button */}
+      <div className="flex justify-between items-center gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleShare}
+          className="gap-2"
+        >
+          {copied ? (
+            <>
+              <Check className="w-4 h-4" />
+              {t('travelPlanner.copied') || 'Copié'}
+            </>
+          ) : (
+            <>
+              <Share2 className="w-4 h-4" />
+              {t('travelPlanner.share') || 'Partager'}
+            </>
+          )}
+        </Button>
+        
         <Button
           variant={showMap ? "default" : "outline"}
           size="sm"

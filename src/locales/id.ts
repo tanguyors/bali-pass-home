@@ -474,6 +474,9 @@ export const id = {
     showMap: 'Lihat di peta',
     legend: 'Legenda',
     noPlannedLocations: 'Tidak ada lokasi yang direncanakan dengan koordinat',
+    share: 'Bagikan',
+    copied: 'Disalin',
+    linkCopied: 'Tautan disalin ke clipboard',
     itineraryStatus: {
       active: 'Aktif',
       completed: 'Selesai',

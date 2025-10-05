@@ -474,6 +474,9 @@ export const zh = {
     showMap: '在地图上查看',
     legend: '图例',
     noPlannedLocations: '没有带坐标的计划地点',
+    share: '分享',
+    copied: '已复制',
+    linkCopied: '链接已复制到剪贴板',
     itineraryStatus: {
       active: '活跃',
       completed: '已完成',
