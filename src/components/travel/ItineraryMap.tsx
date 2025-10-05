@@ -168,6 +168,25 @@ function InnerMap({ center, offersWithLocation, onOfferClick }: {
     dayDate: string;
   } | null>(null);
   const map = useMap("balipass-itinerary-map");
+  const [polylines, setPolylines] = useState<any[]>([]);
+
+  // Group offers by day to create routes
+  const offersByDay = useMemo(() => {
+    const grouped: Record<number, Array<{
+      offer: PlannedOffer;
+      dayIndex: number;
+      dayDate: string;
+      lat: number;
+      lng: number;
+    }>> = {};
+    offersWithLocation.forEach(item => {
+      if (!grouped[item.dayIndex]) {
+        grouped[item.dayIndex] = [];
+      }
+      grouped[item.dayIndex].push(item);
+    });
+    return grouped;
+  }, [offersWithLocation]);
 
   // Fit bounds to include all markers
   useEffect(() => {
@@ -177,9 +196,54 @@ function InnerMap({ center, offersWithLocation, onOfferClick }: {
 
     const bounds = new g.maps.LatLngBounds();
     offersWithLocation.forEach(({ lat, lng }) => bounds.extend({ lat, lng }));
-    // Add padding so markers aren't at the edges
     map.fitBounds(bounds, 64);
   }, [map, offersWithLocation.length]);
+
+  // Draw polylines between points of each day
+  useEffect(() => {
+    if (!map) return;
+    const g = (window as any).google;
+    if (!g?.maps) return;
+
+    // Clear existing polylines
+    polylines.forEach(line => line.setMap(null));
+    const newPolylines: any[] = [];
+
+    // Create a polyline for each day with multiple points
+    Object.entries(offersByDay).forEach(([dayIndexStr, dayOffers]) => {
+      if (dayOffers.length < 2) return; // Need at least 2 points to draw a line
+
+      const dayIndex = parseInt(dayIndexStr);
+      const path = dayOffers.map(({ lat, lng }) => ({ lat, lng }));
+      const color = dayColors[dayIndex % dayColors.length];
+
+      const polyline = new g.maps.Polyline({
+        path,
+        geodesic: true,
+        strokeColor: color,
+        strokeOpacity: 0.7,
+        strokeWeight: 3,
+        icons: [{
+          icon: {
+            path: 'M 0,-1 0,1',
+            strokeOpacity: 1,
+            scale: 3
+          },
+          offset: '0',
+          repeat: '15px'
+        }],
+        map
+      });
+
+      newPolylines.push(polyline);
+    });
+
+    setPolylines(newPolylines);
+
+    return () => {
+      newPolylines.forEach(line => line.setMap(null));
+    };
+  }, [map, offersByDay]);
 
   return (
     <Map
