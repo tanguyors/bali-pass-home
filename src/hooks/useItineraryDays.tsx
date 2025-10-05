@@ -77,7 +77,12 @@ export function useItineraryDays(itineraryId: string | null) {
         .eq("itinerary_id", itineraryId)
         .order("day_date", { ascending: true });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching itinerary days:", error);
+        throw error;
+      }
+      
+      console.log("Itinerary days with offers:", data);
       return data as unknown as ItineraryDay[];
     },
     enabled: !!itineraryId,
