@@ -1,11 +1,15 @@
 import { Card } from "@/components/ui/card";
 import { format } from "date-fns";
 import { fr, enUS, es, id as idLocale, zhCN } from "date-fns/locale";
-import { MapPin, Calendar } from "lucide-react";
+import { MapPin, Calendar, Map as MapIcon } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { type Itinerary } from "@/hooks/useItineraries";
 import { type ItineraryDay } from "@/hooks/useItineraryDays";
 import { usePlannedOffers } from "@/hooks/usePlannedOffers";
+import { ItineraryMap } from "./ItineraryMap";
+import { useState } from "react";
+import { Button } from "../ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface ItinerarySummaryProps {
   itinerary: Itinerary;
@@ -23,35 +27,67 @@ const localeMap = {
 export function ItinerarySummary({ itinerary, days }: ItinerarySummaryProps) {
   const { t, language } = useTranslation();
   const currentLocale = localeMap[language] || fr;
+  const navigate = useNavigate();
+  const [showMap, setShowMap] = useState(true);
+
+  // Prepare days with offers for the map
+  const daysWithOffers = days.map(day => ({
+    ...day,
+    itinerary_planned_offers: day.itinerary_planned_offers || []
+  }));
 
   return (
-    <Card className="p-6 shadow-elegant">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-2">{itinerary.title}</h2>
-        {itinerary.description && (
-          <p className="text-muted-foreground mb-4">{itinerary.description}</p>
-        )}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Calendar className="w-4 h-4" />
-          <span>
-            {format(new Date(itinerary.start_date), "PP", { locale: currentLocale })} -{" "}
-            {format(new Date(itinerary.end_date), "PP", { locale: currentLocale })}
-          </span>
-        </div>
+    <div className="space-y-6">
+      {/* Map view toggle */}
+      <div className="flex justify-end">
+        <Button
+          variant={showMap ? "default" : "outline"}
+          size="sm"
+          onClick={() => setShowMap(!showMap)}
+          className="gap-2"
+        >
+          <MapIcon className="w-4 h-4" />
+          {showMap ? t('travelPlanner.hideMap') || 'Masquer la carte' : t('travelPlanner.showMap') || 'Voir sur la carte'}
+        </Button>
       </div>
 
-      <div className="space-y-6">
-        {days.map((day, index) => (
-          <DaySummary
-            key={day.id}
-            day={day}
-            dayNumber={index + 1}
-            currentLocale={currentLocale}
-            t={t}
-          />
-        ))}
-      </div>
-    </Card>
+      {/* Map */}
+      {showMap && (
+        <ItineraryMap
+          days={daysWithOffers}
+          onOfferClick={(offerId) => navigate(`/offer/${offerId}`)}
+        />
+      )}
+
+      {/* Summary Card */}
+      <Card className="p-6 shadow-elegant">
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold mb-2">{itinerary.title}</h2>
+          {itinerary.description && (
+            <p className="text-muted-foreground mb-4">{itinerary.description}</p>
+          )}
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Calendar className="w-4 h-4" />
+            <span>
+              {format(new Date(itinerary.start_date), "PP", { locale: currentLocale })} -{" "}
+              {format(new Date(itinerary.end_date), "PP", { locale: currentLocale })}
+            </span>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          {days.map((day, index) => (
+            <DaySummary
+              key={day.id}
+              day={day}
+              dayNumber={index + 1}
+              currentLocale={currentLocale}
+              t={t}
+            />
+          ))}
+        </div>
+      </Card>
+    </div>
   );
 }
 

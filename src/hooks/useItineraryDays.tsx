@@ -17,6 +17,24 @@ export interface ItineraryDay {
     geo_center_lat: number;
     geo_center_lng: number;
   };
+  itinerary_planned_offers?: Array<{
+    id: string;
+    offer_id: string;
+    planned_time?: string;
+    notes?: string;
+    offers: {
+      id: string;
+      title: string;
+      slug: string;
+      partners: {
+        id: string;
+        name: string;
+        lat?: number;
+        lng?: number;
+        address?: string;
+      };
+    };
+  }>;
 }
 
 export function useItineraryDays(itineraryId: string | null) {
@@ -36,6 +54,24 @@ export function useItineraryDays(itineraryId: string | null) {
             name,
             geo_center_lat,
             geo_center_lng
+          ),
+          itinerary_planned_offers (
+            id,
+            offer_id,
+            planned_time,
+            notes,
+            offers (
+              id,
+              title,
+              slug,
+              partners (
+                id,
+                name,
+                lat,
+                lng,
+                address
+              )
+            )
           )
         `)
         .eq("itinerary_id", itineraryId)
