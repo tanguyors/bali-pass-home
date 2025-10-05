@@ -53,23 +53,19 @@ export function OffersMap({ offers, onOfferClick }: OffersMapProps) {
           gestureHandling="greedy"
           disableDefaultUI={false}
         >
-          {offersWithLocation.map((offer) => {
-            const pinElement = new google.maps.marker.PinElement({
-              background: "hsl(var(--primary))",
-              borderColor: "white",
-              glyphColor: "white",
-            });
-
-            return (
-              <AdvancedMarker
-                key={offer.id}
-                position={{ lat: offer.partner.lat!, lng: offer.partner.lng! }}
-                onClick={() => setSelectedOffer(offer)}
-              >
-                <div dangerouslySetInnerHTML={{ __html: pinElement.element.outerHTML }} />
-              </AdvancedMarker>
-            );
-          })}
+          {offersWithLocation.map((offer) => (
+            <AdvancedMarker
+              key={offer.id}
+              position={{ lat: offer.partner.lat!, lng: offer.partner.lng! }}
+              onClick={() => setSelectedOffer(offer)}
+            >
+              <Pin
+                background="hsl(var(--primary))"
+                borderColor="white"
+                glyphColor="white"
+              />
+            </AdvancedMarker>
+          ))}
 
           {selectedOffer && (
             <InfoWindow
