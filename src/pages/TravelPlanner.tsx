@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserPass } from "@/hooks/useUserPass";
 import { Navigate, useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
-import { MapPin, Plus, ListChecks, CalendarDays, LogOut, User, Heart, Settings, ShoppingBag, QrCode, ArrowLeft } from "lucide-react";
+import { MapPin, Plus, ListChecks, CalendarDays, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,17 +15,11 @@ import { CreateItineraryModal } from "@/components/travel/CreateItineraryModal";
 import { ItinerarySummary } from "@/components/travel/ItinerarySummary";
 import { useTranslation } from "@/hooks/useTranslation";
 import { LanguageSelector } from "@/components/LanguageSelector";
-import BaliPassLogo from "@/components/BaliPassLogo";
 import { BottomNavigation } from "@/components/BottomNavigation";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
 
 const TravelPlanner = () => {
   const { user } = useAuth();
-  
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate("/");
-  };
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { hasPass, loading: passLoading } = useUserPass();
@@ -34,7 +27,6 @@ const TravelPlanner = () => {
   const [selectedItineraryId, setSelectedItineraryId] = useState<string | null>(null);
   const [selectedDayId, setSelectedDayId] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [activeTab, setActiveTab] = useState("planner");
   
   const { days } = useItineraryDays(selectedItineraryId);
   const selectedDay = days.find(d => d.id === selectedDayId);
@@ -99,36 +91,6 @@ const TravelPlanner = () => {
       </div>
 
       <div className="container mx-auto px-4 max-w-7xl pb-24 pt-6">
-
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="planner" className="flex items-center gap-2">
-              <MapPin className="h-4 w-4" />
-              {t('travelPlanner.title')}
-            </TabsTrigger>
-            <TabsTrigger value="pass" className="flex items-center gap-2" onClick={() => navigate("/mon-pass")}>
-              <QrCode className="h-4 w-4" />
-              {t('travelPlanner.tabs.myPass')}
-            </TabsTrigger>
-            <TabsTrigger value="profile" className="flex items-center gap-2" onClick={() => navigate("/profil")}>
-              <User className="h-4 w-4" />
-              {t('travelPlanner.tabs.profile')}
-            </TabsTrigger>
-            <TabsTrigger value="favorites" className="flex items-center gap-2" onClick={() => navigate("/favorites")}>
-              <Heart className="h-4 w-4" />
-              {t('travelPlanner.tabs.favorites')}
-            </TabsTrigger>
-            <TabsTrigger value="used-offers" className="flex items-center gap-2" onClick={() => navigate("/pass-history")}>
-              <ShoppingBag className="h-4 w-4" />
-              {t('travelPlanner.tabs.usedOffers')}
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="flex items-center gap-2" onClick={() => navigate("/profil")}>
-              <Settings className="h-4 w-4" />
-              {t('travelPlanner.tabs.settings')}
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="planner">
             <Card className="p-6 mb-6 shadow-elegant">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -235,8 +197,6 @@ const TravelPlanner = () => {
                 </div>
               </div>
             )}
-          </TabsContent>
-        </Tabs>
       </div>
 
       <CreateItineraryModal
