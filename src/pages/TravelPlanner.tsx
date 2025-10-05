@@ -18,6 +18,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { BottomNavigation } from "@/components/BottomNavigation";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
+import { supabase } from "@/integrations/supabase/client";
 
 const TravelPlanner = () => {
   const { user } = useAuth();
@@ -29,7 +30,7 @@ const TravelPlanner = () => {
   const [selectedDayId, setSelectedDayId] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   
-  const { days } = useItineraryDays(selectedItineraryId);
+  const { days, createDay } = useItineraryDays(selectedItineraryId);
   const selectedDay = days.find(d => d.id === selectedDayId);
   const { createItinerary } = useItineraries();
 
@@ -38,13 +39,53 @@ const TravelPlanner = () => {
     const endDate = new Date(startDate);
     endDate.setDate(endDate.getDate() + template.duration - 1);
 
-    await createItinerary.mutateAsync({
-      title: template.title,
-      description: template.description,
-      start_date: startDate.toISOString().split('T')[0],
-      end_date: endDate.toISOString().split('T')[0],
-      is_active: true
-    });
+    try {
+      // Créer l'itinéraire
+      const newItinerary: any = await createItinerary.mutateAsync({
+        title: template.title,
+        description: template.description,
+        start_date: startDate.toISOString().split('T')[0],
+        end_date: endDate.toISOString().split('T')[0],
+        is_active: true
+      });
+
+      if (!newItinerary || !newItinerary.id) return;
+
+      // Récupérer toutes les villes disponibles
+      const { data: cities, error } = await supabase
+        .from("cities" as any)
+        .select("id, name");
+
+      if (error || !cities) {
+        console.error("Error fetching cities:", error);
+        return;
+      }
+
+      // Créer les jours avec leurs villes
+      for (let i = 0; i < template.days.length; i++) {
+        const templateDay = template.days[i];
+        const dayDate = new Date(startDate);
+        dayDate.setDate(dayDate.getDate() + i);
+
+        // Trouver la ville correspondante
+        const city: any = cities.find((c: any) => c.name === templateDay.cityName);
+
+        if (city && city.id) {
+          await createDay.mutateAsync({
+            itinerary_id: newItinerary.id,
+            day_date: dayDate.toISOString().split('T')[0],
+            day_order: i + 1,
+            city_id: city.id,
+            notes: ""
+          });
+        }
+      }
+
+      // Sélectionner le nouvel itinéraire
+      setSelectedItineraryId(newItinerary.id);
+    } catch (error) {
+      console.error("Error creating itinerary from template:", error);
+    }
   };
 
   if (!user) {

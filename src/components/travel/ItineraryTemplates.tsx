@@ -3,13 +3,19 @@ import { Button } from "@/components/ui/button";
 import { MapPin, Calendar, Sparkles } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 
-interface Template {
+export interface TemplateDay {
+  cityName: string;
+  offerIds: string[];
+}
+
+export interface Template {
   id: string;
   title: string;
   description: string;
   duration: number;
   cities: string[];
   highlights: string[];
+  days: TemplateDay[];
 }
 
 const templates: Template[] = [
@@ -19,7 +25,12 @@ const templates: Template[] = [
     description: "Immersion culturelle et nature",
     duration: 3,
     cities: ["Ubud"],
-    highlights: ["Rizières", "Temples", "Spa & Yoga"]
+    highlights: ["Rizières", "Temples", "Spa & Yoga"],
+    days: [
+      { cityName: "Ubud", offerIds: [] },
+      { cityName: "Ubud", offerIds: [] },
+      { cityName: "Ubud", offerIds: [] }
+    ]
   },
   {
     id: "south-bali",
@@ -27,7 +38,14 @@ const templates: Template[] = [
     description: "Plages et temples iconiques",
     duration: 5,
     cities: ["Seminyak", "Uluwatu", "Sanur"],
-    highlights: ["Plages", "Surf", "Sunset"]
+    highlights: ["Plages", "Surf", "Sunset"],
+    days: [
+      { cityName: "Seminyak", offerIds: [] },
+      { cityName: "Seminyak", offerIds: [] },
+      { cityName: "Uluwatu", offerIds: [] },
+      { cityName: "Sanur", offerIds: [] },
+      { cityName: "Sanur", offerIds: [] }
+    ]
   },
   {
     id: "complete-tour",
@@ -35,7 +53,19 @@ const templates: Template[] = [
     description: "L'essentiel de l'île",
     duration: 10,
     cities: ["Seminyak", "Ubud", "Munduk", "Amed"],
-    highlights: ["Plages", "Rizières", "Volcans", "Temples"]
+    highlights: ["Plages", "Rizières", "Volcans", "Temples"],
+    days: [
+      { cityName: "Seminyak", offerIds: [] },
+      { cityName: "Seminyak", offerIds: [] },
+      { cityName: "Ubud", offerIds: [] },
+      { cityName: "Ubud", offerIds: [] },
+      { cityName: "Ubud", offerIds: [] },
+      { cityName: "Munduk", offerIds: [] },
+      { cityName: "Munduk", offerIds: [] },
+      { cityName: "Amed", offerIds: [] },
+      { cityName: "Amed", offerIds: [] },
+      { cityName: "Amed", offerIds: [] }
+    ]
   },
   {
     id: "north-adventure",
@@ -43,7 +73,16 @@ const templates: Template[] = [
     description: "Hors des sentiers battus",
     duration: 7,
     cities: ["Munduk", "Lovina", "Pemuteran"],
-    highlights: ["Cascades", "Dauphins", "Plongée"]
+    highlights: ["Cascades", "Dauphins", "Plongée"],
+    days: [
+      { cityName: "Munduk", offerIds: [] },
+      { cityName: "Munduk", offerIds: [] },
+      { cityName: "Lovina", offerIds: [] },
+      { cityName: "Lovina", offerIds: [] },
+      { cityName: "Pemuteran", offerIds: [] },
+      { cityName: "Pemuteran", offerIds: [] },
+      { cityName: "Pemuteran", offerIds: [] }
+    ]
   }
 ];
 
