@@ -494,6 +494,7 @@ export const id = {
     duplicateItinerary: 'Duplikat rencana perjalanan ini dan sesuaikan dengan keinginan Anda dengan PassBali',
     cities: 'kota',
     noOffersPlanned: 'Tidak ada penawaran yang direncanakan',
+    dailyPlan: 'Rencana Harian',
     itineraryStatus: {
       active: 'Aktif',
       completed: 'Selesai',

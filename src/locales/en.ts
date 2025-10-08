@@ -494,6 +494,7 @@ export const en = {
     duplicateItinerary: 'Duplicate this itinerary and customize it to your liking with PassBali',
     cities: 'cities',
     noOffersPlanned: 'No offers planned',
+    dailyPlan: 'Daily Plan',
     itineraryStatus: {
       active: 'Active',
       completed: 'Completed',

@@ -208,58 +208,67 @@ export default function SharedItinerary() {
           </Button>
         </Card>
 
-        {/* Itinerary Overview */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <MapIcon className="w-5 h-5 text-primary" />
-            <h2 className="text-2xl font-bold">
-              {t('travelPlanner.itineraryOverview') || 'Itinerary Overview'}
-            </h2>
+        {/* Itinerary Summary Card */}
+        <Card className="p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-2xl font-semibold">{itinerary.title}</h3>
+            {itinerary.is_active && (
+              <Badge className="bg-primary text-primary-foreground">
+                {t('travelPlanner.active') || 'Active'}
+              </Badge>
+            )}
           </div>
 
-          {showMap && (
-            <div className="mb-6">
-              <ItineraryMap
-                days={days}
-                onOfferClick={(offerId) => navigate(`/offer/${offerId}`)}
-              />
-            </div>
+          {itinerary.description && (
+            <p className="text-muted-foreground mb-4">{itinerary.description}</p>
           )}
 
-          {/* Itinerary Summary */}
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold">{itinerary.title}</h3>
-              {itinerary.is_active && (
-                <Badge variant="default" className="bg-primary">
-                  {t('travelPlanner.active') || 'Active'}
-                </Badge>
-              )}
+          <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4" />
+              <span>
+                {format(new Date(itinerary.start_date), "d MMM", { locale: currentLocale })} -{" "}
+                {format(new Date(itinerary.end_date), "d MMM yyyy", { locale: currentLocale })}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4" />
+              <span>{daysDiff} {t('travelPlanner.days') || 'days'}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4" />
+              <span>{uniqueCities.length} {t('travelPlanner.cities') || 'cities'}</span>
+            </div>
+          </div>
+        </Card>
+
+        {/* Itinerary Overview with Map */}
+        {days.some(d => d.itinerary_planned_offers?.length > 0) && (
+          <div className="mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <MapIcon className="w-5 h-5 text-primary" />
+              <h2 className="text-2xl font-bold">
+                {t('travelPlanner.itineraryOverview') || 'Itinerary Overview'}
+              </h2>
             </div>
 
-            {itinerary.description && (
-              <p className="text-muted-foreground mb-4">{itinerary.description}</p>
+            {showMap && (
+              <div className="mb-6 rounded-xl overflow-hidden shadow-lg">
+                <ItineraryMap
+                  days={days}
+                  onOfferClick={(offerId) => navigate(`/offer/${offerId}`)}
+                />
+              </div>
             )}
+          </div>
+        )}
 
-            <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-6">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
-                <span>
-                  {format(new Date(itinerary.start_date), "d MMM", { locale: currentLocale })} -{" "}
-                  {format(new Date(itinerary.end_date), "d MMM yyyy", { locale: currentLocale })}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4" />
-                <span>{daysDiff} {t('travelPlanner.days') || 'days'}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
-                <span>{uniqueCities.length} {t('travelPlanner.cities') || 'cities'}</span>
-              </div>
-            </div>
-
-            {/* Days */}
+        {/* Daily Details */}
+        {days.length > 0 && (
+          <Card className="p-6 mb-8">
+            <h2 className="text-2xl font-bold mb-6">
+              {t('travelPlanner.dailyPlan') || 'Daily Plan'}
+            </h2>
             <div className="space-y-6">
               {days.map((day, index) => (
                 <DaySection 
@@ -273,7 +282,7 @@ export default function SharedItinerary() {
               ))}
             </div>
           </Card>
-        </div>
+        )}
 
         {/* CTA Section */}
         <Card className="p-8 text-center bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">

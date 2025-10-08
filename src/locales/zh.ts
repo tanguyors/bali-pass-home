@@ -494,6 +494,7 @@ export const zh = {
     duplicateItinerary: '复制此行程并使用 PassBali 进行个性化定制',
     cities: '城市',
     noOffersPlanned: '没有计划的优惠',
+    dailyPlan: '每日计划',
     itineraryStatus: {
       active: '活跃',
       completed: '已完成',
