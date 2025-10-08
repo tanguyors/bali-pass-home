@@ -11,6 +11,7 @@ import { useState } from "react";
 import baliHeroImage from "@/assets/bali-hero.jpg";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
+import { LanguageSelector } from "@/components/LanguageSelector";
 
 const localeMap = {
   fr: fr,
@@ -72,6 +73,11 @@ export default function SharedItinerary() {
         style={{ backgroundImage: `url(${baliHeroImage})` }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+        
+        {/* Language Selector */}
+        <div className="absolute top-4 right-4 z-10">
+          <LanguageSelector />
+        </div>
         
         <div className="relative h-full flex flex-col items-center justify-center text-white px-4">
           <Badge variant="secondary" className="mb-4 bg-white/20 text-white border-white/30">
