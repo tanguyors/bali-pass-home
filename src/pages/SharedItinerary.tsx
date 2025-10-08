@@ -12,6 +12,7 @@ import baliHeroImage from "@/assets/bali-hero.jpg";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { ShareInstagramStory } from "@/components/travel/ShareInstagramStory";
 
 const localeMap = {
   fr: fr,
@@ -102,18 +103,28 @@ export default function SharedItinerary() {
             </div>
           </div>
 
-          <Button 
-            size="lg" 
-            onClick={handleDuplicate}
-            disabled={duplicateItinerary.isPending}
-            className="bg-white text-primary hover:bg-white/90 shadow-lg"
-          >
-            <Copy className="w-4 h-4 mr-2" />
-            {user 
-              ? (duplicateItinerary.isPending ? t('travelPlanner.duplicating') || 'Duplication...' : t('travelPlanner.useItinerary') || 'Dupliquer cet itinéraire')
-              : (t('travelPlanner.signInToDuplicate') || 'Se connecter pour dupliquer')
-            }
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Button 
+              size="lg" 
+              onClick={handleDuplicate}
+              disabled={duplicateItinerary.isPending}
+              className="bg-white text-primary hover:bg-white/90 shadow-lg"
+            >
+              <Copy className="w-4 h-4 mr-2" />
+              {user 
+                ? (duplicateItinerary.isPending ? t('travelPlanner.duplicating') || 'Duplication...' : t('travelPlanner.useItinerary') || 'Dupliquer cet itinéraire')
+                : (t('travelPlanner.signInToDuplicate') || 'Se connecter pour dupliquer')
+              }
+            </Button>
+            
+            <ShareInstagramStory
+              itineraryId={itinerary.id}
+              title={itinerary.title}
+              startDate={itinerary.start_date}
+              endDate={itinerary.end_date}
+              days={days}
+            />
+          </div>
         </div>
       </div>
 

@@ -502,6 +502,11 @@ export const id = {
     loading: 'Memuat...',
     itineraryNotFound: 'Rencana perjalanan tidak ditemukan',
     backToHome: 'Kembali ke beranda',
+    highlights: 'Sorotan',
+    shareInstagramStory: 'Bagikan di Instagram Story',
+    shareOn: 'Bagikan di',
+    shareError: 'Gagal membagikan',
+    imageDownloaded: 'Gambar diunduh! Anda sekarang dapat mengunggahnya ke Instagram.',
     itineraryStatus: {
       active: 'Aktif',
       completed: 'Selesai',

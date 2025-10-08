@@ -502,6 +502,11 @@ export const fr = {
     loading: 'Chargement...',
     itineraryNotFound: 'Itinéraire non trouvé',
     backToHome: 'Retour à l\'accueil',
+    highlights: 'Points forts',
+    shareInstagramStory: 'Partager en story Instagram',
+    shareOn: 'Partager sur',
+    shareError: 'Erreur lors du partage',
+    imageDownloaded: 'Image téléchargée ! Vous pouvez maintenant la publier sur Instagram.',
     itineraryStatus: {
       active: 'Actif',
       completed: 'Terminé',

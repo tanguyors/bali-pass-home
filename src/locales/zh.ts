@@ -502,6 +502,11 @@ export const zh = {
     loading: '加载中...',
     itineraryNotFound: '未找到行程',
     backToHome: '返回主页',
+    highlights: '亮点',
+    shareInstagramStory: '分享到Instagram故事',
+    shareOn: '分享到',
+    shareError: '分享失败',
+    imageDownloaded: '图片已下载！您现在可以将其上传到Instagram。',
     itineraryStatus: {
       active: '活跃',
       completed: '已完成',
