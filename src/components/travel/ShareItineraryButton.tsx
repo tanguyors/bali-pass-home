@@ -222,21 +222,21 @@ export function ShareItineraryButton({ itinerary, days }: ShareItineraryButtonPr
           <!-- 2. BADGES INFOS - Style carte postale moderne -->
           <div style="display: flex; justify-content: center; gap: 16px; margin: 50px 0;">
             <!-- Badge Durée avec icône stylée -->
-            <div style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); padding: 20px 32px; border-radius: 20px; text-align: center; box-shadow: 0 12px 40px rgba(0,0,0,0.25), inset 0 -2px 0 rgba(255,154,86,0.3); border-top: 3px solid rgba(255,154,86,0.5);">
+            <div style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); padding: 20px 32px; border-radius: 20px; text-align: center; box-shadow: 0 12px 40px rgba(0,0,0,0.25);">
               <div style="font-size: 44px; margin-bottom: 6px;">📅</div>
               <div style="font-size: 52px; font-weight: 900; color: #FF6B6B; line-height: 1;">${daysDiff}</div>
               <div style="font-size: 22px; font-weight: 700; color: #555; margin-top: 2px; letter-spacing: 0.5px;">${t('travelPlanner.days') || 'days'}</div>
             </div>
             
             <!-- Badge Villes -->
-            <div style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); padding: 20px 32px; border-radius: 20px; text-align: center; box-shadow: 0 12px 40px rgba(0,0,0,0.25), inset 0 -2px 0 rgba(196,113,237,0.3); border-top: 3px solid rgba(196,113,237,0.5);">
+            <div style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); padding: 20px 32px; border-radius: 20px; text-align: center; box-shadow: 0 12px 40px rgba(0,0,0,0.25);">
               <div style="font-size: 44px; margin-bottom: 6px;">🌆</div>
               <div style="font-size: 52px; font-weight: 900; color: #C471ED; line-height: 1;">${activeDays.length}</div>
               <div style="font-size: 22px; font-weight: 700; color: #555; margin-top: 2px; letter-spacing: 0.5px;">${t('travelPlanner.cities') || 'cities'}</div>
             </div>
             
             <!-- Badge Spots -->
-            <div style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); padding: 20px 32px; border-radius: 20px; text-align: center; box-shadow: 0 12px 40px rgba(0,0,0,0.25), inset 0 -2px 0 rgba(18,203,196,0.3); border-top: 3px solid rgba(18,203,196,0.5);">
+            <div style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); padding: 20px 32px; border-radius: 20px; text-align: center; box-shadow: 0 12px 40px rgba(0,0,0,0.25);">
               <div style="font-size: 44px; margin-bottom: 6px;">📍</div>
               <div style="font-size: 52px; font-weight: 900; color: #12CBC4; line-height: 1;">${totalOffers}</div>
               <div style="font-size: 22px; font-weight: 700; color: #555; margin-top: 2px; letter-spacing: 0.5px;">spots</div>
