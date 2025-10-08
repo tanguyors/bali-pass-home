@@ -495,6 +495,10 @@ export const es = {
     cities: 'ciudades',
     noOffersPlanned: 'No hay ofertas planificadas',
     dailyPlan: 'Plan diario',
+    generateLink: 'Generar enlace',
+    generating: 'Generando...',
+    duplicating: 'Duplicando...',
+    signInToDuplicate: 'Iniciar sesión para duplicar',
     itineraryStatus: {
       active: 'Activo',
       completed: 'Completado',

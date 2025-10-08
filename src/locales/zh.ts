@@ -495,6 +495,10 @@ export const zh = {
     cities: '城市',
     noOffersPlanned: '没有计划的优惠',
     dailyPlan: '每日计划',
+    generateLink: '生成链接',
+    generating: '生成中...',
+    duplicating: '复制中...',
+    signInToDuplicate: '登录以复制',
     itineraryStatus: {
       active: '活跃',
       completed: '已完成',

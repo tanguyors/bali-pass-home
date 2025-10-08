@@ -495,6 +495,10 @@ export const id = {
     cities: 'kota',
     noOffersPlanned: 'Tidak ada penawaran yang direncanakan',
     dailyPlan: 'Rencana Harian',
+    generateLink: 'Buat tautan',
+    generating: 'Membuat...',
+    duplicating: 'Menduplikasi...',
+    signInToDuplicate: 'Masuk untuk menduplikasi',
     itineraryStatus: {
       active: 'Aktif',
       completed: 'Selesai',

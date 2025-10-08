@@ -37,7 +37,7 @@ const App = () => (
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/partner/:slug" element={<PartnerDetail />} />
             <Route path="/travel-planner" element={<TravelPlanner />} />
-            <Route path="/itinerary/:id" element={<SharedItinerary />} />
+            <Route path="/shared-itinerary/:token" element={<SharedItinerary />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

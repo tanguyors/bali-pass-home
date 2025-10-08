@@ -1,15 +1,16 @@
 import { Card } from "@/components/ui/card";
 import { format } from "date-fns";
 import { fr, enUS, es, id as idLocale, zhCN } from "date-fns/locale";
-import { MapPin, Calendar, Map as MapIcon, Share2, Check } from "lucide-react";
+import { MapPin, Calendar, Map as MapIcon } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
-import { type Itinerary, useItineraries } from "@/hooks/useItineraries";
+import { type Itinerary } from "@/hooks/useItineraries";
 import { type ItineraryDay } from "@/hooks/useItineraryDays";
 import { usePlannedOffers } from "@/hooks/usePlannedOffers";
 import { ItineraryMap } from "./ItineraryMap";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
+import { ShareItineraryButton } from "./ShareItineraryButton";
 
 interface ItinerarySummaryProps {
   itinerary: Itinerary;
@@ -29,7 +30,6 @@ export function ItinerarySummary({ itinerary, days }: ItinerarySummaryProps) {
   const currentLocale = localeMap[language] || fr;
   const navigate = useNavigate();
   const [showMap, setShowMap] = useState(true);
-  const { shareItinerary } = useItineraries();
 
   // Prepare days with offers for the map
   const daysWithOffers = days.map(day => ({
@@ -37,33 +37,11 @@ export function ItinerarySummary({ itinerary, days }: ItinerarySummaryProps) {
     itinerary_planned_offers: day.itinerary_planned_offers || []
   }));
 
-  const handleShare = () => {
-    shareItinerary.mutate(itinerary.id);
-  };
-
   return (
     <div className="space-y-6">
       {/* Map view toggle and Share button */}
       <div className="flex justify-between items-center gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleShare}
-          disabled={shareItinerary.isPending}
-          className="gap-2"
-        >
-          {shareItinerary.isSuccess ? (
-            <>
-              <Check className="w-4 h-4" />
-              {t('travelPlanner.copied') || 'Copié'}
-            </>
-          ) : (
-            <>
-              <Share2 className="w-4 h-4" />
-              {t('travelPlanner.share') || 'Partager'}
-            </>
-          )}
-        </Button>
+        <ShareItineraryButton itinerary={itinerary} days={days} />
         
         <Button
           variant={showMap ? "default" : "outline"}

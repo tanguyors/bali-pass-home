@@ -1,6 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { useSharedItinerary, useDuplicateItinerary } from "@/hooks/useSharedItinerary";
 import { useTranslation } from "@/hooks/useTranslation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -9,11 +8,9 @@ import { format, differenceInDays } from "date-fns";
 import { fr, enUS, es, id as idLocale, zhCN } from "date-fns/locale";
 import { ItineraryMap } from "@/components/travel/ItineraryMap";
 import { useState } from "react";
-import { toast } from "sonner";
 import baliHeroImage from "@/assets/bali-hero.jpg";
 import { Badge } from "@/components/ui/badge";
-import { type Itinerary } from "@/hooks/useItineraries";
-import { type ItineraryDay } from "@/hooks/useItineraryDays";
+import { useAuth } from "@/contexts/AuthContext";
 
 const localeMap = {
   fr: fr,
@@ -24,76 +21,24 @@ const localeMap = {
 };
 
 export default function SharedItinerary() {
-  const { id } = useParams();
+  const { token } = useParams();
   const navigate = useNavigate();
   const { t, language } = useTranslation();
+  const { user } = useAuth();
   const currentLocale = localeMap[language] || fr;
   const [showMap, setShowMap] = useState(true);
 
-  // Fetch itinerary data
-  const { data: itinerary, isLoading } = useQuery<Itinerary>({
-    queryKey: ["shared-itinerary", id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("travel_itineraries" as any)
-        .select("*")
-        .eq("id", id)
-        .eq("is_public", true)
-        .maybeSingle();
+  const { data: itinerary, isLoading } = useSharedItinerary(token);
+  const duplicateItinerary = useDuplicateItinerary();
 
-      if (error) throw error;
-      return data as unknown as Itinerary;
-    },
-    enabled: !!id,
-  });
-
-  // Fetch itinerary days
-  const { data: days = [] } = useQuery<ItineraryDay[]>({
-    queryKey: ["shared-itinerary-days", id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("itinerary_days" as any)
-        .select(`
-          *,
-          cities (*),
-          itinerary_planned_offers (
-            id,
-            planned_time,
-            notes,
-            offers (
-              id,
-              title,
-              title_en,
-              title_es,
-              title_id,
-              title_zh,
-              description,
-              description_en,
-              description_es,
-              description_id,
-              description_zh,
-              discount_amount,
-              discount_type,
-              photos,
-              partners (
-                id,
-                name,
-                slug
-              )
-            )
-          )
-        `)
-        .eq("itinerary_id", id)
-        .order("day_date", { ascending: true });
-
-      if (error) throw error;
-      return data as unknown as ItineraryDay[];
-    },
-    enabled: !!id,
-  });
-
-  const handleUseItinerary = () => {
-    navigate("/auth");
+  const handleDuplicate = () => {
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
+    if (token) {
+      duplicateItinerary.mutate(token);
+    }
   };
 
   if (isLoading) {
@@ -115,8 +60,9 @@ export default function SharedItinerary() {
     );
   }
 
+  const days = (itinerary as any).itinerary_days || [];
   const daysDiff = differenceInDays(new Date(itinerary.end_date), new Date(itinerary.start_date)) + 1;
-  const uniqueCities = [...new Set(days.map(d => d.cities?.name).filter(Boolean))];
+  const uniqueCities = [...new Set(days.map((d: any) => d.cities?.name).filter(Boolean))];
 
   return (
     <div className="min-h-screen bg-background">
@@ -152,11 +98,15 @@ export default function SharedItinerary() {
 
           <Button 
             size="lg" 
-            onClick={handleUseItinerary}
+            onClick={handleDuplicate}
+            disabled={duplicateItinerary.isPending}
             className="bg-white text-primary hover:bg-white/90 shadow-lg"
           >
             <Copy className="w-4 h-4 mr-2" />
-            {t('travelPlanner.useItinerary') || 'Use this itinerary'}
+            {user 
+              ? (duplicateItinerary.isPending ? t('travelPlanner.duplicating') || 'Duplication...' : t('travelPlanner.useItinerary') || 'Dupliquer cet itinéraire')
+              : (t('travelPlanner.signInToDuplicate') || 'Se connecter pour dupliquer')
+            }
           </Button>
         </div>
       </div>
@@ -212,7 +162,7 @@ export default function SharedItinerary() {
         <Card className="p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-2xl font-semibold">{itinerary.title}</h3>
-            {itinerary.is_active && (
+            {(itinerary as any).is_active && (
               <Badge className="bg-primary text-primary-foreground">
                 {t('travelPlanner.active') || 'Active'}
               </Badge>
@@ -292,9 +242,12 @@ export default function SharedItinerary() {
           <p className="text-muted-foreground mb-6">
             {t('travelPlanner.duplicateItinerary') || 'Duplicate this itinerary and customize it to your liking with PassBali'}
           </p>
-          <Button size="lg" onClick={handleUseItinerary}>
+          <Button size="lg" onClick={handleDuplicate} disabled={duplicateItinerary.isPending}>
             <Copy className="w-4 h-4 mr-2" />
-            {t('travelPlanner.useItinerary') || 'Use this itinerary'}
+            {user 
+              ? (duplicateItinerary.isPending ? t('travelPlanner.duplicating') || 'Duplication...' : t('travelPlanner.useItinerary') || 'Dupliquer cet itinéraire')
+              : (t('travelPlanner.signInToDuplicate') || 'Se connecter pour dupliquer')
+            }
           </Button>
         </Card>
       </div>
