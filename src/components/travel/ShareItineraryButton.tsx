@@ -280,7 +280,7 @@ export function ShareItineraryButton({ itinerary, days }: ShareItineraryButtonPr
                       <span style="font-size: 38px; line-height: 1; display: flex; align-items: center;">${emoji}</span>
                       <span style="font-size: 38px; font-weight: 800; color: #1E1E1E; letter-spacing: -0.5px; line-height: 1; display: flex; align-items: center;">${cityName}</span>
                     </div>
-                    <div style="background: ${gradient}; color: white; padding: 10px 20px; border-radius: 14px; font-size: 30px; font-weight: 900; box-shadow: 0 4px 16px rgba(0,0,0,0.2); min-width: 60px; text-align: center; display: flex; align-items: center; justify-content: center; height: 52px;">
+                    <div style="background: ${gradient}; color: white; padding: 0; border-radius: 14px; font-size: 30px; font-weight: 900; box-shadow: 0 4px 16px rgba(0,0,0,0.2); width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; line-height: 1;">
                       ${plannedOffers.length}
                     </div>
                   </div>
