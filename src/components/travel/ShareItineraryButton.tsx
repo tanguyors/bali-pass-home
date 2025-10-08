@@ -299,8 +299,8 @@ export function ShareItineraryButton({ itinerary, days }: ShareItineraryButtonPr
               </div>
               
               <!-- Bouton site web -->
-              <div style="display: inline-block; background: white; padding: 18px 52px; border-radius: 100px; box-shadow: 0 8px 28px rgba(0,0,0,0.25); transform: scale(1); transition: transform 0.2s;">
-                <span style="font-size: 42px; font-weight: 900; background: linear-gradient(135deg, #FF8C42, #FF5D73); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px;">passbali.com</span>
+              <div style="display: inline-block; background: white; padding: 18px 52px; border-radius: 100px; box-shadow: 0 8px 28px rgba(0,0,0,0.25);">
+                <span style="font-size: 42px; font-weight: 900; color: #FF5D73; letter-spacing: 0.5px;">passbali.com</span>
               </div>
             </div>
           </div>
