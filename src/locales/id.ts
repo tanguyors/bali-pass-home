@@ -510,6 +510,7 @@ export const id = {
     sharedSuccessfully: 'Berhasil dibagikan!',
     copyLink: 'Salin tautan saja',
     shareWhatsApp: 'Bagikan di WhatsApp',
+    readyForBaliAdventure: 'Siap untuk petualangan Bali Anda?',
     itineraryStatus: {
       active: 'Aktif',
       completed: 'Selesai',

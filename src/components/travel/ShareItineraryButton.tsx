@@ -295,7 +295,7 @@ export function ShareItineraryButton({ itinerary, days }: ShareItineraryButtonPr
             <div style="background: linear-gradient(135deg, #FF8C42 0%, #FF5D73 100%); padding: 42px 48px; border-radius: 32px; box-shadow: 0 20px 60px rgba(255,93,115,0.4), 0 8px 24px rgba(0,0,0,0.3); border: 3px solid rgba(255,255,255,0.3);">
               <!-- Texte accrocheur -->
               <div style="font-size: 50px; font-weight: 900; color: white; margin-bottom: 22px; line-height: 1.2; text-shadow: 0 4px 16px rgba(0,0,0,0.3);">
-                🌴 Ready for your<br/>Bali adventure?
+                🌴 ${t('travelPlanner.readyForBaliAdventure') || 'Ready for your Bali adventure?'}
               </div>
               
               <!-- Bouton site web -->

@@ -510,6 +510,7 @@ export const zh = {
     sharedSuccessfully: '分享成功！',
     copyLink: '仅复制链接',
     shareWhatsApp: '分享到WhatsApp',
+    readyForBaliAdventure: '准备好巴厘岛冒险了吗？',
     itineraryStatus: {
       active: '活跃',
       completed: '已完成',

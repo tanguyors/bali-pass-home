@@ -510,6 +510,7 @@ export const es = {
     sharedSuccessfully: 'Compartido con éxito!',
     copyLink: 'Copiar enlace solamente',
     shareWhatsApp: 'Compartir en WhatsApp',
+    readyForBaliAdventure: '¿Listo para tu aventura en Bali?',
     itineraryStatus: {
       active: 'Activo',
       completed: 'Completado',
