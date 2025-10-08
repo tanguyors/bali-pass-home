@@ -256,7 +256,7 @@ export function ShareItineraryButton({ itinerary, days }: ShareItineraryButtonPr
             
             <!-- Tags destinations avec emojis contextuels -->
             <div style="display: flex; flex-direction: column; gap: 14px; max-width: 750px; margin: 0 auto;">
-              ${activeDays.slice(0, 5).map((day: any, index: number) => {
+              ${activeDays.map((day: any, index: number) => {
                 const plannedOffers = day.itinerary_planned_offers || [];
                 const cityName = day.cities?.name || 'Destination';
                 
