@@ -277,11 +277,11 @@ export function ShareItineraryButton({ itinerary, days }: ShareItineraryButtonPr
                 return `
                   <div style="background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(15px); padding: 18px 28px; border-radius: 18px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 8px 28px rgba(0,0,0,0.2);">
                     <div style="display: flex; align-items: center; gap: 14px;">
-                      <span style="font-size: 38px; line-height: 1; display: flex; align-items: center;">${emoji}</span>
-                      <span style="font-size: 38px; font-weight: 800; color: #1E1E1E; letter-spacing: -0.5px; line-height: 1; display: flex; align-items: center;">${cityName}</span>
+                      <span style="font-size: 38px; line-height: 1; display: flex; align-items: center; transform: translateY(-2px);">${emoji}</span>
+                      <span style="font-size: 38px; font-weight: 800; color: #1E1E1E; letter-spacing: -0.5px; line-height: 1; display: flex; align-items: center; transform: translateY(-2px);">${cityName}</span>
                     </div>
                     <div style="background: ${gradient}; color: white; padding: 0; border-radius: 14px; font-size: 30px; font-weight: 900; box-shadow: 0 4px 16px rgba(0,0,0,0.2); width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; line-height: 1;">
-                      ${plannedOffers.length}
+                      <span style="transform: translateY(-2px);">${plannedOffers.length}</span>
                     </div>
                   </div>
                 `;
