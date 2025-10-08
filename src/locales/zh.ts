@@ -507,6 +507,9 @@ export const zh = {
     shareOn: '分享到',
     shareError: '分享失败',
     imageDownloaded: '图片已下载！您现在可以将其上传到Instagram。',
+    sharedSuccessfully: '分享成功！',
+    copyLink: '仅复制链接',
+    shareWhatsApp: '分享到WhatsApp',
     itineraryStatus: {
       active: '活跃',
       completed: '已完成',

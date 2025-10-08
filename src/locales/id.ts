@@ -507,6 +507,9 @@ export const id = {
     shareOn: 'Bagikan di',
     shareError: 'Gagal membagikan',
     imageDownloaded: 'Gambar diunduh! Anda sekarang dapat mengunggahnya ke Instagram.',
+    sharedSuccessfully: 'Berhasil dibagikan!',
+    copyLink: 'Salin tautan saja',
+    shareWhatsApp: 'Bagikan di WhatsApp',
     itineraryStatus: {
       active: 'Aktif',
       completed: 'Selesai',

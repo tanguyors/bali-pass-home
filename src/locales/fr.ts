@@ -507,6 +507,9 @@ export const fr = {
     shareOn: 'Partager sur',
     shareError: 'Erreur lors du partage',
     imageDownloaded: 'Image téléchargée ! Vous pouvez maintenant la publier sur Instagram.',
+    sharedSuccessfully: 'Partagé avec succès !',
+    copyLink: 'Copier le lien uniquement',
+    shareWhatsApp: 'Partager sur WhatsApp',
     itineraryStatus: {
       active: 'Actif',
       completed: 'Terminé',
