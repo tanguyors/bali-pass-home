@@ -275,7 +275,7 @@ export function ShareItineraryButton({ itinerary, days }: ShareItineraryButtonPr
                 const gradient = gradients[index % gradients.length];
                 
                 return `
-                  <div style="background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(15px); padding: 18px 28px; border-radius: 18px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 8px 28px rgba(0,0,0,0.2); transform: rotate(${index % 2 === 0 ? '-' : ''}0.5deg);">
+                  <div style="background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(15px); padding: 18px 28px; border-radius: 18px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 8px 28px rgba(0,0,0,0.2);">
                     <div style="display: flex; align-items: center; gap: 14px;">
                       <span style="font-size: 38px;">${emoji}</span>
                       <span style="font-size: 38px; font-weight: 800; color: #1E1E1E; letter-spacing: -0.5px;">${cityName}</span>
