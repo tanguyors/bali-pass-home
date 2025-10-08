@@ -3,14 +3,13 @@ import { format } from "date-fns";
 import { fr, enUS, es, id as idLocale, zhCN } from "date-fns/locale";
 import { MapPin, Calendar, Map as MapIcon, Share2, Check } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
-import { type Itinerary } from "@/hooks/useItineraries";
+import { type Itinerary, useItineraries } from "@/hooks/useItineraries";
 import { type ItineraryDay } from "@/hooks/useItineraryDays";
 import { usePlannedOffers } from "@/hooks/usePlannedOffers";
 import { ItineraryMap } from "./ItineraryMap";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 interface ItinerarySummaryProps {
   itinerary: Itinerary;
@@ -30,7 +29,7 @@ export function ItinerarySummary({ itinerary, days }: ItinerarySummaryProps) {
   const currentLocale = localeMap[language] || fr;
   const navigate = useNavigate();
   const [showMap, setShowMap] = useState(true);
-  const [copied, setCopied] = useState(false);
+  const { shareItinerary } = useItineraries();
 
   // Prepare days with offers for the map
   const daysWithOffers = days.map(day => ({
@@ -38,17 +37,8 @@ export function ItinerarySummary({ itinerary, days }: ItinerarySummaryProps) {
     itinerary_planned_offers: day.itinerary_planned_offers || []
   }));
 
-  const handleShare = async () => {
-    const shareUrl = `${window.location.origin}/itinerary/${itinerary.id}`;
-    
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      setCopied(true);
-      toast.success(t('travelPlanner.linkCopied') || 'Lien copié !');
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      toast.error(t('common.error') || 'Erreur');
-    }
+  const handleShare = () => {
+    shareItinerary.mutate(itinerary.id);
   };
 
   return (
@@ -59,9 +49,10 @@ export function ItinerarySummary({ itinerary, days }: ItinerarySummaryProps) {
           variant="outline"
           size="sm"
           onClick={handleShare}
+          disabled={shareItinerary.isPending}
           className="gap-2"
         >
-          {copied ? (
+          {shareItinerary.isSuccess ? (
             <>
               <Check className="w-4 h-4" />
               {t('travelPlanner.copied') || 'Copié'}

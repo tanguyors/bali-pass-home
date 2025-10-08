@@ -287,8 +287,7 @@ export type Database = {
       }
       employee_affiliations: {
         Row: {
-          affiliate_id: string
-          affiliate_type: string
+          affiliated_user_id: string
           commission_rate: number
           created_at: string
           employee_user_id: string
@@ -297,8 +296,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          affiliate_id: string
-          affiliate_type: string
+          affiliated_user_id: string
           commission_rate?: number
           created_at?: string
           employee_user_id: string
@@ -307,8 +305,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          affiliate_id?: string
-          affiliate_type?: string
+          affiliated_user_id?: string
           commission_rate?: number
           created_at?: string
           employee_user_id?: string
@@ -446,12 +443,148 @@ export type Database = {
         }
         Relationships: []
       }
+      itinerary_days: {
+        Row: {
+          city_id: string | null
+          created_at: string
+          day_date: string
+          day_order: number
+          id: string
+          itinerary_id: string
+          notes: string | null
+          updated_at: string
+        }
+        Insert: {
+          city_id?: string | null
+          created_at?: string
+          day_date: string
+          day_order: number
+          id?: string
+          itinerary_id: string
+          notes?: string | null
+          updated_at?: string
+        }
+        Update: {
+          city_id?: string | null
+          created_at?: string
+          day_date?: string
+          day_order?: number
+          id?: string
+          itinerary_id?: string
+          notes?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itinerary_days_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "itinerary_days_itinerary_id_fkey"
+            columns: ["itinerary_id"]
+            isOneToOne: false
+            referencedRelation: "travel_itineraries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      itinerary_planned_offers: {
+        Row: {
+          added_at: string
+          id: string
+          is_visited: boolean | null
+          itinerary_day_id: string
+          notes: string | null
+          offer_id: string
+          planned_time: string | null
+          visited_at: string | null
+        }
+        Insert: {
+          added_at?: string
+          id?: string
+          is_visited?: boolean | null
+          itinerary_day_id: string
+          notes?: string | null
+          offer_id: string
+          planned_time?: string | null
+          visited_at?: string | null
+        }
+        Update: {
+          added_at?: string
+          id?: string
+          is_visited?: boolean | null
+          itinerary_day_id?: string
+          notes?: string | null
+          offer_id?: string
+          planned_time?: string | null
+          visited_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itinerary_planned_offers_itinerary_day_id_fkey"
+            columns: ["itinerary_day_id"]
+            isOneToOne: false
+            referencedRelation: "itinerary_days"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "itinerary_planned_offers_offer_id_fkey"
+            columns: ["offer_id"]
+            isOneToOne: false
+            referencedRelation: "offers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      newsletter_campaigns: {
+        Row: {
+          created_at: string
+          failed_count: number
+          id: string
+          message: string
+          recipient_count: number
+          recipients: string[]
+          sent_at: string
+          sent_by: string | null
+          subject: string
+          success_count: number
+        }
+        Insert: {
+          created_at?: string
+          failed_count?: number
+          id?: string
+          message: string
+          recipient_count?: number
+          recipients?: string[]
+          sent_at?: string
+          sent_by?: string | null
+          subject: string
+          success_count?: number
+        }
+        Update: {
+          created_at?: string
+          failed_count?: number
+          id?: string
+          message?: string
+          recipient_count?: number
+          recipients?: string[]
+          sent_at?: string
+          sent_by?: string | null
+          subject?: string
+          success_count?: number
+        }
+        Relationships: []
+      }
       offers: {
         Row: {
           category_id: string
           conditions_text: string | null
           conditions_text_en: string | null
           conditions_text_es: string | null
+          conditions_text_fr: string | null
           conditions_text_id: string | null
           conditions_text_zh: string | null
           created_at: string
@@ -463,6 +596,7 @@ export type Database = {
           long_desc: string | null
           long_desc_en: string | null
           long_desc_es: string | null
+          long_desc_fr: string | null
           long_desc_id: string | null
           long_desc_zh: string | null
           partner_id: string
@@ -473,6 +607,7 @@ export type Database = {
           short_desc: string | null
           short_desc_en: string | null
           short_desc_es: string | null
+          short_desc_fr: string | null
           short_desc_id: string | null
           short_desc_zh: string | null
           slug: string
@@ -481,6 +616,7 @@ export type Database = {
           title: string
           title_en: string | null
           title_es: string | null
+          title_fr: string | null
           title_id: string | null
           title_zh: string | null
           updated_at: string
@@ -492,6 +628,7 @@ export type Database = {
           conditions_text?: string | null
           conditions_text_en?: string | null
           conditions_text_es?: string | null
+          conditions_text_fr?: string | null
           conditions_text_id?: string | null
           conditions_text_zh?: string | null
           created_at?: string
@@ -503,6 +640,7 @@ export type Database = {
           long_desc?: string | null
           long_desc_en?: string | null
           long_desc_es?: string | null
+          long_desc_fr?: string | null
           long_desc_id?: string | null
           long_desc_zh?: string | null
           partner_id: string
@@ -513,6 +651,7 @@ export type Database = {
           short_desc?: string | null
           short_desc_en?: string | null
           short_desc_es?: string | null
+          short_desc_fr?: string | null
           short_desc_id?: string | null
           short_desc_zh?: string | null
           slug: string
@@ -521,6 +660,7 @@ export type Database = {
           title: string
           title_en?: string | null
           title_es?: string | null
+          title_fr?: string | null
           title_id?: string | null
           title_zh?: string | null
           updated_at?: string
@@ -532,6 +672,7 @@ export type Database = {
           conditions_text?: string | null
           conditions_text_en?: string | null
           conditions_text_es?: string | null
+          conditions_text_fr?: string | null
           conditions_text_id?: string | null
           conditions_text_zh?: string | null
           created_at?: string
@@ -543,6 +684,7 @@ export type Database = {
           long_desc?: string | null
           long_desc_en?: string | null
           long_desc_es?: string | null
+          long_desc_fr?: string | null
           long_desc_id?: string | null
           long_desc_zh?: string | null
           partner_id?: string
@@ -553,6 +695,7 @@ export type Database = {
           short_desc?: string | null
           short_desc_en?: string | null
           short_desc_es?: string | null
+          short_desc_fr?: string | null
           short_desc_id?: string | null
           short_desc_zh?: string | null
           slug?: string
@@ -561,6 +704,7 @@ export type Database = {
           title?: string
           title_en?: string | null
           title_es?: string | null
+          title_fr?: string | null
           title_id?: string | null
           title_zh?: string | null
           updated_at?: string
@@ -727,7 +871,7 @@ export type Database = {
       partners: {
         Row: {
           address: string | null
-          city_id: string
+          city_id: string | null
           cover_url: string | null
           created_at: string
           description: string | null
@@ -756,7 +900,7 @@ export type Database = {
         }
         Insert: {
           address?: string | null
-          city_id: string
+          city_id?: string | null
           cover_url?: string | null
           created_at?: string
           description?: string | null
@@ -785,7 +929,7 @@ export type Database = {
         }
         Update: {
           address?: string | null
-          city_id?: string
+          city_id?: string | null
           cover_url?: string | null
           created_at?: string
           description?: string | null
@@ -889,6 +1033,33 @@ export type Database = {
           status?: Database["public"]["Enums"]["pass_status"] | null
           user_id?: string
           wallet_pass_url?: string | null
+        }
+        Relationships: []
+      }
+      password_reset_tokens: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          token: string
+          used: boolean | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          token: string
+          used?: boolean | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          token?: string
+          used?: boolean | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -1169,6 +1340,9 @@ export type Database = {
       }
       resellers: {
         Row: {
+          bank_account_number: string | null
+          bank_full_name: string | null
+          bank_name: string | null
           commission_rate: number | null
           created_at: string
           discount_rate: number | null
@@ -1183,6 +1357,9 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          bank_account_number?: string | null
+          bank_full_name?: string | null
+          bank_name?: string | null
           commission_rate?: number | null
           created_at?: string
           discount_rate?: number | null
@@ -1197,6 +1374,9 @@ export type Database = {
           user_id: string
         }
         Update: {
+          bank_account_number?: string | null
+          bank_full_name?: string | null
+          bank_name?: string | null
           commission_rate?: number | null
           created_at?: string
           discount_rate?: number | null
@@ -1207,6 +1387,90 @@ export type Database = {
           total_sales?: number | null
           unique_code?: string
           unique_link?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      site_images: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          file_name: string
+          file_size: number | null
+          file_type: string | null
+          id: string
+          image_url: string
+          title: string
+          updated_at: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          file_name: string
+          file_size?: number | null
+          file_type?: string | null
+          id?: string
+          image_url: string
+          title: string
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          file_name?: string
+          file_size?: number | null
+          file_type?: string | null
+          id?: string
+          image_url?: string
+          title?: string
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Relationships: []
+      }
+      travel_itineraries: {
+        Row: {
+          created_at: string
+          description: string | null
+          end_date: string
+          id: string
+          is_active: boolean | null
+          is_public: boolean | null
+          share_token: string | null
+          start_date: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          end_date: string
+          id?: string
+          is_active?: boolean | null
+          is_public?: boolean | null
+          share_token?: string | null
+          start_date: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          end_date?: string
+          id?: string
+          is_active?: boolean | null
+          is_public?: boolean | null
+          share_token?: string | null
+          start_date?: string
+          title?: string
           updated_at?: string
           user_id?: string
         }
@@ -1235,9 +1499,24 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      quick_stats: {
+        Row: {
+          active_count: number | null
+          table_name: string | null
+          total_count: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
+      cleanup_expired_passes: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      cleanup_expired_password_tokens: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       create_partner_pass: {
         Args: { partner_user_id: string }
         Returns: string
@@ -1250,8 +1529,33 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      generate_share_token: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      get_partner_stats: {
+        Args: { partner_uuid: string }
+        Returns: Json
+      }
+      get_partners_for_employee: {
+        Args: { employee_id: string }
+        Returns: {
+          address: string
+          city_id: string
+          description: string
+          id: string
+          name: string
+          owner_account_id: string
+          phone: string
+          slug: string
+          status: Database["public"]["Enums"]["partner_status"]
+          user_id: string
+        }[]
+      }
       get_resellers_for_employee: {
-        Args: { employee_id: string; reseller_ids: string[] }
+        Args:
+          | { employee_id: string }
+          | { employee_id: string; reseller_ids: string[] }
         Returns: {
           commission_rate: number
           discount_rate: number
@@ -1267,6 +1571,10 @@ export type Database = {
         Args: { _role: Database["public"]["Enums"]["app_role"] }
         Returns: number
       }
+      get_user_entities_for_employee: {
+        Args: { employee_id: string; target_user_id: string }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1280,6 +1588,26 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      regenerate_reseller_qr_codes: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      search_offers: {
+        Args: {
+          category_filter?: string
+          city_filter?: string
+          limit_count?: number
+          search_term?: string
+        }
+        Returns: {
+          category_name: string
+          city_name: string
+          id: string
+          partner_name: string
+          short_desc: string
+          title: string
+        }[]
       }
     }
     Enums: {

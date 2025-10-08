@@ -38,7 +38,8 @@ export default function SharedItinerary() {
         .from("travel_itineraries" as any)
         .select("*")
         .eq("id", id)
-        .single();
+        .eq("is_public", true)
+        .maybeSingle();
 
       if (error) throw error;
       return data as unknown as Itinerary;

@@ -11,6 +11,8 @@ export interface Itinerary {
   start_date: string;
   end_date: string;
   is_active: boolean;
+  is_public?: boolean;
+  share_token?: string;
   created_at: string;
   updated_at: string;
 }
@@ -100,11 +102,35 @@ export function useItineraries() {
     },
   });
 
+  const shareItinerary = useMutation({
+    mutationFn: async (id: string) => {
+      const { data, error } = await supabase
+        .from("travel_itineraries" as any)
+        .update({ is_public: true })
+        .eq("id", id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as unknown as Itinerary;
+    },
+    onSuccess: (data: Itinerary) => {
+      queryClient.invalidateQueries({ queryKey: ["itineraries"] });
+      const shareUrl = `${window.location.origin}/itinerary/${data.id}`;
+      navigator.clipboard.writeText(shareUrl);
+      toast.success("Lien copié dans le presse-papiers");
+    },
+    onError: () => {
+      toast.error("Erreur lors du partage");
+    },
+  });
+
   return {
     itineraries,
     isLoading,
     createItinerary,
     updateItinerary,
     deleteItinerary,
+    shareItinerary,
   };
 }
