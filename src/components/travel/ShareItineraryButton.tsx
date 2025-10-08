@@ -165,58 +165,76 @@ export function ShareItineraryButton({ itinerary, days }: ShareItineraryButtonPr
     setIsGeneratingStory(true);
     
     try {
-      // Create a temporary div with the story content
       const storyDiv = document.createElement('div');
       storyDiv.style.position = 'fixed';
       storyDiv.style.left = '-9999px';
       storyDiv.style.width = '1080px';
       storyDiv.style.height = '1920px';
-      storyDiv.style.background = 'linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #14b8a6 100%)';
-      storyDiv.style.padding = '80px 60px';
-      storyDiv.style.fontFamily = 'system-ui, -apple-system, sans-serif';
+      storyDiv.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%)';
+      storyDiv.style.padding = '0';
+      storyDiv.style.fontFamily = "'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif";
       storyDiv.style.color = 'white';
+      storyDiv.style.position = 'relative';
+      storyDiv.style.overflow = 'hidden';
       
       const daysDiff = Math.ceil((new Date(itinerary.end_date).getTime() - new Date(itinerary.start_date).getTime()) / (1000 * 60 * 60 * 24)) + 1;
       
       storyDiv.innerHTML = `
-        <div style="display: flex; flex-direction: column; height: 100%; justify-content: space-between;">
-          <div style="text-align: center;">
-            <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(20px); padding: 25px 35px; border-radius: 30px; display: inline-block; margin-bottom: 60px; box-shadow: 0 8px 32px rgba(0,0,0,0.1);">
-              <div style="font-size: 28px; margin-bottom: 8px; opacity: 0.9;">🗺️ ${t('travelPlanner.sharedBy') || 'Shared by'}</div>
-              <div style="font-size: 48px; font-weight: 900; letter-spacing: 2px;">PassBali</div>
+        <!-- Formes décoratives en arrière-plan -->
+        <div style="position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; background: rgba(255,255,255,0.1); border-radius: 50%; filter: blur(60px);"></div>
+        <div style="position: absolute; bottom: -150px; left: -150px; width: 500px; height: 500px; background: rgba(255,255,255,0.08); border-radius: 50%; filter: blur(80px);"></div>
+        <div style="position: absolute; top: 300px; right: -50px; width: 250px; height: 250px; background: rgba(255,255,255,0.06); border-radius: 50%; filter: blur(50px);"></div>
+        
+        <!-- Grain texture overlay -->
+        <div style="position: absolute; inset: 0; background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 400 400%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%220.05%22/%3E%3C/svg%3E'); mix-blend-mode: overlay; opacity: 0.3;"></div>
+        
+        <div style="position: relative; display: flex; flex-direction: column; height: 100%; padding: 70px 60px; justify-content: space-between;">
+          <!-- Header avec logo -->
+          <div style="text-align: center; animation: fadeInDown 0.8s ease-out;">
+            <div style="background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%); backdrop-filter: blur(30px); padding: 22px 40px; border-radius: 25px; display: inline-block; border: 2px solid rgba(255,255,255,0.3); box-shadow: 0 20px 60px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.4);">
+              <div style="font-size: 24px; margin-bottom: 6px; opacity: 0.95; font-weight: 600; letter-spacing: 1px;">🗺️ ${t('travelPlanner.sharedBy') || 'Shared by'}</div>
+              <div style="font-size: 52px; font-weight: 900; letter-spacing: 3px; background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 4px 20px rgba(0,0,0,0.2);">PassBali</div>
             </div>
           </div>
           
-          <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; text-align: center; padding: 40px 0;">
-            <h1 style="font-size: 88px; font-weight: 900; margin-bottom: 50px; text-shadow: 0 4px 30px rgba(0,0,0,0.3); line-height: 1.1; word-wrap: break-word;">
+          <!-- Contenu principal -->
+          <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; text-align: center; padding: 50px 0;">
+            <!-- Titre principal avec effet néon -->
+            <h1 style="font-size: 96px; font-weight: 900; margin-bottom: 60px; line-height: 1.1; word-wrap: break-word; background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 40px rgba(255,255,255,0.5), 0 0 80px rgba(255,255,255,0.3); filter: drop-shadow(0 8px 32px rgba(0,0,0,0.4)); letter-spacing: -2px;">
               ${itinerary.title}
             </h1>
             
-            <div style="display: flex; justify-content: center; gap: 30px; margin-bottom: 60px;">
-              <div style="background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: 25px 35px; border-radius: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
-                <div style="font-size: 24px; opacity: 0.9; margin-bottom: 8px;">📅</div>
-                <div style="font-size: 32px; font-weight: 700;">${daysDiff} ${t('travelPlanner.days') || 'days'}</div>
+            <!-- Stats cards avec effet 3D -->
+            <div style="display: flex; justify-content: center; gap: 25px; margin-bottom: 70px;">
+              <div style="background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.15) 100%); backdrop-filter: blur(20px); padding: 30px 40px; border-radius: 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.5); border: 2px solid rgba(255,255,255,0.25); transform: perspective(1000px) rotateY(-5deg); transition: all 0.3s;">
+                <div style="font-size: 42px; margin-bottom: 12px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));">📅</div>
+                <div style="font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">${daysDiff} ${t('travelPlanner.days') || 'jours'}</div>
               </div>
-              <div style="background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: 25px 35px; border-radius: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
-                <div style="font-size: 24px; opacity: 0.9; margin-bottom: 8px;">📍</div>
-                <div style="font-size: 32px; font-weight: 700;">${days.filter((d: any) => d.itinerary_planned_offers?.length > 0).length} ${t('travelPlanner.days') || 'days'}</div>
+              <div style="background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.15) 100%); backdrop-filter: blur(20px); padding: 30px 40px; border-radius: 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.5); border: 2px solid rgba(255,255,255,0.25); transform: perspective(1000px) rotateY(5deg); transition: all 0.3s;">
+                <div style="font-size: 42px; margin-bottom: 12px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));">🌴</div>
+                <div style="font-size: 36px; font-weight: 800; letter-spacing: 0.5px;">${days.filter((d: any) => d.itinerary_planned_offers?.length > 0).length} ${t('travelPlanner.cities') || 'villes'}</div>
               </div>
             </div>
             
-            <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(20px); padding: 50px; border-radius: 35px; box-shadow: 0 8px 32px rgba(0,0,0,0.15);">
-              <h2 style="font-size: 48px; font-weight: 800; margin-bottom: 35px; letter-spacing: 1px;">
-                ✨ ${t('travelPlanner.highlights') || 'Highlights'}
-              </h2>
-              <div style="display: flex; flex-direction: column; gap: 22px; text-align: left;">
+            <!-- Section highlights avec design moderne -->
+            <div style="background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%); backdrop-filter: blur(30px); padding: 55px 50px; border-radius: 40px; box-shadow: 0 30px 80px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.4); border: 2px solid rgba(255,255,255,0.3);">
+              <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 40px;">
+                <div style="width: 60px; height: 4px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); border-radius: 2px;"></div>
+                <h2 style="font-size: 46px; font-weight: 900; letter-spacing: 1px; margin: 0; background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+                  ✨ ${t('travelPlanner.highlights') || 'Points forts'}
+                </h2>
+                <div style="width: 60px; height: 4px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); border-radius: 2px;"></div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 18px;">
                 ${days.slice(0, 4).map((day: any, index: number) => {
                   const plannedOffers = day.itinerary_planned_offers || [];
                   if (plannedOffers.length === 0) return '';
                   
                   return `
-                    <div style="font-size: 32px; padding: 20px 25px; background: rgba(255,255,255,0.1); border-radius: 20px; display: flex; align-items: center; gap: 20px;">
-                      <span style="font-size: 40px;">📍</span>
-                      <span style="font-weight: 600;">${day.cities?.name || `Day ${index + 1}`}</span>
-                      <span style="opacity: 0.8; margin-left: auto;">${plannedOffers.length} ${plannedOffers.length > 1 ? 'offers' : 'offer'}</span>
+                    <div style="background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.08) 100%); backdrop-filter: blur(10px); padding: 22px 28px; border-radius: 22px; display: flex; align-items: center; gap: 20px; border: 1.5px solid rgba(255,255,255,0.25); box-shadow: 0 8px 24px rgba(0,0,0,0.15); transition: all 0.3s;">
+                      <span style="font-size: 40px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));">📍</span>
+                      <span style="font-size: 32px; font-weight: 700; flex: 1; text-align: left;">${day.cities?.name || `Jour ${index + 1}`}</span>
+                      <span style="font-size: 28px; background: rgba(255,255,255,0.25); padding: 8px 18px; border-radius: 15px; font-weight: 700; backdrop-filter: blur(10px);">${plannedOffers.length}</span>
                     </div>
                   `;
                 }).filter(Boolean).join('')}
@@ -224,12 +242,15 @@ export function ShareItineraryButton({ itinerary, days }: ShareItineraryButtonPr
             </div>
           </div>
           
-          <div style="text-align: center; background: rgba(255,255,255,0.2); backdrop-filter: blur(20px); padding: 45px; border-radius: 35px; box-shadow: 0 8px 32px rgba(0,0,0,0.15);">
-            <div style="font-size: 38px; font-weight: 800; margin-bottom: 20px;">
-              ${t('travelPlanner.readyForAdventure') || 'Ready for this adventure?'}
-            </div>
-            <div style="font-size: 32px; opacity: 0.95; font-weight: 600; letter-spacing: 0.5px;">
-              passbali.com
+          <!-- Footer avec CTA -->
+          <div style="text-align: center;">
+            <div style="background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.15) 100%); backdrop-filter: blur(30px); padding: 50px 55px; border-radius: 40px; box-shadow: 0 30px 80px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.5); border: 2px solid rgba(255,255,255,0.35);">
+              <div style="font-size: 42px; font-weight: 900; margin-bottom: 18px; letter-spacing: 0.5px;">
+                ${t('travelPlanner.readyForAdventure') || 'Prêt à vivre cette aventure ?'}
+              </div>
+              <div style="display: inline-block; background: rgba(255,255,255,0.95); color: #667eea; padding: 18px 45px; border-radius: 25px; font-size: 34px; font-weight: 900; letter-spacing: 1px; box-shadow: 0 12px 40px rgba(0,0,0,0.25); border: 2px solid rgba(255,255,255,1);">
+                passbali.com
+              </div>
             </div>
           </div>
         </div>
