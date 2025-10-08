@@ -511,6 +511,7 @@ export const id = {
     copyLink: 'Salin tautan saja',
     shareWhatsApp: 'Bagikan di WhatsApp',
     readyForBaliAdventure: 'Siap untuk petualangan Bali Anda?',
+    myRoute: 'Perjalanan saya',
     itineraryStatus: {
       active: 'Aktif',
       completed: 'Selesai',

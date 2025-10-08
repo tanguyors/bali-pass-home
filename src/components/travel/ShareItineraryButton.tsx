@@ -248,7 +248,7 @@ export function ShareItineraryButton({ itinerary, days }: ShareItineraryButtonPr
             <!-- Titre section avec effet manuscrit -->
             <div style="text-align: center; margin-bottom: 28px;">
               <h2 style="font-size: 56px; font-weight: 900; color: white; margin: 0; text-shadow: 0 6px 24px rgba(0,0,0,0.5); letter-spacing: -1px; display: inline-block; position: relative;">
-                ✨ ${t('travelPlanner.highlights') || 'Your Adventure'}
+                ✨ ${t('travelPlanner.myRoute') || 'Mon parcours'}
                 <!-- Soulignement décoratif -->
                 <div style="position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 80%; height: 4px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent); border-radius: 2px;"></div>
               </h2>

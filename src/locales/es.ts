@@ -511,6 +511,7 @@ export const es = {
     copyLink: 'Copiar enlace solamente',
     shareWhatsApp: 'Compartir en WhatsApp',
     readyForBaliAdventure: '¿Listo para tu aventura en Bali?',
+    myRoute: 'Mi ruta',
     itineraryStatus: {
       active: 'Activo',
       completed: 'Completado',
