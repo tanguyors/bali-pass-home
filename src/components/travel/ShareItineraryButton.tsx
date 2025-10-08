@@ -53,6 +53,19 @@ export function ShareItineraryButton({ itinerary, days }: ShareItineraryButtonPr
     generateLink.mutate(itinerary.id);
   };
 
+  const handleCopyLinkOnly = async () => {
+    if (!shareUrl) return;
+
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      toast.success(t('travelPlanner.linkCopied') || 'Lien copié !');
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error(t('common.error') || 'Erreur lors de la copie');
+    }
+  };
+
   const handleCopyLink = async () => {
     if (!shareUrl) return;
 
@@ -183,6 +196,11 @@ export function ShareItineraryButton({ itinerary, days }: ShareItineraryButtonPr
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuItem onClick={handleCopyLinkOnly}>
+          <Link2 className="w-4 h-4 mr-2" />
+          Copier le lien uniquement
+        </DropdownMenuItem>
+
         <DropdownMenuItem onClick={handleCopyLink}>
           <Copy className="w-4 h-4 mr-2" />
           Copier lien + description
