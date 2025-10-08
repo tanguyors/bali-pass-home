@@ -499,6 +499,9 @@ export const zh = {
     generating: '生成中...',
     duplicating: '复制中...',
     signInToDuplicate: '登录以复制',
+    loading: '加载中...',
+    itineraryNotFound: '未找到行程',
+    backToHome: '返回主页',
     itineraryStatus: {
       active: '活跃',
       completed: '已完成',

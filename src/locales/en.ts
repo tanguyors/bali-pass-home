@@ -499,6 +499,9 @@ export const en = {
     generating: 'Generating...',
     duplicating: 'Duplicating...',
     signInToDuplicate: 'Sign in to duplicate',
+    loading: 'Loading...',
+    itineraryNotFound: 'Itinerary not found',
+    backToHome: 'Back to home',
     itineraryStatus: {
       active: 'Active',
       completed: 'Completed',

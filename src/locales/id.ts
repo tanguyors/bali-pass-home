@@ -499,6 +499,9 @@ export const id = {
     generating: 'Membuat...',
     duplicating: 'Menduplikasi...',
     signInToDuplicate: 'Masuk untuk menduplikasi',
+    loading: 'Memuat...',
+    itineraryNotFound: 'Rencana perjalanan tidak ditemukan',
+    backToHome: 'Kembali ke beranda',
     itineraryStatus: {
       active: 'Aktif',
       completed: 'Selesai',

@@ -44,7 +44,7 @@ export default function SharedItinerary() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-lg">Chargement...</div>
+        <div className="animate-pulse text-lg">{t('travelPlanner.loading') || 'Chargement...'}</div>
       </div>
     );
   }
@@ -53,8 +53,8 @@ export default function SharedItinerary() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Itinéraire non trouvé</h1>
-          <Button onClick={() => navigate("/")}>Retour à l'accueil</Button>
+          <h1 className="text-2xl font-bold mb-4">{t('travelPlanner.itineraryNotFound') || 'Itinéraire non trouvé'}</h1>
+          <Button onClick={() => navigate("/")}>{t('travelPlanner.backToHome') || 'Retour à l\'accueil'}</Button>
         </div>
       </div>
     );
