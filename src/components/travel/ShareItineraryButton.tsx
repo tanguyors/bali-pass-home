@@ -205,7 +205,7 @@ export function ShareItineraryButton({ itinerary, days }: ShareItineraryButtonPr
           <div style="text-align: center;">
             <!-- Petit logo badge discret -->
             <div style="display: inline-block; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(15px); padding: 10px 24px; border-radius: 100px; margin-bottom: 20px; border: 1.5px solid rgba(255,255,255,0.4); box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
-              <span style="font-size: 16px; font-weight: 700; color: white; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">Created with Bali'Pass</span>
+              <span style="font-size: 16px; font-weight: 700; color: white; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">Created with Pass'Bali</span>
             </div>
             
             <!-- TITRE GÉANT - Style magazine voyage -->
