@@ -201,48 +201,9 @@ export function ShareItineraryButton({ itinerary, days }: ShareItineraryButtonPr
           Copier le lien uniquement
         </DropdownMenuItem>
 
-        <DropdownMenuItem onClick={handleCopyLink}>
-          <Copy className="w-4 h-4 mr-2" />
-          Copier lien + description
-        </DropdownMenuItem>
-
-        <DropdownMenuSeparator />
-
-        <DropdownMenuItem onClick={handleNativeShare}>
-          <Share2 className="w-4 h-4 mr-2" />
-          Partager via...
-        </DropdownMenuItem>
-
         <DropdownMenuItem onClick={handleShareWhatsApp}>
           <MessageCircle className="w-4 h-4 mr-2" />
           Partager sur WhatsApp
-        </DropdownMenuItem>
-
-        <DropdownMenuItem onClick={handleShareEmail}>
-          <Mail className="w-4 h-4 mr-2" />
-          Partager par Email
-        </DropdownMenuItem>
-
-        <DropdownMenuItem onClick={handleShareFacebook}>
-          <Facebook className="w-4 h-4 mr-2" />
-          Partager sur Facebook
-        </DropdownMenuItem>
-
-        <DropdownMenuSeparator />
-
-        <DropdownMenuItem onClick={handleDownloadMap}>
-          <Download className="w-4 h-4 mr-2" />
-          Télécharger la carte
-        </DropdownMenuItem>
-
-        <DropdownMenuSeparator />
-
-        <DropdownMenuItem
-          onClick={handleDisableSharing}
-          className="text-destructive focus:text-destructive"
-        >
-          <X className="w-4 h-4 mr-2" />
-          Désactiver le partage
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
