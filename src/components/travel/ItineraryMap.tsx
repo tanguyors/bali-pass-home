@@ -185,7 +185,7 @@ function InnerMap({ center, offersWithLocation, onOfferClick, currentLocale, t }
   const map = useMap("balipass-itinerary-map");
   const [polylines, setPolylines] = useState<any[]>([]);
 
-  // Group offers by day to create routes
+  // Group offers by day to create routes (sorted by planned_time)
   const offersByDay = useMemo(() => {
     const grouped: Record<number, Array<{
       offer: PlannedOffer;
@@ -193,13 +193,32 @@ function InnerMap({ center, offersWithLocation, onOfferClick, currentLocale, t }
       dayDate: string;
       lat: number;
       lng: number;
+      offerIndex: number;
     }>> = {};
+    
     offersWithLocation.forEach(item => {
       if (!grouped[item.dayIndex]) {
         grouped[item.dayIndex] = [];
       }
-      grouped[item.dayIndex].push(item);
+      grouped[item.dayIndex].push({
+        ...item,
+        offerIndex: grouped[item.dayIndex].length
+      });
     });
+    
+    // Sort each day's offers by planned_time if available
+    Object.keys(grouped).forEach(dayIndex => {
+      grouped[parseInt(dayIndex)].sort((a, b) => {
+        const timeA = a.offer.planned_time || '00:00';
+        const timeB = b.offer.planned_time || '00:00';
+        return timeA.localeCompare(timeB);
+      });
+      // Update offerIndex after sorting
+      grouped[parseInt(dayIndex)].forEach((item, idx) => {
+        item.offerIndex = idx;
+      });
+    });
+    
     return grouped;
   }, [offersWithLocation]);
 
@@ -236,17 +255,8 @@ function InnerMap({ center, offersWithLocation, onOfferClick, currentLocale, t }
         path,
         geodesic: true,
         strokeColor: color,
-        strokeOpacity: 0.7,
-        strokeWeight: 3,
-        icons: [{
-          icon: {
-            path: 'M 0,-1 0,1',
-            strokeOpacity: 1,
-            scale: 3
-          },
-          offset: '0',
-          repeat: '15px'
-        }],
+        strokeOpacity: 0.8,
+        strokeWeight: 4,
         map
       });
 
@@ -268,24 +278,26 @@ function InnerMap({ center, offersWithLocation, onOfferClick, currentLocale, t }
       gestureHandling="greedy"
       disableDefaultUI={false}
     >
-      {offersWithLocation.map((item, idx) => {
-        const color = dayColors[item.dayIndex % dayColors.length];
+      {Object.entries(offersByDay).flatMap(([dayIndexStr, dayOffers]) => {
+        const dayIndex = parseInt(dayIndexStr);
+        const color = dayColors[dayIndex % dayColors.length];
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         
-        return (
+        return dayOffers.map((item) => (
           <AdvancedMarker
-            key={`${item.offer.id}-${idx}`}
+            key={`${item.offer.id}`}
             position={{ lat: item.lat, lng: item.lng }}
             onClick={() => setSelectedOffer(item)}
           >
             <div
-              className="w-6 h-6 rounded-full shadow-lg ring-2 ring-white border border-white flex items-center justify-center text-white text-xs font-bold"
+              className="w-8 h-8 rounded-full shadow-lg ring-2 ring-white flex items-center justify-center text-white text-xs font-bold"
               style={{ backgroundColor: color }}
               aria-label={item.offer.offers.partners.name}
             >
-              {item.dayIndex + 1}
+              {dayIndex + 1}{letters[item.offerIndex]}
             </div>
           </AdvancedMarker>
-        );
+        ));
       })}
 
       {selectedOffer && (
