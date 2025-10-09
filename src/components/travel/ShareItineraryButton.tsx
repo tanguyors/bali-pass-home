@@ -128,9 +128,56 @@ export function ShareItineraryButton({ itinerary, days }: ShareItineraryButtonPr
     );
   };
 
-  const handleDownloadMap = () => {
-    const mapUrl = generateStaticMapUrl(days);
-    window.open(mapUrl, '_blank');
+  const handleDownloadMap = async () => {
+    try {
+      const mapUrl = generateStaticMapUrl(days);
+      
+      // Créer une image temporaire pour charger la carte
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = mapUrl;
+      });
+      
+      // Créer un canvas et y dessiner l'image
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      
+      if (!ctx) {
+        throw new Error('Canvas context not available');
+      }
+      
+      ctx.drawImage(img, 0, 0);
+      
+      // Convertir en blob et télécharger
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          toast.error(t('common.error') || 'Erreur lors du téléchargement');
+          return;
+        }
+        
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = `${itinerary.title}-map.png`;
+        link.href = url;
+        link.click();
+        URL.revokeObjectURL(url);
+        
+        toast.success(t('travelPlanner.mapDownloaded') || 'Carte téléchargée !');
+      }, 'image/png');
+      
+    } catch (error) {
+      console.error('Error downloading map:', error);
+      // Fallback: ouvrir dans un nouvel onglet
+      const mapUrl = generateStaticMapUrl(days);
+      window.open(mapUrl, '_blank');
+      toast.info(t('travelPlanner.mapOpenedInNewTab') || 'Carte ouverte dans un nouvel onglet');
+    }
   };
 
   const handleNativeShare = async () => {
@@ -435,6 +482,18 @@ export function ShareItineraryButton({ itinerary, days }: ShareItineraryButtonPr
               <span className="font-medium">{t('travelPlanner.shareInstagramStory') || 'Partager en story Instagram'}</span>
             </>
           )}
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem 
+          onClick={handleDownloadMap}
+          className="gap-3 py-3 cursor-pointer hover:bg-primary/5"
+        >
+          <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <span className="font-medium">{t('travelPlanner.downloadMap') || 'Télécharger la carte'}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
