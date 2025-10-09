@@ -1,9 +1,13 @@
 import { APIProvider, Map, AdvancedMarker, InfoWindow, useMap } from '@vis.gl/react-google-maps';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { Card } from '../ui/card';
 import { format } from 'date-fns';
 import { fr, enUS, es, id as idLocale, zhCN } from 'date-fns/locale';
 import { useTranslation } from '@/hooks/useTranslation';
+import html2canvas from 'html2canvas';
+import { Button } from '../ui/button';
+import { Download } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface PlannedOffer {
   id: string;
@@ -40,6 +44,7 @@ interface ItineraryDay {
 interface ItineraryMapProps {
   days: ItineraryDay[];
   onOfferClick?: (offerId: string) => void;
+  itineraryTitle?: string;
 }
 
 // Color palette for different days
@@ -62,14 +67,49 @@ const localeMap = {
   zh: zhCN,
 };
 
-export function ItineraryMap({ days, onOfferClick }: ItineraryMapProps) {
+export function ItineraryMap({ days, onOfferClick, itineraryTitle }: ItineraryMapProps) {
   const { t, language } = useTranslation();
   const currentLocale = localeMap[language] || fr;
+  const mapContainerRef = useRef<HTMLDivElement>(null);
   const [selectedOffer, setSelectedOffer] = useState<{
     offer: PlannedOffer;
     dayIndex: number;
     dayDate: string;
   } | null>(null);
+
+  const handleDownloadMap = async () => {
+    if (!mapContainerRef.current) return;
+    
+    try {
+      toast.info(t('travelPlanner.generatingMap') || 'Génération de la carte...');
+      
+      const canvas = await html2canvas(mapContainerRef.current, {
+        useCORS: true,
+        allowTaint: true,
+        scale: 2,
+        logging: false,
+      });
+      
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          toast.error(t('common.error') || 'Erreur lors de la génération');
+          return;
+        }
+        
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = `${itineraryTitle || 'itinerary'}-map.png`;
+        link.href = url;
+        link.click();
+        URL.revokeObjectURL(url);
+        
+        toast.success(t('travelPlanner.mapDownloaded') || 'Carte téléchargée !');
+      }, 'image/png');
+    } catch (error) {
+      console.error('Error downloading map:', error);
+      toast.error(t('common.error') || 'Erreur lors du téléchargement');
+    }
+  };
 
   // Collect all offers with locations
   const offersWithLocation: Array<{
@@ -124,10 +164,21 @@ export function ItineraryMap({ days, onOfferClick }: ItineraryMapProps) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" ref={mapContainerRef}>
       {/* Legend */}
       <Card className="p-4">
-        <h3 className="text-sm font-semibold mb-3">{t('travelPlanner.legend')}</h3>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-semibold">{t('travelPlanner.legend')}</h3>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleDownloadMap}
+            className="gap-2"
+          >
+            <Download className="w-4 h-4" />
+            {t('travelPlanner.downloadMap') || 'Télécharger'}
+          </Button>
+        </div>
         <div className="flex flex-wrap gap-3">
           {days.map((day, index) => {
             const hasOffers = day.itinerary_planned_offers && day.itinerary_planned_offers.length > 0;
