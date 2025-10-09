@@ -1,5 +1,5 @@
 import { APIProvider, Map, AdvancedMarker, InfoWindow, useMap } from '@vis.gl/react-google-maps';
-import { useEffect, useMemo, useState, useRef, forwardRef, useImperativeHandle } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { Card } from '../ui/card';
 import { format } from 'date-fns';
 import { fr, enUS, es, id as idLocale, zhCN } from 'date-fns/locale';
@@ -8,8 +8,6 @@ import html2canvas from 'html2canvas';
 import { Button } from '../ui/button';
 import { Download } from 'lucide-react';
 import { toast } from 'sonner';
-import { Capacitor } from '@capacitor/core';
-import { Share as CapShare } from '@capacitor/share';
 
 interface PlannedOffer {
   id: string;
@@ -49,10 +47,6 @@ interface ItineraryMapProps {
   itineraryTitle?: string;
 }
 
-export interface ItineraryMapRef {
-  captureAndShareMap: () => Promise<void>;
-}
-
 // Color palette for different days
 const dayColors = [
   '#FF6B6B', // Red
@@ -73,80 +67,49 @@ const localeMap = {
   zh: zhCN,
 };
 
-export const ItineraryMap = forwardRef<ItineraryMapRef, ItineraryMapProps>(
-  ({ days, onOfferClick, itineraryTitle }, ref) => {
-    const { t, language } = useTranslation();
-    const currentLocale = localeMap[language] || fr;
-    const mapContainerRef = useRef<HTMLDivElement>(null);
-    const [selectedOffer, setSelectedOffer] = useState<{
-      offer: PlannedOffer;
-      dayIndex: number;
-      dayDate: string;
-    } | null>(null);
+export function ItineraryMap({ days, onOfferClick, itineraryTitle }: ItineraryMapProps) {
+  const { t, language } = useTranslation();
+  const currentLocale = localeMap[language] || fr;
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const [selectedOffer, setSelectedOffer] = useState<{
+    offer: PlannedOffer;
+    dayIndex: number;
+    dayDate: string;
+  } | null>(null);
 
-    const captureAndShareMap = async () => {
-      if (!mapContainerRef.current) return;
+  const handleDownloadMap = async () => {
+    if (!mapContainerRef.current) return;
+    
+    try {
+      toast.info(t('travelPlanner.generatingMap') || 'Génération de la carte...');
       
-      try {
-        toast.info(t('travelPlanner.generatingMap') || 'Génération de la carte...');
+      const canvas = await html2canvas(mapContainerRef.current, {
+        useCORS: true,
+        allowTaint: true,
+        scale: 2,
+        logging: false,
+      });
+      
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          toast.error(t('common.error') || 'Erreur lors de la génération');
+          return;
+        }
         
-        const canvas = await html2canvas(mapContainerRef.current, {
-          useCORS: true,
-          allowTaint: true,
-          scale: 2,
-          logging: false,
-        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = `${itineraryTitle || 'itinerary'}-map.png`;
+        link.href = url;
+        link.click();
+        URL.revokeObjectURL(url);
         
-        const blob = await new Promise<Blob>((resolve, reject) => {
-          canvas.toBlob((blob) => {
-            if (blob) resolve(blob);
-            else reject(new Error('Failed to create blob'));
-          }, 'image/png');
-        });
-
-        const reader = new FileReader();
-        reader.readAsDataURL(blob);
-        
-        reader.onloadend = async () => {
-          const base64data = reader.result as string;
-          
-          if (Capacitor.isNativePlatform()) {
-            try {
-              await CapShare.share({
-                title: itineraryTitle || 'Mon itinéraire',
-                text: `${itineraryTitle || 'Mon itinéraire'} - Carte avec les points d'intérêt`,
-                url: base64data,
-                dialogTitle: t('travelPlanner.shareOn') || 'Partager sur',
-              });
-              toast.success(t('travelPlanner.sharedSuccessfully') || 'Partagé avec succès !');
-            } catch (error) {
-              console.error('Error sharing:', error);
-            }
-          } else {
-            // Sur web, télécharger l'image
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.download = `${itineraryTitle || 'itinerary'}-map.png`;
-            link.href = url;
-            link.click();
-            URL.revokeObjectURL(url);
-            
-            toast.success(t('travelPlanner.mapDownloaded') || 'Carte téléchargée ! Vous pouvez la partager sur vos réseaux sociaux.');
-          }
-        };
-      } catch (error) {
-        console.error('Error sharing map:', error);
-        toast.error(t('common.error') || 'Erreur lors du partage');
-      }
-    };
-
-    useImperativeHandle(ref, () => ({
-      captureAndShareMap,
-    }));
-
-    const handleDownloadMap = async () => {
-      await captureAndShareMap();
-    };
+        toast.success(t('travelPlanner.mapDownloaded') || 'Carte téléchargée !');
+      }, 'image/png');
+    } catch (error) {
+      console.error('Error downloading map:', error);
+      toast.error(t('common.error') || 'Erreur lors du téléchargement');
+    }
+  };
 
     // Collect all offers with locations
     const offersWithLocation: Array<{
@@ -247,13 +210,10 @@ export const ItineraryMap = forwardRef<ItineraryMapRef, ItineraryMapProps>(
               t={t}
             />
           </APIProvider>
-        </Card>
-      </div>
-    );
-  }
-);
-
-ItineraryMap.displayName = 'ItineraryMap';
+      </Card>
+    </div>
+  );
+}
 
 function InnerMap({ center, offersWithLocation, onOfferClick, currentLocale, t }: {
   center: { lat: number; lng: number };

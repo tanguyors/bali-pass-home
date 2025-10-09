@@ -6,8 +6,8 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { type Itinerary } from "@/hooks/useItineraries";
 import { type ItineraryDay } from "@/hooks/useItineraryDays";
 import { usePlannedOffers } from "@/hooks/usePlannedOffers";
-import { ItineraryMap, type ItineraryMapRef } from "./ItineraryMap";
-import { useState, useRef } from "react";
+import { ItineraryMap } from "./ItineraryMap";
+import { useState } from "react";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
 import { ShareItineraryButton } from "./ShareItineraryButton";
@@ -30,7 +30,6 @@ export function ItinerarySummary({ itinerary, days }: ItinerarySummaryProps) {
   const currentLocale = localeMap[language] || fr;
   const navigate = useNavigate();
   const [showMap, setShowMap] = useState(true);
-  const mapRef = useRef<ItineraryMapRef>(null);
 
   // Prepare days with offers for the map
   const daysWithOffers = days.map(day => ({
@@ -38,21 +37,11 @@ export function ItinerarySummary({ itinerary, days }: ItinerarySummaryProps) {
     itinerary_planned_offers: day.itinerary_planned_offers || []
   }));
 
-  const handleShareMap = async () => {
-    if (mapRef.current) {
-      await mapRef.current.captureAndShareMap();
-    }
-  };
-
   return (
     <div className="space-y-6">
       {/* Map view toggle and Share button */}
       <div className="flex justify-between items-center gap-2">
-        <ShareItineraryButton 
-          itinerary={itinerary} 
-          days={days}
-          onShareMap={showMap ? handleShareMap : undefined}
-        />
+        <ShareItineraryButton itinerary={itinerary} days={days} />
         
         <Button
           variant={showMap ? "default" : "outline"}
@@ -68,7 +57,6 @@ export function ItinerarySummary({ itinerary, days }: ItinerarySummaryProps) {
       {/* Map */}
       {showMap && (
         <ItineraryMap
-          ref={mapRef}
           days={daysWithOffers}
           onOfferClick={(offerId) => navigate(`/offer/${offerId}`)}
           itineraryTitle={itinerary.title}
