@@ -59,7 +59,6 @@ export function ItinerarySummary({ itinerary, days }: ItinerarySummaryProps) {
         <ItineraryMap
           days={daysWithOffers}
           onOfferClick={(offerId) => navigate(`/offer/${offerId}`)}
-          itineraryTitle={itinerary.title}
         />
       )}
 
