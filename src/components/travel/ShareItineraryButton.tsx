@@ -33,12 +33,14 @@ import { useTranslation } from "@/hooks/useTranslation";
 interface ShareItineraryButtonProps {
   itinerary: Itinerary;
   days: ItineraryDay[];
+  onShareMap?: () => Promise<void>;
 }
 
-export function ShareItineraryButton({ itinerary, days }: ShareItineraryButtonProps) {
+export function ShareItineraryButton({ itinerary, days, onShareMap }: ShareItineraryButtonProps) {
   const { t, language } = useTranslation();
   const [copied, setCopied] = useState(false);
   const [isGeneratingStory, setIsGeneratingStory] = useState(false);
+  const [isGeneratingMap, setIsGeneratingMap] = useState(false);
   const generateLink = useGenerateShareLink();
   const disableSharing = useDisableSharing();
 
@@ -206,6 +208,23 @@ export function ShareItineraryButton({ itinerary, days }: ShareItineraryButtonPr
 
   const handleDisableSharing = () => {
     disableSharing.mutate(itinerary.id);
+  };
+
+  const handleShareMapImage = async () => {
+    if (!onShareMap) {
+      toast.error(t('travelPlanner.mapNotAvailable') || 'Carte non disponible');
+      return;
+    }
+    
+    setIsGeneratingMap(true);
+    try {
+      await onShareMap();
+    } catch (error) {
+      console.error('Error sharing map:', error);
+      toast.error(t('common.error') || 'Erreur lors du partage');
+    } finally {
+      setIsGeneratingMap(false);
+    }
   };
 
   const generateInstagramStory = async () => {
@@ -487,13 +506,23 @@ export function ShareItineraryButton({ itinerary, days }: ShareItineraryButtonPr
         <DropdownMenuSeparator />
 
         <DropdownMenuItem 
-          onClick={handleDownloadMap}
-          className="gap-3 py-3 cursor-pointer hover:bg-primary/5"
+          onClick={handleShareMapImage}
+          disabled={isGeneratingMap || !onShareMap}
+          className="gap-3 py-3 cursor-pointer hover:bg-blue-500/5"
         >
-          <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          <span className="font-medium">{t('travelPlanner.downloadMap') || 'Télécharger la carte'}</span>
+          {isGeneratingMap ? (
+            <>
+              <Sparkles className="w-4 h-4 text-blue-500 animate-pulse" />
+              <span className="font-medium">{t('travelPlanner.generating') || 'Génération...'}</span>
+            </>
+          ) : (
+            <>
+              <svg className="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              </svg>
+              <span className="font-medium">{t('travelPlanner.shareMapImage') || 'Partager la carte'}</span>
+            </>
+          )}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
