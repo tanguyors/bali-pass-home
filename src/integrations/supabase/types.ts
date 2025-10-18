@@ -1069,6 +1069,8 @@ export type Database = {
           created_at: string
           currency: string | null
           id: string
+          promo_code_id: string | null
+          reseller_code: string | null
           status: Database["public"]["Enums"]["payment_status"] | null
           stripe_payment_intent: string | null
           user_id: string
@@ -1078,6 +1080,8 @@ export type Database = {
           created_at?: string
           currency?: string | null
           id?: string
+          promo_code_id?: string | null
+          reseller_code?: string | null
           status?: Database["public"]["Enums"]["payment_status"] | null
           stripe_payment_intent?: string | null
           user_id: string
@@ -1087,11 +1091,21 @@ export type Database = {
           created_at?: string
           currency?: string | null
           id?: string
+          promo_code_id?: string | null
+          reseller_code?: string | null
           status?: Database["public"]["Enums"]["payment_status"] | null
           stripe_payment_intent?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "payments_promo_code_id_fkey"
+            columns: ["promo_code_id"]
+            isOneToOne: false
+            referencedRelation: "promo_codes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -1103,6 +1117,7 @@ export type Database = {
           id: string
           last_name: string | null
           locale: string | null
+          manager_code: string | null
           name: string | null
           onboarding_completed: boolean | null
           phone: string | null
@@ -1119,6 +1134,7 @@ export type Database = {
           id?: string
           last_name?: string | null
           locale?: string | null
+          manager_code?: string | null
           name?: string | null
           onboarding_completed?: boolean | null
           phone?: string | null
@@ -1135,6 +1151,7 @@ export type Database = {
           id?: string
           last_name?: string | null
           locale?: string | null
+          manager_code?: string | null
           name?: string | null
           onboarding_completed?: boolean | null
           phone?: string | null
@@ -1519,6 +1536,10 @@ export type Database = {
       }
       create_partner_pass: {
         Args: { partner_user_id: string }
+        Returns: string
+      }
+      generate_manager_code: {
+        Args: Record<PropertyKey, never>
         Returns: string
       }
       generate_partner_qr_code: {

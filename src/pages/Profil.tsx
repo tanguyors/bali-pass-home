@@ -37,7 +37,6 @@ import { SupportLink } from '@/components/SupportLink';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageSelector } from '@/components/LanguageSelector';
-import { TranslateOffersButton } from '@/components/admin/TranslateOffersButton';
 import { QRScanner } from '@/components/QRScanner';
 import { PartnerOffersModal } from '@/components/PartnerOffersModal';
 import { openExternalUrl } from '@/lib/browser';
@@ -464,26 +463,6 @@ const Profil: React.FC = () => {
         )}
 
         {/* Settings removed as requested */}
-
-        {/* Admin Tools - Only for admin users */}
-        {user && user.email === 'tanguyvente57@gmail.com' && (
-          <Card className="shadow-lg border-0 bg-card/60 backdrop-blur-sm">
-            <CardContent className="p-6">
-              <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                <div className="w-2 h-6 bg-gradient-to-b from-purple-500 to-purple-400 rounded-full"></div>
-                Outils d'administration
-              </h3>
-              <div className="space-y-4">
-                <div className="p-4 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
-                  <p className="text-sm text-purple-700 dark:text-purple-300 mb-3">
-                    Traduire automatiquement toutes les descriptions des offres dans toutes les langues (EN, ES, ID, ZH)
-                  </p>
-                  <TranslateOffersButton />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Support */}
         <Card className="shadow-lg border-0 bg-card/60 backdrop-blur-sm">
