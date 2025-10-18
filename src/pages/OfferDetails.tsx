@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, MapPin, Star, Heart, Clock, Share2, Percent, Euro, Navigation, Phone, Globe, Instagram, Calendar, CheckCircle, Sparkles, Gift } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "@/hooks/useTranslation";
 import { QRScanner } from "@/components/QRScanner";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { logger } from "@/lib/logger";
@@ -15,12 +15,28 @@ import { openExternalUrl } from "@/lib/browser";
 interface Offer {
   id: string;
   title: string;
+  title_en?: string;
+  title_es?: string;
+  title_id?: string;
+  title_zh?: string;
   short_desc?: string;
+  short_desc_en?: string;
+  short_desc_es?: string;
+  short_desc_id?: string;
+  short_desc_zh?: string;
   long_desc?: string;
+  long_desc_en?: string;
+  long_desc_es?: string;
+  long_desc_id?: string;
+  long_desc_zh?: string;
   value_text?: string;
   promo_type?: string;
   value_number?: number;
   conditions_text?: string;
+  conditions_text_en?: string;
+  conditions_text_es?: string;
+  conditions_text_id?: string;
+  conditions_text_zh?: string;
   terms_url?: string;
   start_date?: string;
   end_date?: string;
@@ -43,7 +59,7 @@ export default function OfferDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { t } = useLanguage();
+  const { t, getTranslatedText } = useTranslation();
   const [offer, setOffer] = useState<Offer | null>(null);
   const [loading, setLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -97,12 +113,28 @@ export default function OfferDetails() {
         .select(`
           id,
           title,
+          title_en,
+          title_es,
+          title_id,
+          title_zh,
           short_desc,
+          short_desc_en,
+          short_desc_es,
+          short_desc_id,
+          short_desc_zh,
           long_desc,
+          long_desc_en,
+          long_desc_es,
+          long_desc_id,
+          long_desc_zh,
           value_text,
           promo_type,
           value_number,
           conditions_text,
+          conditions_text_en,
+          conditions_text_es,
+          conditions_text_id,
+          conditions_text_zh,
           terms_url,
           start_date,
           end_date,
@@ -531,11 +563,21 @@ export default function OfferDetails() {
           <Card className="border-0 shadow-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl animate-slide-in-right">
             <CardContent className="p-6">
               <h1 className="text-3xl font-bold text-slate-900 dark:text-white leading-tight mb-2">
-                {offer.title}
+                {getTranslatedText(offer.title, {
+                  en: offer.title_en,
+                  es: offer.title_es,
+                  id: offer.title_id,
+                  zh: offer.title_zh
+                })}
               </h1>
-              {offer.short_desc && (
+              {(offer.short_desc || offer.short_desc_en || offer.short_desc_es || offer.short_desc_id || offer.short_desc_zh) && (
                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                  {offer.short_desc}
+                  {getTranslatedText(offer.short_desc, {
+                    en: offer.short_desc_en,
+                    es: offer.short_desc_es,
+                    id: offer.short_desc_id,
+                    zh: offer.short_desc_zh
+                  })}
                 </p>
               )}
             </CardContent>
@@ -641,21 +683,26 @@ export default function OfferDetails() {
           </Card>
 
           {/* Long Description */}
-          {offer.long_desc && (
+          {(offer.long_desc || offer.long_desc_en || offer.long_desc_es || offer.long_desc_id || offer.long_desc_zh) && (
             <Card className="border-0 shadow-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl animate-fade-in">
               <CardContent className="p-6">
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
                   {t('offer_details.details')}
                 </h3>
                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                  {offer.long_desc}
+                  {getTranslatedText(offer.long_desc, {
+                    en: offer.long_desc_en,
+                    es: offer.long_desc_es,
+                    id: offer.long_desc_id,
+                    zh: offer.long_desc_zh
+                  })}
                 </p>
               </CardContent>
             </Card>
           )}
 
           {/* Conditions */}
-          {offer.conditions_text && (
+          {(offer.conditions_text || offer.conditions_text_en || offer.conditions_text_es || offer.conditions_text_id || offer.conditions_text_zh) && (
             <Card className="border-0 shadow-xl bg-amber-50/80 dark:bg-amber-950/20 backdrop-blur-xl border border-amber-200/50 dark:border-amber-800/50 animate-fade-in">
               <CardContent className="p-6">
                 <h3 className="text-xl font-bold text-amber-900 dark:text-amber-100 mb-4 flex items-center gap-2">
@@ -663,7 +710,12 @@ export default function OfferDetails() {
                   {t('offer_details.conditions')}
                 </h3>
                 <p className="text-amber-800 dark:text-amber-200 leading-relaxed">
-                  {offer.conditions_text}
+                  {getTranslatedText(offer.conditions_text, {
+                    en: offer.conditions_text_en,
+                    es: offer.conditions_text_es,
+                    id: offer.conditions_text_id,
+                    zh: offer.conditions_text_zh
+                  })}
                 </p>
               </CardContent>
             </Card>
