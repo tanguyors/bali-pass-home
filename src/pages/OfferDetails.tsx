@@ -48,6 +48,11 @@ interface Offer {
     website?: string;
     instagram?: string;
     photos?: string[];
+    description?: string;
+    description_en?: string;
+    description_es?: string;
+    description_id?: string;
+    description_zh?: string;
   };
   category: {
     name: string;
@@ -139,7 +144,7 @@ export default function OfferDetails() {
           terms_url,
           start_date,
           end_date,
-          partner:partners(id, name, address, phone, website, instagram, photos),
+          partner:partners(id, name, address, phone, website, instagram, photos, description, description_en, description_es, description_id, description_zh),
           category:categories(name, icon)
         `)
         .eq('id', offerId)
@@ -760,18 +765,20 @@ export default function OfferDetails() {
           </Card>
 
           {/* Long Description */}
-          {(offer.long_desc || offer.long_desc_en || offer.long_desc_es || offer.long_desc_id || offer.long_desc_zh) && (
+          {(offer.long_desc || offer.long_desc_en || offer.long_desc_es || offer.long_desc_id || offer.long_desc_zh || 
+            offer.partner.description || offer.partner.description_en || offer.partner.description_es || 
+            offer.partner.description_id || offer.partner.description_zh) && (
             <Card className="border-0 shadow-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl animate-fade-in">
               <CardContent className="p-6">
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
                   {t('offer_details.details')}
                 </h3>
-                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                  {getTranslatedText(offer.long_desc, {
-                    en: offer.long_desc_en,
-                    es: offer.long_desc_es,
-                    id: offer.long_desc_id,
-                    zh: offer.long_desc_zh
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">
+                  {getTranslatedText(offer.long_desc || offer.partner.description, {
+                    en: offer.long_desc_en || offer.partner.description_en,
+                    es: offer.long_desc_es || offer.partner.description_es,
+                    id: offer.long_desc_id || offer.partner.description_id,
+                    zh: offer.long_desc_zh || offer.partner.description_zh
                   })}
                 </p>
               </CardContent>
