@@ -59,6 +59,14 @@ serve(async (req) => {
 
     if (fetchError) throw fetchError;
 
+    // Récupérer tous les partenaires approuvés
+    const { data: partners, error: partnersError } = await supabaseClient
+      .from('partners')
+      .select('id, description, description_en, description_es, description_id, description_zh')
+      .eq('status', 'approved');
+
+    if (partnersError) throw partnersError;
+
     const languages = [
       { code: 'en', suffix: '_en' },
       { code: 'es', suffix: '_es' },
@@ -67,10 +75,12 @@ serve(async (req) => {
     ];
 
     const fields = ['title', 'short_desc', 'long_desc', 'conditions_text'];
+    const partnerFields = ['description'];
 
     let translatedCount = 0;
     let skippedCount = 0;
 
+    // Traduire les offres
     for (const offer of offers || []) {
       const updates: any = {};
       let hasUpdates = false;
@@ -116,6 +126,52 @@ serve(async (req) => {
       }
     }
 
+    // Traduire les descriptions des partenaires
+    for (const partner of partners || []) {
+      const updates: any = {};
+      let hasUpdates = false;
+
+      for (const field of partnerFields) {
+        const sourceText = partner[field];
+        if (!sourceText || sourceText.trim() === '') continue;
+
+        for (const lang of languages) {
+          const fieldName = `${field}${lang.suffix}`;
+          
+          // Si la traduction existe déjà, on la saute
+          if (partner[fieldName] && partner[fieldName].trim() !== '') {
+            skippedCount++;
+            continue;
+          }
+
+          try {
+            // Traduire le texte
+            const translated = await translateText(sourceText, lang.code, googleApiKey);
+            updates[fieldName] = translated;
+            hasUpdates = true;
+            translatedCount++;
+            
+            // Petit délai pour éviter de surcharger l'API
+            await new Promise(resolve => setTimeout(resolve, 100));
+          } catch (error) {
+            console.error(`Error translating ${field} to ${lang.code} for partner ${partner.id}:`, error);
+          }
+        }
+      }
+
+      // Mettre à jour le partenaire si il y a des traductions
+      if (hasUpdates) {
+        const { error: updateError } = await supabaseClient
+          .from('partners')
+          .update(updates)
+          .eq('id', partner.id);
+
+        if (updateError) {
+          console.error(`Error updating partner ${partner.id}:`, updateError);
+        }
+      }
+    }
+
     return new Response(
       JSON.stringify({
         success: true,
@@ -123,6 +179,7 @@ serve(async (req) => {
         translatedCount,
         skippedCount,
         totalOffers: offers?.length || 0,
+        totalPartners: partners?.length || 0,
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
