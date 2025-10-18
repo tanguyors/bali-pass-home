@@ -10,6 +10,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { QRScanner } from "@/components/QRScanner";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { logger } from "@/lib/logger";
+import { openExternalUrl } from "@/lib/browser";
 
 interface Offer {
   id: string;
@@ -693,6 +694,18 @@ export default function OfferDetails() {
               </span>
             </div>
           </Button>
+          
+          {offer.partner.phone && (
+            <Button 
+              variant="outline" 
+              size="lg"
+              className="h-14 px-6 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 border-0 text-white rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+              onClick={() => openExternalUrl(`https://wa.me/${offer.partner.phone!.replace(/[^\d+]/g, '')}`)}
+              title="WhatsApp"
+            >
+              <Phone className="w-6 h-6" />
+            </Button>
+          )}
           
           {offer.partner.address && (
             <Button 
