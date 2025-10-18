@@ -312,6 +312,7 @@ export const id = {
     valid_until: 'Berlaku hingga',
     conditions: 'Syarat & Ketentuan',
     terms: 'Lihat syarat penggunaan',
+    partner_photos: 'Foto mitra',
     error_loading: 'Tidak dapat memuat detail penawaran',
     error_occurred: 'Terjadi kesalahan',
     login_required: 'Masuk diperlukan',

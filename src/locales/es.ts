@@ -312,6 +312,7 @@ export const es = {
     valid_until: 'Válido hasta',
     conditions: 'Condiciones',
     terms: 'Ver términos de uso',
+    partner_photos: 'Fotos del socio',
     error_loading: 'No se pudieron cargar los detalles de la oferta',
     error_occurred: 'Ocurrió un error',
     login_required: 'Inicio de sesión requerido',

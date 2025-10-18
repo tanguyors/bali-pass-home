@@ -312,6 +312,7 @@ export const en = {
     valid_until: 'Valid until',
     conditions: 'Conditions',
     terms: 'View terms of use',
+    partner_photos: 'Partner photos',
     error_loading: 'Unable to load offer details',
     error_occurred: 'An error occurred',
     login_required: 'Login required',

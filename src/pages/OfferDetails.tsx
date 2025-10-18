@@ -557,6 +557,29 @@ export default function OfferDetails() {
 
         </div>
 
+        {/* Partner Photos Gallery */}
+        {offer.partner.photos && offer.partner.photos.length > 1 && (
+          <div className="px-6 py-6">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
+              {t('offer_details.partner_photos')}
+            </h3>
+            <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
+              {offer.partner.photos.map((photo, index) => (
+                <div 
+                  key={index} 
+                  className="flex-shrink-0 w-48 h-32 rounded-xl overflow-hidden snap-start shadow-lg hover:shadow-xl transition-shadow duration-300"
+                >
+                  <img
+                    src={photo}
+                    alt={`${offer.partner.name} - Photo ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Main Content */}
         <div className="px-6 -mt-8 relative z-10 space-y-6">
           {/* Title Card */}
