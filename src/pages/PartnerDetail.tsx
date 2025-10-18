@@ -288,17 +288,21 @@ const PartnerDetail: React.FC = () => {
             )}
             
             {partner.phone && (
-              <a
-                href={`https://wa.me/${partner.phone.replace(/[^\d+]/g, '')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full flex items-center gap-3 rounded-md px-2 py-1 hover:bg-accent/30 transition-colors cursor-pointer"
+              <Button
+                asChild
+                variant="secondary"
+                className="w-full justify-start gap-3 rounded-md"
+                aria-label={t('partner_details.contact_whatsapp')}
               >
-                <Phone className="w-5 h-5 text-muted-foreground" />
-                <span className="text-sm text-primary underline-offset-2 hover:underline font-medium">
-                  {partner.phone}
-                </span>
-              </a>
+                <a
+                  href={`https://wa.me/${partner.phone.replace(/[^\d+]/g, '')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Phone className="w-5 h-5" />
+                  <span className="text-sm font-medium">{partner.phone}</span>
+                </a>
+              </Button>
             )}
             
             {partner.website && (
