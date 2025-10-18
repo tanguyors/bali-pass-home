@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, MapPin, Star, Heart, Clock, Share2, Percent, Euro, Navigation, Phone, Globe, Instagram, Calendar, CheckCircle, Sparkles, Gift } from "lucide-react";
+import { ArrowLeft, MapPin, Star, Heart, Clock, Share2, Percent, Euro, Navigation, Phone, Globe, Instagram, Calendar, CheckCircle, Sparkles, Gift, ChevronLeft, ChevronRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "@/hooks/useTranslation";
 import { QRScanner } from "@/components/QRScanner";
@@ -69,6 +69,7 @@ export default function OfferDetails() {
   const [isAlreadyUsed, setIsAlreadyUsed] = useState(false);
   const [showRedemptionConfirmation, setShowRedemptionConfirmation] = useState(false);
   const [redemptionData, setRedemptionData] = useState<any>(null);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
   useEffect(() => {
     if (id) {
@@ -458,6 +459,18 @@ export default function OfferDetails() {
     }
   };
 
+  const handleNextPhoto = () => {
+    if (offer?.partner.photos && offer.partner.photos.length > 0) {
+      setCurrentPhotoIndex((prev) => (prev + 1) % offer.partner.photos.length);
+    }
+  };
+
+  const handlePrevPhoto = () => {
+    if (offer?.partner.photos && offer.partner.photos.length > 0) {
+      setCurrentPhotoIndex((prev) => (prev - 1 + offer.partner.photos.length) % offer.partner.photos.length);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -530,11 +543,49 @@ export default function OfferDetails() {
           {offer.partner.photos && offer.partner.photos.length > 0 ? (
             <div className="relative w-full h-full">
               <img
-                src={offer.partner.photos[0]}
-                alt={offer.title}
-                className="w-full h-full object-cover"
+                src={offer.partner.photos[currentPhotoIndex]}
+                alt={`${offer.title} - Photo ${currentPhotoIndex + 1}`}
+                className="w-full h-full object-cover transition-all duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+              
+              {/* Navigation Arrows */}
+              {offer.partner.photos.length > 1 && (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handlePrevPhoto}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 hover:bg-white border border-white/50 shadow-lg backdrop-blur-sm transition-all duration-300"
+                  >
+                    <ChevronLeft className="w-6 h-6 text-slate-900" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleNextPhoto}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 hover:bg-white border border-white/50 shadow-lg backdrop-blur-sm transition-all duration-300"
+                  >
+                    <ChevronRight className="w-6 h-6 text-slate-900" />
+                  </Button>
+                  
+                  {/* Photo Indicators */}
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                    {offer.partner.photos.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentPhotoIndex(index)}
+                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                          index === currentPhotoIndex
+                            ? 'bg-white w-8'
+                            : 'bg-white/50 hover:bg-white/75'
+                        }`}
+                        aria-label={`Photo ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-primary/30 via-secondary/20 to-lagoon/30 flex items-center justify-center relative">
@@ -565,16 +616,19 @@ export default function OfferDetails() {
             </h3>
             <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
               {offer.partner.photos.map((photo, index) => (
-                <div 
-                  key={index} 
-                  className="flex-shrink-0 w-48 h-32 rounded-xl overflow-hidden snap-start shadow-lg hover:shadow-xl transition-shadow duration-300"
+                <button
+                  key={index}
+                  onClick={() => setCurrentPhotoIndex(index)}
+                  className={`flex-shrink-0 w-24 h-20 rounded-lg overflow-hidden snap-start shadow-md hover:shadow-xl transition-all duration-300 ${
+                    index === currentPhotoIndex ? 'ring-2 ring-primary scale-105' : ''
+                  }`}
                 >
                   <img
                     src={photo}
                     alt={`${offer.partner.name} - Photo ${index + 1}`}
                     className="w-full h-full object-cover"
                   />
-                </div>
+                </button>
               ))}
             </div>
           </div>
