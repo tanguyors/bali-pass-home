@@ -12,6 +12,7 @@ import { usePartnerFavorites } from '@/hooks/usePartnerFavorites';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageSelector } from '@/components/LanguageSelector';
+import { openExternalUrl } from '@/lib/browser';
 
 interface Partner {
   id: string;
@@ -102,9 +103,11 @@ const PartnerDetail: React.FC = () => {
     }
   };
 
-  const handleCall = () => {
+  const handleWhatsApp = async () => {
     if (partner?.phone) {
-      window.location.href = `tel:${partner.phone}`;
+      // Remove all non-digit characters except +
+      const cleanPhone = partner.phone.replace(/[^\d+]/g, '');
+      await openExternalUrl(`https://wa.me/${cleanPhone}`);
     }
   };
 
@@ -249,11 +252,11 @@ const PartnerDetail: React.FC = () => {
             <div className="flex gap-3">
               {partner.phone && (
                 <Button 
-                  onClick={handleCall}
-                  className="flex-1 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 gap-2"
+                  onClick={handleWhatsApp}
+                  className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 gap-2 text-white"
                 >
                   <Phone className="w-4 h-4" />
-                  {t('offer_card.call')}
+                  WhatsApp
                 </Button>
               )}
               
@@ -287,7 +290,12 @@ const PartnerDetail: React.FC = () => {
             {partner.phone && (
               <div className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-muted-foreground" />
-                <span className="text-sm">{partner.phone}</span>
+                <button 
+                  onClick={handleWhatsApp}
+                  className="text-sm text-primary hover:underline cursor-pointer"
+                >
+                  {partner.phone}
+                </button>
               </div>
             )}
             
