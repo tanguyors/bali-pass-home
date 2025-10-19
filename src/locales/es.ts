@@ -314,6 +314,7 @@ export const es = {
     terms: 'Ver términos de uso',
     partner_photos: 'Fotos del socio',
     visit_website: 'Visitar sitio web',
+    view_on_map: 'Ver en el mapa',
     error_loading: 'No se pudieron cargar los detalles de la oferta',
     error_occurred: 'Ocurrió un error',
     login_required: 'Inicio de sesión requerido',

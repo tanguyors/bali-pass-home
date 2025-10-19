@@ -321,6 +321,7 @@ export const fr = {
     terms: 'Voir les conditions d\'utilisation',
     partner_photos: 'Photos du partenaire',
     visit_website: 'Visiter le site',
+    view_on_map: 'Voir sur la carte',
     error_loading: 'Impossible de charger les détails de l\'offre',
     error_occurred: 'Une erreur s\'est produite',
     login_required: 'Connexion requise',

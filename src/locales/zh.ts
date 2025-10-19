@@ -314,6 +314,7 @@ export const zh = {
     terms: '查看使用条款',
     partner_photos: '合作伙伴照片',
     visit_website: '访问网站',
+    view_on_map: '在地图上查看',
     error_loading: '无法加载优惠详情',
     error_occurred: '发生错误',
     login_required: '需要登录',

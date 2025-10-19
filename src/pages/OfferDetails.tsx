@@ -689,7 +689,7 @@ export default function OfferDetails() {
                     <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                       <MapPin className="w-5 h-5 text-primary" />
                     </div>
-                    <span className="text-slate-700 dark:text-slate-300 flex-1">{offer.partner.address}</span>
+                    <span className="text-primary dark:text-primary flex-1 font-medium">{t('offer_details.view_on_map')}</span>
                     <ExternalLink className="w-4 h-4 text-primary" />
                   </button>
                 )}

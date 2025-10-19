@@ -314,6 +314,7 @@ export const en = {
     terms: 'View terms of use',
     partner_photos: 'Partner photos',
     visit_website: 'Visit Website',
+    view_on_map: 'View on map',
     error_loading: 'Unable to load offer details',
     error_occurred: 'An error occurred',
     login_required: 'Login required',

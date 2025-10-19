@@ -314,6 +314,7 @@ export const id = {
     terms: 'Lihat syarat penggunaan',
     partner_photos: 'Foto mitra',
     visit_website: 'Kunjungi Website',
+    view_on_map: 'Lihat di peta',
     error_loading: 'Tidak dapat memuat detail penawaran',
     error_occurred: 'Terjadi kesalahan',
     login_required: 'Masuk diperlukan',
