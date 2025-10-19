@@ -13,6 +13,7 @@ export interface Offer {
   promo_type: string;
   value_number: number | null;
   is_featured: boolean;
+  photos: string[] | null;
   partner: {
     id: string;
     name: string;
@@ -130,6 +131,7 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
           promo_type,
           value_number,
           is_featured,
+          photos,
           partner:partners(id, name, address, phone, photos, lat, lng, city_id),
           category:categories(id, name, icon)
         `)

@@ -40,6 +40,7 @@ interface Offer {
   terms_url?: string;
   start_date?: string;
   end_date?: string;
+  photos?: string[];
   partner: {
     id: string;
     name: string;
@@ -144,6 +145,7 @@ export default function OfferDetails() {
           terms_url,
           start_date,
           end_date,
+          photos,
           partner:partners(id, name, address, phone, website, instagram, photos, description, description_en, description_es, description_id, description_zh),
           category:categories(name, icon)
         `)
@@ -465,14 +467,16 @@ export default function OfferDetails() {
   };
 
   const handleNextPhoto = () => {
-    if (offer?.partner.photos && offer.partner.photos.length > 0) {
-      setCurrentPhotoIndex((prev) => (prev + 1) % offer.partner.photos.length);
+    const photos = offer?.photos || offer?.partner.photos;
+    if (photos && photos.length > 0) {
+      setCurrentPhotoIndex((prev) => (prev + 1) % photos.length);
     }
   };
 
   const handlePrevPhoto = () => {
-    if (offer?.partner.photos && offer.partner.photos.length > 0) {
-      setCurrentPhotoIndex((prev) => (prev - 1 + offer.partner.photos.length) % offer.partner.photos.length);
+    const photos = offer?.photos || offer?.partner.photos;
+    if (photos && photos.length > 0) {
+      setCurrentPhotoIndex((prev) => (prev - 1 + photos.length) % photos.length);
     }
   };
 
@@ -545,17 +549,17 @@ export default function OfferDetails() {
       <div className="pb-24">
         {/* Hero Image Section */}
         <div className="relative h-80 overflow-hidden">
-          {offer.partner.photos && offer.partner.photos.length > 0 ? (
+          {((offer.photos && offer.photos.length > 0) || (offer.partner.photos && offer.partner.photos.length > 0)) ? (
             <div className="relative w-full h-full">
               <img
-                src={offer.partner.photos[currentPhotoIndex]}
+                src={(offer.photos && offer.photos.length > 0 ? offer.photos : offer.partner.photos)[currentPhotoIndex]}
                 alt={`${offer.title} - Photo ${currentPhotoIndex + 1}`}
                 className="w-full h-full object-cover transition-all duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
               
               {/* Navigation Arrows */}
-              {offer.partner.photos.length > 1 && (
+              {((offer.photos && offer.photos.length > 1) || (offer.partner.photos && offer.partner.photos.length > 1)) && (
                 <>
                   <Button
                     variant="ghost"
@@ -576,7 +580,7 @@ export default function OfferDetails() {
                   
                   {/* Photo Indicators */}
                   <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                    {offer.partner.photos.map((_, index) => (
+                    {(offer.photos && offer.photos.length > 0 ? offer.photos : offer.partner.photos).map((_, index) => (
                       <button
                         key={index}
                         onClick={() => setCurrentPhotoIndex(index)}
@@ -613,14 +617,14 @@ export default function OfferDetails() {
 
         </div>
 
-        {/* Partner Photos Gallery */}
-        {offer.partner.photos && offer.partner.photos.length > 1 && (
+        {/* Partner Photos Gallery - Only show if there are additional photos */}
+        {((offer.photos && offer.photos.length > 1) || (offer.partner.photos && offer.partner.photos.length > 1)) && (
           <div className="px-6 py-6">
             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
               {t('offer_details.partner_photos')}
             </h3>
             <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
-              {offer.partner.photos.map((photo, index) => (
+              {(offer.photos && offer.photos.length > 0 ? offer.photos : offer.partner.photos).map((photo, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentPhotoIndex(index)}

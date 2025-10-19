@@ -45,6 +45,10 @@ export function OfferCard({ offer, onToggleFavorite, viewMode }: OfferCardProps)
   };
 
   const getImageUrl = () => {
+    // Prioritize offer photos over partner photos
+    if (offer.photos && offer.photos.length > 0) {
+      return offer.photos[0];
+    }
     return offer.partner.photos && offer.partner.photos.length > 0 
       ? offer.partner.photos[0] 
       : null;
