@@ -313,6 +313,7 @@ export const en = {
     conditions: 'Conditions',
     terms: 'View terms of use',
     partner_photos: 'Partner photos',
+    visit_website: 'Visit Website',
     error_loading: 'Unable to load offer details',
     error_occurred: 'An error occurred',
     login_required: 'Login required',

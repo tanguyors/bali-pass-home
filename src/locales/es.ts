@@ -313,6 +313,7 @@ export const es = {
     conditions: 'Condiciones',
     terms: 'Ver términos de uso',
     partner_photos: 'Fotos del socio',
+    visit_website: 'Visitar sitio web',
     error_loading: 'No se pudieron cargar los detalles de la oferta',
     error_occurred: 'Ocurrió un error',
     login_required: 'Inicio de sesión requerido',
