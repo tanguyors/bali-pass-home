@@ -691,12 +691,16 @@ export default function OfferDetails() {
                 )}
                 
                 {offer.partner.phone && (
-                  <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
-                    <div className="w-10 h-10 bg-green-500/10 rounded-full flex items-center justify-center">
+                  <a 
+                    href={`tel:${offer.partner.phone}`}
+                    className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors group"
+                  >
+                    <div className="w-10 h-10 bg-green-500/10 rounded-full flex items-center justify-center group-hover:bg-green-500/20 transition-colors">
                       <Phone className="w-5 h-5 text-green-600" />
                     </div>
-                    <span className="text-slate-700 dark:text-slate-300 flex-1">{offer.partner.phone}</span>
-                  </div>
+                    <span className="text-green-600 dark:text-green-400 flex-1 font-medium">{offer.partner.phone}</span>
+                    <ExternalLink className="w-4 h-4 text-green-600 dark:text-green-400" />
+                  </a>
                 )}
 
                 {offer.partner.website && (
