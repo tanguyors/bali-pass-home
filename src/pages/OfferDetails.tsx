@@ -704,33 +704,29 @@ export default function OfferDetails() {
                 )}
 
                 {offer.partner.website && (
-                  <a 
-                    href={offer.partner.website.startsWith('http') ? offer.partner.website : `https://${offer.partner.website}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors group"
+                  <button 
+                    onClick={() => openExternalUrl(offer.partner.website.startsWith('http') ? offer.partner.website : `https://${offer.partner.website}`)}
+                    className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors group w-full text-left"
                   >
                     <div className="w-10 h-10 bg-blue-500/10 rounded-full flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
                       <Globe className="w-5 h-5 text-blue-600" />
                     </div>
                     <span className="text-blue-600 dark:text-blue-400 flex-1 font-medium">{t('offer_details.visit_website')}</span>
                     <ExternalLink className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                  </a>
+                  </button>
                 )}
 
                 {offer.partner.instagram && (
-                  <a 
-                    href={`https://instagram.com/${offer.partner.instagram.replace('@', '')}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors group"
+                  <button 
+                    onClick={() => openExternalUrl(`https://instagram.com/${offer.partner.instagram.replace('@', '')}`)}
+                    className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors group w-full text-left"
                   >
                     <div className="w-10 h-10 bg-pink-500/10 rounded-full flex items-center justify-center group-hover:bg-pink-500/20 transition-colors">
                       <Instagram className="w-5 h-5 text-pink-600" />
                     </div>
                     <span className="text-pink-600 dark:text-pink-400 flex-1 font-medium">@{offer.partner.instagram}</span>
                     <ExternalLink className="w-4 h-4 text-pink-600 dark:text-pink-400" />
-                  </a>
+                  </button>
                 )}
               </div>
             </CardContent>

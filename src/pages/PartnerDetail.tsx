@@ -289,48 +289,38 @@ const PartnerDetail: React.FC = () => {
             
             {partner.phone && (
               <Button
-                asChild
+                onClick={() => openExternalUrl(`https://wa.me/${partner.phone.replace(/[^\d+]/g, '')}`)}
                 variant="secondary"
                 className="w-full justify-start gap-3 rounded-md"
                 aria-label={t('partner_details.contact_whatsapp')}
               >
-                <a
-                  href={`https://wa.me/${partner.phone.replace(/[^\d+]/g, '')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Phone className="w-5 h-5" />
-                  <span className="text-sm font-medium">{partner.phone}</span>
-                </a>
+                <Phone className="w-5 h-5" />
+                <span className="text-sm font-medium">{partner.phone}</span>
               </Button>
             )}
             
             {partner.website && (
-              <div className="flex items-center gap-3">
+              <button 
+                onClick={() => openExternalUrl(partner.website)}
+                className="flex items-center gap-3 text-left hover:opacity-80 transition-opacity"
+              >
                 <Globe className="w-5 h-5 text-muted-foreground" />
-                <a 
-                  href={partner.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-primary hover:underline"
-                >
+                <span className="text-sm text-primary hover:underline">
                   {t('partner_details.website')}
-                </a>
-              </div>
+                </span>
+              </button>
             )}
             
             {partner.instagram && (
-              <div className="flex items-center gap-3">
+              <button 
+                onClick={() => openExternalUrl(`https://instagram.com/${partner.instagram}`)}
+                className="flex items-center gap-3 text-left hover:opacity-80 transition-opacity"
+              >
                 <Instagram className="w-5 h-5 text-muted-foreground" />
-                <a 
-                  href={`https://instagram.com/${partner.instagram}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-primary hover:underline"
-                >
+                <span className="text-sm text-primary hover:underline">
                   @{partner.instagram}
-                </a>
-              </div>
+                </span>
+              </button>
             )}
           </CardContent>
         </Card>
