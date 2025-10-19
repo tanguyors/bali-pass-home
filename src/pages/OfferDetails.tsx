@@ -682,25 +682,16 @@ export default function OfferDetails() {
 
               <div className="space-y-3">
                 {offer.partner.address && (
-                  <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
-                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                  <button 
+                    onClick={() => openExternalUrl(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(offer.partner.address)}`)}
+                    className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors group w-full text-left"
+                  >
+                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                       <MapPin className="w-5 h-5 text-primary" />
                     </div>
                     <span className="text-slate-700 dark:text-slate-300 flex-1">{offer.partner.address}</span>
-                  </div>
-                )}
-                
-                {offer.partner.phone && (
-                  <a 
-                    href={`tel:${offer.partner.phone}`}
-                    className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors group"
-                  >
-                    <div className="w-10 h-10 bg-green-500/10 rounded-full flex items-center justify-center group-hover:bg-green-500/20 transition-colors">
-                      <Phone className="w-5 h-5 text-green-600" />
-                    </div>
-                    <span className="text-green-600 dark:text-green-400 flex-1 font-medium">{offer.partner.phone}</span>
-                    <ExternalLink className="w-4 h-4 text-green-600 dark:text-green-400" />
-                  </a>
+                    <ExternalLink className="w-4 h-4 text-primary" />
+                  </button>
                 )}
 
                 {offer.partner.website && (
