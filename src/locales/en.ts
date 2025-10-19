@@ -391,6 +391,7 @@ export const en = {
   // Categories translations
   category_names: {
     'Activités': 'Activities',
+    'Beach Club': 'Beach Club',
     'Bien-être': 'Wellness',
     'Co-Working': 'Co-Working',
     'Culture': 'Culture',

@@ -391,6 +391,7 @@ export const id = {
   // Categories translations
   category_names: {
     'Activités': 'Aktivitas',
+    'Beach Club': 'Klub Pantai',
     'Bien-être': 'Kesehatan',
     'Co-Working': 'Co-Working',
     'Culture': 'Budaya',

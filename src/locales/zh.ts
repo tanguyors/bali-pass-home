@@ -391,6 +391,7 @@ export const zh = {
   // Categories translations
   category_names: {
     'Activités': '活动',
+    'Beach Club': '海滩俱乐部',
     'Bien-être': '健康',
     'Co-Working': '联合办公',
     'Culture': '文化',
