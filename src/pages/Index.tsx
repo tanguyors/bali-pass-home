@@ -49,8 +49,8 @@ const Index = () => {
         {/* Trial Expired Banner - After Hero */}
         {isAuthenticated && isTrialExpired && <TrialExpiredBanner />}
         
-        {/* Pricing Highlight - only show for unauthenticated or users without pass */}
-        {(!isAuthenticated || !hasActivePass) && <PricingHighlight />}
+        {/* Pricing Highlight - only show for unauthenticated or users without pass AND without expired trial */}
+        {(!isAuthenticated || (!hasActivePass && !isTrialExpired)) && <PricingHighlight />}
         
         {/* Quick Actions - only for authenticated users */}
         {isAuthenticated && <QuickActions hasActivePass={hasActivePass} />}
