@@ -41,13 +41,13 @@ const Index = () => {
       
       {/* Main Content */}
       <main className="pb-20">
-        {/* Trial Expired Banner */}
-        {isAuthenticated && isTrialExpired && <TrialExpiredBanner />}
-        
         {/* Conditional Hero Section */}
         {!isAuthenticated && <HeroUnauthenticated />}
         {isAuthenticated && !hasActivePass && <HeroNoPass />}
         {isAuthenticated && hasActivePass && <HeroWithPass user={user} />}
+        
+        {/* Trial Expired Banner - After Hero */}
+        {isAuthenticated && isTrialExpired && <TrialExpiredBanner />}
         
         {/* Pricing Highlight - only show for unauthenticated or users without pass */}
         {(!isAuthenticated || !hasActivePass) && <PricingHighlight />}
