@@ -75,7 +75,7 @@ export const es = {
     your_privilege_pass: 'Tu pase de privilegios para Bali',
     connect_to_access: 'Inicia sesión para acceder a tu pase y descubrir tus ahorros',
     benefits_included: 'Beneficios incluidos',
-    exclusive_discounts: 'Descuentos exclusivos en más de 50 socios',
+    exclusive_discounts: 'Descuentos exclusivos en',
     simple_qr_scan: 'Escaneo simple con código QR',
     valid_12_months: 'Válido por 12 meses',
     support_24_7: 'Soporte al cliente 24/7',

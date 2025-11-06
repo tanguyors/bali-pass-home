@@ -33,6 +33,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { useToast } from '@/components/ui/use-toast';
 import { useOfferFavorites } from '@/hooks/useOfferFavorites';
+import { usePartnersCount } from '@/hooks/usePartnersCount';
 import { supabase } from '@/integrations/supabase/client';
 import { openExternalUrl } from '@/lib/browser';
 
@@ -74,6 +75,7 @@ const MonPass: React.FC = () => {
   const { t } = useLanguage();
   const { user, profile, userPass, loading, hasActivePass } = useAuth();
   const { favorites, loading: favoritesLoading, removeFromFavorites } = useOfferFavorites();
+  const { partnersCount } = usePartnersCount();
   const [showScanner, setShowScanner] = useState(false);
   const [scannedPartner, setScannedPartner] = useState<any>(null);
   const [redemptions, setRedemptions] = useState<Redemption[]>([]);
@@ -277,7 +279,9 @@ const MonPass: React.FC = () => {
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <CheckCircle className="w-5 h-5 text-green-300 flex-shrink-0" />
-                  <span>{t('pass.exclusive_discounts')}</span>
+                  <span>
+                    {t('pass.exclusive_discounts')} +{partnersCount} {t('hero.partners')}
+                  </span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="w-5 h-5 text-green-300 flex-shrink-0" />

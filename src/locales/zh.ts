@@ -75,7 +75,7 @@ export const zh = {
     your_privilege_pass: '您的巴厘岛特权通行证',
     connect_to_access: '登录以访问您的通行证并发现您的节省',
     benefits_included: '包含的福利',
-    exclusive_discounts: '50多个合作伙伴的独家折扣',
+    exclusive_discounts: '独家折扣在',
     simple_qr_scan: '简单的二维码扫描',
     valid_12_months: '有效期12个月',
     support_24_7: '24/7客户支持',

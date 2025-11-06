@@ -75,7 +75,7 @@ export const id = {
     your_privilege_pass: 'Pass istimewa Anda untuk Bali',
     connect_to_access: 'Masuk untuk mengakses pass Anda dan temukan penghematan',
     benefits_included: 'Manfaat yang disertakan',
-    exclusive_discounts: 'Diskon eksklusif di 50+ mitra',
+    exclusive_discounts: 'Diskon eksklusif di',
     simple_qr_scan: 'Pemindaian QR code sederhana',
     valid_12_months: 'Berlaku selama 12 bulan',
     support_24_7: 'Dukungan pelanggan 24/7',
