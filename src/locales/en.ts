@@ -329,6 +329,16 @@ export const en = {
     reviews: 'reviews',
   },
 
+  trial: {
+    expired_title: "Trial Ended!",
+    expired_description: "You've used your trial offer. Discover all exclusive offers with the full BaliPass.",
+    benefit_1: "Unlimited access to all partner offers",
+    benefit_2: "Exclusive discounts up to 50%",
+    benefit_3: "Valid for 12 months across Bali",
+    buy_pass_now: "Buy BaliPass",
+    maybe_later: "Maybe later"
+  },
+
   // Partner Details
   partner_details: {
     loading: 'Loading partner...',

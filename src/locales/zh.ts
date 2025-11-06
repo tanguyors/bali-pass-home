@@ -329,6 +329,16 @@ export const zh = {
     reviews: '评价',
   },
 
+  trial: {
+    expired_title: "试用结束！",
+    expired_description: "您已使用试用优惠。使用完整的BaliPass探索所有独家优惠。",
+    benefit_1: "无限访问所有合作伙伴优惠",
+    benefit_2: "独家折扣高达50%",
+    benefit_3: "在巴厘岛全境12个月有效",
+    buy_pass_now: "购买BaliPass",
+    maybe_later: "稍后再说"
+  },
+
   // Partner Details
   partner_details: {
     loading: '加载合作伙伴中...',

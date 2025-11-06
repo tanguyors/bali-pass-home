@@ -329,6 +329,16 @@ export const id = {
     reviews: 'ulasan',
   },
 
+  trial: {
+    expired_title: "Uji Coba Selesai!",
+    expired_description: "Anda telah menggunakan penawaran uji coba Anda. Temukan semua penawaran eksklusif dengan BaliPass lengkap.",
+    benefit_1: "Akses tak terbatas ke semua penawaran mitra",
+    benefit_2: "Diskon eksklusif hingga 50%",
+    benefit_3: "Berlaku 12 bulan di seluruh Bali",
+    buy_pass_now: "Beli BaliPass",
+    maybe_later: "Nanti"
+  },
+
   // Partner Details
   partner_details: {
     loading: 'Memuat mitra...',

@@ -329,6 +329,16 @@ export const es = {
     reviews: 'reseñas',
   },
 
+  trial: {
+    expired_title: "¡Prueba terminada!",
+    expired_description: "Has usado tu oferta de prueba. Descubre todas las ofertas exclusivas con el BaliPass completo.",
+    benefit_1: "Acceso ilimitado a todas las ofertas de socios",
+    benefit_2: "Descuentos exclusivos de hasta 50%",
+    benefit_3: "Válido por 12 meses en todo Bali",
+    buy_pass_now: "Comprar BaliPass",
+    maybe_later: "Más tarde"
+  },
+
   // Partner Details
   partner_details: {
     loading: 'Cargando socio...',

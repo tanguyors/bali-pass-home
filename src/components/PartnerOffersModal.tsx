@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
+import { TrialExpiredModal } from "./TrialExpiredModal";
 
 interface PartnerOffersModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
   const [isRedeeming, setIsRedeeming] = useState<string | null>(null);
   const [showRedemptionConfirmation, setShowRedemptionConfirmation] = useState(false);
   const [redemptionData, setRedemptionData] = useState<any>(null);
+  const [showTrialExpired, setShowTrialExpired] = useState(false);
   const { toast } = useToast();
   const { t } = useLanguage();
 
@@ -39,7 +41,7 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
       // Vérifier si l'utilisateur a un pass actif
       const { data: userPass } = await supabase
         .from('passes')
-        .select('id, expires_at')
+        .select('id, expires_at, qr_token')
         .eq('user_id', user.id)
         .eq('status', 'active')
         .single();
@@ -116,6 +118,16 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
       // Afficher la confirmation
       setRedemptionData(confirmationData);
       setShowRedemptionConfirmation(true);
+
+      // Vérifier si c'est un pass d'essai
+      const isTrialPass = userPass.qr_token?.startsWith('TRIAL_');
+      if (isTrialPass) {
+        // Attendre un peu avant d'afficher le modal trial (laisser voir la confirmation)
+        setTimeout(() => {
+          setShowRedemptionConfirmation(false);
+          setShowTrialExpired(true);
+        }, 3000);
+      }
       
     } catch (error) {
       console.error('Erreur lors de la rédemption:', error);
@@ -314,6 +326,14 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
           </div>
         </DialogContent>
       </Dialog>
+
+      <TrialExpiredModal
+        isOpen={showTrialExpired}
+        onClose={() => {
+          setShowTrialExpired(false);
+          onClose();
+        }}
+      />
     </>
   );
 }
