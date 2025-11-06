@@ -116,6 +116,7 @@ export const zh = {
   // Offers
   offers: {
     view_offer: '查看优惠',
+    pass_required: '需要通行证',
     connect_message: '连接并获取您的巴厘岛通行证',
     access_details: '访问完整的优惠详情',
     connect_button: '连接',

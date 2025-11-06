@@ -116,6 +116,7 @@ export const en = {
   // Offers
   offers: {
     view_offer: 'View Offer',
+    pass_required: 'Pass required',
     connect_message: 'Connect and get your Bali\'Pass',
     access_details: 'Access full offer details',
     connect_button: 'Connect',

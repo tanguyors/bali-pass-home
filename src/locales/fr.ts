@@ -122,6 +122,7 @@ export const fr = {
   // Offers
   offers: {
     view_offer: 'Voir l\'offre',
+    pass_required: 'Pass requis',
     connect_message: 'Connectez-vous et obtenez votre Bali\'Pass',
     access_details: 'Accédez aux détails complets des offres',
     connect_button: 'Se connecter',

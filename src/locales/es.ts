@@ -116,6 +116,7 @@ export const es = {
   // Offers
   offers: {
     view_offer: 'Ver Oferta',
+    pass_required: 'Pase requerido',
     connect_message: 'Conéctate y obtén tu Bali\'Pass',
     access_details: 'Accede a todos los detalles de la oferta',
     connect_button: 'Conectar',

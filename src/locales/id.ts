@@ -116,6 +116,7 @@ export const id = {
   // Offers
   offers: {
     view_offer: 'Lihat Penawaran',
+    pass_required: 'Diperlukan pass',
     connect_message: 'Terhubung dan dapatkan Bali\'Pass Anda',
     access_details: 'Akses detail penawaran lengkap',
     connect_button: 'Terhubung',

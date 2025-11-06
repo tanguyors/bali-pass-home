@@ -114,7 +114,7 @@ export function FeaturedOffers() {
     }
   };
 
-  const shouldBlur = !user || !hasActivePass;
+  const shouldBlur = false; // Les offres sont maintenant visibles pour tous
 
   if (offers.length === 0) {
     return null;
@@ -138,25 +138,13 @@ export function FeaturedOffers() {
           {offers.map((offer) => (
             <div
               key={offer.id}
-              className={`flex-shrink-0 w-72 bg-card rounded-2xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-shadow duration-200 flex flex-col relative ${shouldBlur ? 'blur-sm' : ''}`}
+              className="flex-shrink-0 w-72 bg-card rounded-2xl overflow-hidden shadow-bali hover:shadow-bali-4 transition-shadow duration-200 flex flex-col relative"
               style={{ scrollSnapAlign: 'start' }}
             >
-              {shouldBlur && (
-                <div className="absolute inset-0 bg-black/20 z-10 flex items-center justify-center">
-                  <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 mx-4 text-center">
-                    <p className="text-sm font-medium text-gray-800 mb-2">
-                      {t('offers.connect_message')}
-                    </p>
-                    <p className="text-xs text-gray-600 mb-3">
-                      {t('offers.access_details')}
-                    </p>
-                    <Button
-                      size="sm"
-                      onClick={() => navigate('/auth')}
-                      className="text-xs"
-                    >
-                      {t('offers.connect_button')}
-                    </Button>
+              {!hasActivePass && (
+                <div className="absolute top-2 right-2 z-10">
+                  <div className="bg-primary/90 backdrop-blur-sm text-white text-[10px] font-semibold px-2 py-1 rounded-full shadow-lg">
+                    🔒 {t('offers.pass_required')}
                   </div>
                 </div>
               )}
@@ -220,9 +208,8 @@ export function FeaturedOffers() {
                   <Button 
                     variant="pill" 
                     size="sm" 
-                    className="px-4 flex-1 h-9 disabled:opacity-50"
+                    className="px-4 flex-1 h-9"
                     onClick={() => navigate(`/offer/${offer.id}`)}
-                    disabled={shouldBlur}
                   >
                     {t('offers.view_offer')}
                   </Button>
@@ -230,9 +217,8 @@ export function FeaturedOffers() {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="px-3 h-9 w-12 flex-shrink-0 bg-gradient-to-r from-primary/10 to-lagoon/10 border-primary/20 hover:from-primary/20 hover:to-lagoon/20 hover:border-primary/30 hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50"
+                      className="px-3 h-9 w-12 flex-shrink-0 bg-gradient-to-r from-primary/10 to-lagoon/10 border-primary/20 hover:from-primary/20 hover:to-lagoon/20 hover:border-primary/30 hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md"
                       onClick={() => openNavigation(offer.partner.address!)}
-                      disabled={shouldBlur}
                       title="Navigation GPS"
                     >
                       <Navigation className="w-4 h-4 text-primary" />
