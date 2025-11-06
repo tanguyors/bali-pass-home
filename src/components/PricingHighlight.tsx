@@ -12,7 +12,7 @@ export function PricingHighlight() {
             <p className="text-sm text-primary font-semibold uppercase tracking-wide mb-2">
               {t('pricing.try_now')}
             </p>
-            <p className="text-4xl font-bold text-white mb-1">
+            <p className="text-4xl font-bold text-foreground mb-1">
               $0
             </p>
             <p className="text-sm text-primary font-medium">
@@ -25,13 +25,13 @@ export function PricingHighlight() {
           
           {/* Right column - Potential Savings */}
           <div className="flex-1 text-center">
-            <p className="text-sm text-white font-semibold uppercase tracking-wide mb-2">
+            <p className="text-sm text-foreground font-semibold uppercase tracking-wide mb-2">
               {t('pricing.save_up_to')}
             </p>
             <p className="text-4xl font-bold text-coral mb-1">
               $1,000.00
             </p>
-            <p className="text-sm text-white font-medium">
+            <p className="text-sm text-foreground font-medium">
               {t('pricing.in_cumulative_savings')}
             </p>
           </div>
