@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { usePassSettings } from "@/hooks/usePassSettings";
-import { usePartnersCount } from "@/hooks/usePartnersCount";
 import { ExternalLink, ArrowRight } from "lucide-react";
 import baliHeroImage from "@/assets/bali-hero.jpg";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +10,6 @@ import { openExternalUrl } from "@/lib/browser";
 export function HeroNoPass() {
   const { t } = useLanguage();
   const { settings: passSettings } = usePassSettings();
-  const { partnersCount } = usePartnersCount();
   const navigate = useNavigate();
 
   const getSettingValue = (key: string, defaultValue: string = '') => {
@@ -47,11 +45,6 @@ export function HeroNoPass() {
           {getSettingValue('validity_period') && (
             <div className="bg-white/25 backdrop-blur-sm rounded-full px-3 py-1.5 text-xs font-medium">
               {getSettingValue('validity_period')}
-            </div>
-          )}
-          {partnersCount > 0 && (
-            <div className="bg-white/25 backdrop-blur-sm rounded-full px-3 py-1.5 text-xs font-medium">
-              +{partnersCount} {t('hero.partners')}
             </div>
           )}
         </div>
