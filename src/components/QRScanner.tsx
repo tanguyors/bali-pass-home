@@ -166,27 +166,42 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
 
-    if (!context || video.videoWidth === 0) return;
+    if (!context || video.videoWidth === 0 || video.videoHeight === 0) return;
 
     // Utiliser requestAnimationFrame pour éviter de bloquer le thread principal
     requestAnimationFrame(() => {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      context.drawImage(video, 0, 0);
+      try {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
 
-      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-      
-      // Utilisation de jsQR avec une seule tentative pour améliorer la performance
-      const code = jsQR(imageData.data, imageData.width, imageData.height, {
-        inversionAttempts: "dontInvert",
-      });
+        if (canvas.width === 0 || canvas.height === 0) return;
 
-      if (code) {
-        // Nettoyer les données scannées
-        const cleanedData = code.data.trim().replace(/[\r\n\t\s]/g, '');
+        context.drawImage(video, 0, 0);
+
+        let imageData: ImageData | undefined;
+        try {
+          imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+        } catch (e) {
+          // Peut arriver si la vidéo n'est pas encore prête
+          return;
+        }
+        if (!imageData) return;
         
-        stopCamera();
-        handleScanResult(cleanedData);
+        // Utilisation de jsQR avec une seule tentative pour améliorer la performance
+        const code = jsQR(imageData.data, imageData.width, imageData.height, {
+          inversionAttempts: "dontInvert",
+        });
+
+        if (code) {
+          // Nettoyer les données scannées
+          const cleanedData = code.data.trim().replace(/[\r\n\t\s]/g, '');
+          
+          // Ne pas arrêter la caméra ici. On valide d'abord le format.
+          handleScanResult(cleanedData, true);
+        }
+      } catch (err) {
+        // Ignore et continuer
+        return;
       }
     });
   };
@@ -242,29 +257,34 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
 
   const handleManualSubmit = () => {
     if (manualInput.trim()) {
-      handleScanResult(manualInput.trim());
+      handleScanResult(manualInput.trim(), false);
     }
   };
 
-  const handleScanResult = async (data: string) => {
+  const handleScanResult = async (data: string, silentInvalid: boolean = true) => {
     if (scanned) return;
-    
-    setScanned(true);
-    
+
     try {
-      // Vérifier si c'est un QR code partenaire
-      if (!data.startsWith('PARTNER_')) {
-        toast({
-          title: "Code invalide",
-          description: "Ce n'est pas un code partenaire Bali'Pass valide.",
-          variant: "destructive",
-        });
-        setTimeout(() => setScanned(false), 2000);
+      // Valider rapidement le format attendu du code
+      const isValidFormat = /^PARTNER_[A-Z0-9]{4,}$/i.test(data);
+      if (!isValidFormat) {
+        // Si le code est invalide et qu'on vient du champ manuel, on affiche un toast
+        if (!silentInvalid) {
+          toast({
+            title: "Code invalide",
+            description: "Ce n'est pas un code partenaire Bali'Pass valide.",
+            variant: "destructive",
+          });
+        }
+        // Ne pas bloquer le scanner
         return;
       }
 
+      // Montrer l'état de validation et éviter les scans concurrents
+      setScanned(true);
+
       // Créer un timeout pour la requête (5 secondes)
-      const timeoutPromise = new Promise((_, reject) => 
+      const timeoutPromise = new Promise((_, reject) =>
         setTimeout(() => reject(new Error('Timeout')), 5000)
       );
 
@@ -294,12 +314,14 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
       const { data: partner, error } = await Promise.race([queryPromise, timeoutPromise]) as any;
 
       if (error || !partner) {
-        toast({
-          title: "Partenaire introuvable",
-          description: "Ce code ne correspond à aucun partenaire actif.",
-          variant: "destructive",
-        });
-        setTimeout(() => setScanned(false), 2000);
+        if (!silentInvalid) {
+          toast({
+            title: "Partenaire introuvable",
+            description: "Ce code ne correspond à aucun partenaire actif.",
+            variant: "destructive",
+          });
+        }
+        setScanned(false); // Reprendre le scan
         return;
       }
 
@@ -307,12 +329,14 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
       const activeOffers = partner.offers?.filter((offer: any) => offer.is_active) || [];
       
       if (activeOffers.length === 0) {
-        toast({
-          title: "Aucune offre disponible",
-          description: "Ce partenaire n'a actuellement aucune offre active.",
-          variant: "destructive",
-        });
-        setTimeout(() => setScanned(false), 2000);
+        if (!silentInvalid) {
+          toast({
+            title: "Aucune offre disponible",
+            description: "Ce partenaire n'a actuellement aucune offre active.",
+            variant: "destructive",
+          });
+        }
+        setScanned(false); // Reprendre le scan
         return;
       }
 
@@ -329,12 +353,14 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
       
     } catch (error) {
       console.error('Erreur lors de la validation du code:', error);
-      toast({
-        title: "Erreur",
-        description: "Une erreur s'est produite lors de la validation.",
-        variant: "destructive",
-      });
-      setTimeout(() => setScanned(false), 2000);
+      if (!silentInvalid) {
+        toast({
+          title: "Erreur",
+          description: "Une erreur s'est produite lors de la validation.",
+          variant: "destructive",
+        });
+      }
+      setScanned(false);
     }
   };
 
