@@ -25,7 +25,7 @@ export function TrialExpiredModal({ isOpen, onClose }: TrialExpiredModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden border-0 bg-gradient-to-br from-primary/5 via-background to-lagoon/5">
+      <DialogContent hideCloseButton className="sm:max-w-md p-0 gap-0 overflow-hidden border-0 bg-gradient-to-br from-primary/5 via-background to-lagoon/5">
         {/* Header with gradient */}
         <div className="relative bg-gradient-to-br from-primary to-lagoon pt-12 pb-8 px-6 text-center">
           {/* Decorative blobs */}
