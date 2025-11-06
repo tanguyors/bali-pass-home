@@ -20,6 +20,7 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
   const [showRedemptionConfirmation, setShowRedemptionConfirmation] = useState(false);
   const [redemptionData, setRedemptionData] = useState<any>(null);
   const [showTrialExpired, setShowTrialExpired] = useState(false);
+  const [failedImages, setFailedImages] = useState<Set<number>>(new Set());
   const { toast } = useToast();
   const { t } = useLanguage();
 
@@ -234,14 +235,20 @@ export function PartnerOffersModal({ isOpen, onClose, partner }: PartnerOffersMo
               <div className="space-y-2">
                 <h4 className="font-medium">{t('common.photos')}</h4>
                 <div className="grid grid-cols-2 gap-2">
-                  {partner.photos.slice(0, 4).map((photo: string, index: number) => (
-                    <img
-                      key={index}
-                      src={photo}
-                      alt={`Photo ${index + 1} de ${partner.name}`}
-                      className="w-full h-24 object-cover rounded-lg"
-                    />
-                  ))}
+                  {partner.photos.slice(0, 4).map((photo: string, index: number) => {
+                    if (failedImages.has(index)) return null;
+                    return (
+                      <img
+                        key={index}
+                        src={photo}
+                        alt={`Photo ${index + 1} de ${partner.name}`}
+                        className="w-full h-24 object-cover rounded-lg"
+                        onError={() => {
+                          setFailedImages(prev => new Set(prev).add(index));
+                        }}
+                      />
+                    );
+                  })}
                 </div>
               </div>
             )}
