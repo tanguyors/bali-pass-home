@@ -11,6 +11,8 @@ import { Camera as CapCamera, CameraResultType, CameraSource } from "@capacitor/
 import jsQR from "jsqr";
 import { logger } from "@/lib/logger";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useTrialStatus } from "@/hooks/useTrialStatus";
+import { TrialExpiredModal } from "@/components/TrialExpiredModal";
 
 interface QRScannerProps {
   isOpen: boolean;
@@ -26,8 +28,17 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   const [scanned, setScanned] = useState(false);
   const [manualInput, setManualInput] = useState("");
   const [isScanning, setIsScanning] = useState(false);
+  const [showTrialExpired, setShowTrialExpired] = useState(false);
   const { toast } = useToast();
   const { t } = useLanguage();
+  const { isTrialExpired } = useTrialStatus();
+
+  // Si le trial est expiré, afficher immédiatement le modal
+  useEffect(() => {
+    if (isOpen && isTrialExpired) {
+      setShowTrialExpired(true);
+    }
+  }, [isOpen, isTrialExpired]);
 
   useEffect(() => {
     if (isOpen) {
@@ -318,6 +329,7 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   };
 
   return (
+    <>
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-full max-h-full w-full h-full p-0 border-0 rounded-none">
         <VisuallyHidden>
@@ -562,5 +574,15 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
         </div>
       </DialogContent>
     </Dialog>
+
+    {/* Modal Trial Expiré */}
+    <TrialExpiredModal
+      isOpen={showTrialExpired}
+      onClose={() => {
+        setShowTrialExpired(false);
+        onClose();
+      }}
+    />
+    </>
   );
 }

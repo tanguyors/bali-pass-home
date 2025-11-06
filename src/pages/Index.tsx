@@ -11,12 +11,15 @@ import { BottomNavigation } from "@/components/BottomNavigation";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
 import { PassSummarySection } from "@/components/PassSummarySection";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { TrialExpiredBanner } from "@/components/TrialExpiredBanner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useTrialStatus } from "@/hooks/useTrialStatus";
 
 const Index = () => {
   const { t } = useLanguage();
   const { user, userPass, loading, isAuthenticated, hasActivePass } = useAuth();
+  const { isTrialExpired } = useTrialStatus();
 
   if (loading) {
     return (
@@ -38,6 +41,9 @@ const Index = () => {
       
       {/* Main Content */}
       <main className="pb-20">
+        {/* Trial Expired Banner */}
+        {isAuthenticated && isTrialExpired && <TrialExpiredBanner />}
+        
         {/* Conditional Hero Section */}
         {!isAuthenticated && <HeroUnauthenticated />}
         {isAuthenticated && !hasActivePass && <HeroNoPass />}
