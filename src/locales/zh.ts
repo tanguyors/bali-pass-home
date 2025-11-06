@@ -214,6 +214,10 @@ export const zh = {
   pricing: {
     you_pay: '您支付',
     you_save: '您节省',
+    try_now: '立即试用',
+    for_7_days: '7天',
+    save_up_to: '节省高达',
+    in_cumulative_savings: '累计节省',
     price_coming_soon: '价格即将公布',
     savings_coming_soon: '节省金额即将公布',
   },

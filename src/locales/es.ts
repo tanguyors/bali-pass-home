@@ -214,6 +214,10 @@ export const es = {
   pricing: {
     you_pay: 'Pagas',
     you_save: 'Ahorras',
+    try_now: 'Prueba ahora',
+    for_7_days: 'por 7 días',
+    save_up_to: 'Ahorra hasta',
+    in_cumulative_savings: 'en ahorros acumulados',
     price_coming_soon: 'Precio próximamente',
     savings_coming_soon: 'Ahorros próximamente',
   },

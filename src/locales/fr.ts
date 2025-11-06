@@ -220,6 +220,10 @@ export const fr = {
   pricing: {
     you_pay: 'Vous payez',
     you_save: 'Vous économisez',
+    try_now: 'Essayer maintenant',
+    for_7_days: 'pour 7 jours',
+    save_up_to: 'Économisez jusqu\'à',
+    in_cumulative_savings: 'en réductions cumulées',
     price_coming_soon: 'Prix à venir',
     savings_coming_soon: 'Économies à venir',
   },

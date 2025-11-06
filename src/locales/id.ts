@@ -214,6 +214,10 @@ export const id = {
   pricing: {
     you_pay: 'Anda bayar',
     you_save: 'Anda hemat',
+    try_now: 'Coba sekarang',
+    for_7_days: 'selama 7 hari',
+    save_up_to: 'Hemat hingga',
+    in_cumulative_savings: 'dalam penghematan kumulatif',
     price_coming_soon: 'Harga segera hadir',
     savings_coming_soon: 'Penghematan segera hadir',
   },

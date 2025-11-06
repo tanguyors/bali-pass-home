@@ -1,110 +1,41 @@
-import { usePassSettings } from "@/hooks/usePassSettings";
-import { DollarSign, Gift } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-
-interface PricingData {
-  price?: string;
-  max_savings?: string;
-  currency?: string;
-  availability_status?: string;
-}
 
 export function PricingHighlight() {
   const { t } = useLanguage();
-  const { settings, loading } = usePassSettings(['pass_price', 'savings_amount', 'pass_currency', 'availability_status']);
-
-  const pricingData: PricingData = {};
-  settings.forEach(setting => {
-    switch (setting.setting_key) {
-      case 'pass_price':
-        pricingData.price = setting.setting_value;
-        break;
-      case 'savings_amount':
-        pricingData.max_savings = setting.setting_value;
-        break;
-      case 'pass_currency':
-        pricingData.currency = setting.setting_value;
-        break;
-      case 'availability_status':
-        pricingData.availability_status = setting.setting_value;
-        break;
-    }
-  });
-
-  const formatPrice = (cents: string, currency: string = 'usd') => {
-    const value = parseInt(cents) / 100;
-    const currencySymbol = currency === 'usd' ? '$' : '€';
-    return `${currencySymbol}${value.toFixed(2)}`;
-  };
-
-  const formatSavings = (cents: string, currency: string = 'usd') => {
-    const value = parseInt(cents) / 100;
-    const currencySymbol = currency === 'usd' ? '$' : '€';
-    return `${currencySymbol}${value.toLocaleString()}`;
-  };
 
   return (
     <div className="mx-4 -mt-6 relative z-20">
       <div className="bg-card rounded-3xl p-6 shadow-bali">
         <div className="flex items-center">
-          {/* Left column - Price */}
-          <div className="flex-1 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <DollarSign className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide mb-1">
-                {t('pricing.you_pay')}
-              </p>
-              <p className="text-xl font-bold text-foreground">
-                {loading ? (
-                  <span className="animate-pulse bg-muted rounded h-6 w-16 block"></span>
-                ) : (
-                  pricingData.price && pricingData.price !== '' ? 
-                    formatPrice(pricingData.price, pricingData.currency) : 
-                    t('pricing.price_coming_soon')
-                )}
-              </p>
-            </div>
+          {/* Left column - Trial Price */}
+          <div className="flex-1 text-center">
+            <p className="text-sm text-primary font-semibold uppercase tracking-wide mb-2">
+              {t('pricing.try_now')}
+            </p>
+            <p className="text-4xl font-bold text-white mb-1">
+              $0
+            </p>
+            <p className="text-sm text-primary font-medium">
+              {t('pricing.for_7_days')}
+            </p>
           </div>
           
           {/* Vertical separator */}
-          {pricingData.max_savings && (
-            <>
-              <div className="w-px h-12 bg-border mx-4"></div>
-              
-              {/* Right column - Savings */}
-              <div className="flex-1 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-coral/10 flex items-center justify-center">
-                  <Gift className="w-5 h-5 text-coral" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide mb-1">
-                    {t('pricing.you_save')}
-                  </p>
-                  <p className="text-xl font-bold text-coral">
-                    {loading ? (
-                      <span className="animate-pulse bg-muted rounded h-6 w-20 block"></span>
-                    ) : (
-                      pricingData.max_savings && pricingData.max_savings !== '' ? 
-                        formatSavings(pricingData.max_savings, pricingData.currency) : 
-                        t('pricing.savings_coming_soon')
-                    )}
-                  </p>
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-        
-        {/* Availability chip */}
-        {pricingData.availability_status && (
-          <div className="mt-5 pt-4 border-t border-border/50 flex justify-center">
-            <div className="bg-primary/10 text-primary text-xs font-semibold px-4 py-2 rounded-full">
-              {pricingData.availability_status}
-            </div>
+          <div className="w-px h-20 bg-border mx-4"></div>
+          
+          {/* Right column - Potential Savings */}
+          <div className="flex-1 text-center">
+            <p className="text-sm text-white font-semibold uppercase tracking-wide mb-2">
+              {t('pricing.save_up_to')}
+            </p>
+            <p className="text-4xl font-bold text-coral mb-1">
+              $1,000.00
+            </p>
+            <p className="text-sm text-white font-medium">
+              {t('pricing.in_cumulative_savings')}
+            </p>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
