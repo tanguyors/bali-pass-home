@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { usePassSettings } from "@/hooks/usePassSettings";
+import { usePartnersCount } from "@/hooks/usePartnersCount";
 import { ArrowRight, CreditCard } from "lucide-react";
 import baliHeroImage from "@/assets/bali-hero.jpg";
 
 export function BaliPassHero() {
   const { settings: passSettings } = usePassSettings();
+  const { partnersCount } = usePartnersCount();
 
   const getSettingValue = (key: string, defaultValue: string = '') => {
     const setting = passSettings.find(s => s.setting_key === key);
@@ -34,9 +36,9 @@ export function BaliPassHero() {
               {getSettingValue('validity_period')}
             </div>
           )}
-          {getSettingValue('partner_count') && (
+          {partnersCount > 0 && (
             <div className="bg-white/25 backdrop-blur-sm rounded-full px-3 py-1.5 text-xs font-medium">
-              {getSettingValue('partner_count')} Partenaires
+              +{partnersCount} Partenaires
             </div>
           )}
           {getSettingValue('security_badge') && (
