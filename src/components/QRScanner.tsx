@@ -341,7 +341,7 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   return (
     <>
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-full max-h-full w-full h-full p-0 border-0 rounded-none">
+      <DialogContent hideCloseButton className="max-w-full max-h-full w-full h-full p-0 border-0 rounded-none">
         <VisuallyHidden>
           <DialogTitle>{t('action.scan_qr')}</DialogTitle>
         </VisuallyHidden>
