@@ -120,13 +120,17 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
 
       logger.debug('Fetching offers with filters', filters);
 
+      // Créer un timeout pour éviter les requêtes qui traînent
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Timeout fetching offers')), 10000)
+      );
+
       let query = supabase
         .from('offers')
         .select(`
           id,
           title,
           short_desc,
-          long_desc,
           value_text,
           promo_type,
           value_number,
@@ -155,7 +159,9 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
       const to = from + pageSize - 1;
       query = query.range(from, to);
 
-      const { data, error } = await query;
+      // Exécuter la requête avec timeout
+      const queryPromise = query;
+      const { data, error } = await Promise.race([queryPromise, timeoutPromise]) as any;
 
       if (error) {
         setError(error.message);
@@ -188,17 +194,23 @@ export function useOffers(userLatitude?: number | null, userLongitude?: number |
         const currentLat = userLatitude;
         const currentLng = userLongitude;
         
-        const offersWithDistance = filteredData.map(offer => {
-          const currentFavorites = favoritesRef.current; // Use ref to avoid dependency cycle
-          const currentUsedOffers = usedOffersRef.current; // Use ref to avoid dependency cycle
-          return {
-            ...offer,
-            distance: (currentLat && currentLng && offer.partner?.lat && offer.partner?.lng)
-              ? calculateDistance(currentLat, currentLng, offer.partner.lat, offer.partner.lng)
-              : undefined,
-            isFavorite: currentFavorites.has(offer.id),
-            isUsed: currentUsedOffers.has(offer.id),
-          };
+        // Utiliser setTimeout pour déplacer les calculs hors du thread principal
+        const offersWithDistance = await new Promise<typeof filteredData>((resolve) => {
+          setTimeout(() => {
+            const result = filteredData.map(offer => {
+              const currentFavorites = favoritesRef.current;
+              const currentUsedOffers = usedOffersRef.current;
+              return {
+                ...offer,
+                distance: (currentLat && currentLng && offer.partner?.lat && offer.partner?.lng)
+                  ? calculateDistance(currentLat, currentLng, offer.partner.lat, offer.partner.lng)
+                  : undefined,
+                isFavorite: currentFavorites.has(offer.id),
+                isUsed: currentUsedOffers.has(offer.id),
+              };
+            });
+            resolve(result);
+          }, 0);
         });
 
         // Apply distance filter

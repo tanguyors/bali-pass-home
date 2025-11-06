@@ -115,7 +115,12 @@ export default function OfferDetails() {
 
   const fetchOffer = async (offerId: string) => {
     try {
-      const { data, error } = await supabase
+      // Ajouter un timeout de 8 secondes
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Timeout')), 8000)
+      );
+
+      const queryPromise = supabase
         .from('offers')
         .select(`
           id,
@@ -152,6 +157,8 @@ export default function OfferDetails() {
         .eq('id', offerId)
         .eq('is_active', true)
         .single();
+
+      const { data, error } = await Promise.race([queryPromise, timeoutPromise]) as any;
 
       if (error) {
         console.error('Error fetching offer:', error);

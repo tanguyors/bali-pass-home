@@ -156,7 +156,7 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
   const startScanning = () => {
     intervalRef.current = setInterval(() => {
       scanQRCode();
-    }, 100); // Scan toutes les 100ms
+    }, 300); // Scan toutes les 300ms pour éviter de bloquer l'UI
   };
 
   const scanQRCode = () => {
@@ -168,24 +168,27 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
 
     if (!context || video.videoWidth === 0) return;
 
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    context.drawImage(video, 0, 0);
+    // Utiliser requestAnimationFrame pour éviter de bloquer le thread principal
+    requestAnimationFrame(() => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0);
 
-    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-    
-    // Utilisation de jsQR avec plusieurs tentatives d'inversion
-    const code = jsQR(imageData.data, imageData.width, imageData.height, {
-      inversionAttempts: "attemptBoth",
-    });
-
-    if (code) {
-      // Nettoyer les données scannées
-      const cleanedData = code.data.trim().replace(/[\r\n\t\s]/g, '');
+      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
       
-      stopCamera();
-      handleScanResult(cleanedData);
-    }
+      // Utilisation de jsQR avec une seule tentative pour améliorer la performance
+      const code = jsQR(imageData.data, imageData.width, imageData.height, {
+        inversionAttempts: "dontInvert",
+      });
+
+      if (code) {
+        // Nettoyer les données scannées
+        const cleanedData = code.data.trim().replace(/[\r\n\t\s]/g, '');
+        
+        stopCamera();
+        handleScanResult(cleanedData);
+      }
+    });
   };
 
   const takeNativePhoto = async () => {
@@ -260,8 +263,13 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
         return;
       }
 
-      // Chercher le partenaire dans la base de données
-      const { data: partner, error } = await supabase
+      // Créer un timeout pour la requête (5 secondes)
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Timeout')), 5000)
+      );
+
+      // Chercher le partenaire dans la base de données avec timeout
+      const queryPromise = supabase
         .from('partners')
         .select(`
           id,
@@ -282,6 +290,8 @@ export function QRScanner({ isOpen, onClose, onScanSuccess }: QRScannerProps) {
         .eq('qr_code', data)
         .eq('status', 'approved')
         .single();
+
+      const { data: partner, error } = await Promise.race([queryPromise, timeoutPromise]) as any;
 
       if (error || !partner) {
         toast({
