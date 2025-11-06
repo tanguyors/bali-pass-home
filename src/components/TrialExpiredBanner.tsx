@@ -45,6 +45,10 @@ export function TrialExpiredBanner() {
             <div className="space-y-2 bg-muted/30 rounded-xl p-4">
               <div className="flex items-center gap-2 text-sm">
                 <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
+                <span className="text-foreground">Accès à toutes les offres disponibles</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
                 <span className="text-foreground">{t('trial.benefit_2')}</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
