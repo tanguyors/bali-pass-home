@@ -1,7 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Sparkles, X, CheckCircle } from "lucide-react";
+import { X, CheckCircle, Sparkles } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { openExternalUrl } from "@/lib/browser";
 import { useState } from "react";
 
 export function TrialExpiredBanner() {
@@ -38,17 +36,13 @@ export function TrialExpiredBanner() {
                   {t('trial.expired_title')}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  {t('trial.expired_description')}
+                  Accès à toutes les offres partenaires
                 </p>
               </div>
             </div>
 
             {/* Benefits */}
-            <div className="space-y-2 mb-5 bg-muted/30 rounded-xl p-4">
-              <div className="flex items-center gap-2 text-sm">
-                <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
-                <span className="text-foreground">{t('trial.benefit_1')}</span>
-              </div>
+            <div className="space-y-2 bg-muted/30 rounded-xl p-4">
               <div className="flex items-center gap-2 text-sm">
                 <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
                 <span className="text-foreground">{t('trial.benefit_2')}</span>
@@ -58,14 +52,6 @@ export function TrialExpiredBanner() {
                 <span className="text-foreground">{t('trial.benefit_3')}</span>
               </div>
             </div>
-
-            {/* CTA Button */}
-            <Button
-              onClick={() => openExternalUrl('https://passbali.com/')}
-              className="w-full h-12 text-base font-semibold bg-gradient-to-r from-primary to-lagoon hover:from-primary/90 hover:to-lagoon/90 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-            >
-              {t('trial.buy_pass_now')}
-            </Button>
           </div>
         </div>
       </div>
