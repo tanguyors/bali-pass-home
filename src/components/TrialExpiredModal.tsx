@@ -1,8 +1,11 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Sparkles, X } from "lucide-react";
+import { CheckCircle, Sparkles } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { openExternalUrl } from "@/lib/browser";
+import { usePartnersCount } from "@/hooks/usePartnersCount";
+import { useOffersCount } from "@/hooks/useOffersCount";
+import { useNavigate } from "react-router-dom";
 
 interface TrialExpiredModalProps {
   isOpen: boolean;
@@ -11,23 +14,18 @@ interface TrialExpiredModalProps {
 
 export function TrialExpiredModal({ isOpen, onClose }: TrialExpiredModalProps) {
   const { t } = useLanguage();
+  const navigate = useNavigate();
+  const { partnersCount } = usePartnersCount();
+  const { offersCount } = useOffersCount();
 
-  const handleBuyPass = () => {
-    openExternalUrl('https://passbali.com/');
+  const handleDiscoverOffers = () => {
+    navigate('/explorer');
     onClose();
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden border-0 bg-gradient-to-br from-primary/5 via-background to-lagoon/5">
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 z-50 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
         {/* Header with gradient */}
         <div className="relative bg-gradient-to-br from-primary to-lagoon pt-12 pb-8 px-6 text-center">
           {/* Decorative blobs */}
@@ -57,7 +55,7 @@ export function TrialExpiredModal({ isOpen, onClose }: TrialExpiredModalProps) {
                 <CheckCircle className="w-4 h-4 text-primary" />
               </div>
               <p className="text-sm text-foreground flex-1">
-                {t('trial.benefit_1')}
+                Accès à toutes les {offersCount} offres disponibles
               </p>
             </div>
             <div className="flex items-start gap-3">
@@ -65,7 +63,7 @@ export function TrialExpiredModal({ isOpen, onClose }: TrialExpiredModalProps) {
                 <CheckCircle className="w-4 h-4 text-primary" />
               </div>
               <p className="text-sm text-foreground flex-1">
-                {t('trial.benefit_2')}
+                {t('trial.benefit_2')} {partnersCount > 0 && `chez +${partnersCount} partenaires`}
               </p>
             </div>
             <div className="flex items-start gap-3">
@@ -81,10 +79,10 @@ export function TrialExpiredModal({ isOpen, onClose }: TrialExpiredModalProps) {
           {/* CTA Buttons */}
           <div className="space-y-3">
             <Button 
-              onClick={handleBuyPass}
+              onClick={handleDiscoverOffers}
               className="w-full h-12 text-base font-semibold bg-gradient-to-r from-primary to-lagoon hover:from-primary/90 hover:to-lagoon/90 text-white shadow-lg hover:shadow-xl transition-all duration-300"
             >
-              {t('trial.buy_pass_now')}
+              Découvrir les offres
             </Button>
 
             <Button 
