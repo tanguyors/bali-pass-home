@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.balipass.app',
-  appName: "Bali'Pass - Digital Pass for Bali",
+  appName: "BaliPass - Digital Pass for Bali",
   webDir: 'dist',
   plugins: {
     SplashScreen: {
@@ -16,12 +16,8 @@ const config: CapacitorConfig = {
     }
   },
   android: {
-    signingConfig: {
-      keystorePath: 'android/app/balipass-release-key.keystore',
-      keystorePassword: 'balipass2024',
-      keystoreKeyAlias: 'balipass',
-      keystoreKeyPassword: 'balipass2024'
-    }
+    // Signing configuration moved to environment variables for security
+    // Use gradle.properties or environment variables instead
   }
 };
 

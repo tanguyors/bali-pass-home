@@ -49,12 +49,10 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>This app uses the camera to scan QR codes for partner offers and promotions.</string>
+	<string>Cette application utilise la caméra pour scanner les codes QR des offres et promotions de nos partenaires à Bali.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app uses your location to show you nearby offers and attractions in Bali.</string>
+	<string>Cette application utilise votre localisation pour vous montrer les offres et attractions à proximité de votre position à Bali.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app needs access to your photo library to analyze QR codes from saved images.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>This app may use the microphone during camera operations for QR code scanning.</string>
+	<string>Cette application a besoin d'accéder à votre photothèque pour analyser les codes QR des images sauvegardées.</string>
 </dict>
 </plist>

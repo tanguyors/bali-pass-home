@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Permission descriptions for Google Play compliance -->
+    <string name="camera_permission_description">Cette application utilise la caméra pour scanner les codes QR des offres et promotions de nos partenaires à Bali.</string>
+    <string name="location_permission_description">Cette application utilise votre localisation pour vous montrer les offres et attractions à proximité de votre position à Bali.</string>
+    <string name="internet_permission_description">Cette application nécessite une connexion internet pour synchroniser vos données et afficher les offres en temps réel.</string>
+</resources>
+

@@ -7,9 +7,6 @@
 /* Photo library permission */
 "NSPhotoLibraryUsageDescription" = "Esta aplicación necesita acceso a su fototeca para analizar códigos QR de imágenes guardadas.";
 
-/* Microphone permission */
-"NSMicrophoneUsageDescription" = "Esta aplicación puede usar el micrófono durante las operaciones de cámara para escanear códigos QR.";
-
 /* App display name */
-"CFBundleDisplayName" = "Pass'Bali";
-"CFBundleName" = "Pass'Bali";
+"CFBundleDisplayName" = "BaliPass";
+"CFBundleName" = "BaliPass";
