@@ -1,6 +1,6 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Sparkles } from "lucide-react";
+import { CheckCircle, Sparkles, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { openExternalUrl } from "@/lib/browser";
 
@@ -19,56 +19,82 @@ export function TrialExpiredModal({ isOpen, onClose }: TrialExpiredModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader className="text-center">
-          <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-            <Sparkles className="w-8 h-8 text-primary" />
-          </div>
-          <DialogTitle className="text-2xl font-bold">
-            {t('trial.expired_title')}
-          </DialogTitle>
-          <DialogDescription className="text-base pt-2">
-            {t('trial.expired_description')}
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden border-0 bg-gradient-to-br from-primary/5 via-background to-lagoon/5">
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-50 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
 
-        <div className="space-y-4 py-4">
-          <div className="bg-muted/50 rounded-lg p-4 space-y-3">
+        {/* Header with gradient */}
+        <div className="relative bg-gradient-to-br from-primary to-lagoon pt-12 pb-8 px-6 text-center">
+          {/* Decorative blobs */}
+          <div className="absolute top-0 left-0 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+          
+          {/* Icon */}
+          <div className="relative mx-auto mb-4 w-20 h-20 rounded-3xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-2xl">
+            <Sparkles className="w-10 h-10 text-white" />
+          </div>
+          
+          {/* Title */}
+          <h2 className="text-2xl font-bold text-white mb-2">
+            {t('trial.expired_title')}
+          </h2>
+          <p className="text-white/90 text-sm max-w-xs mx-auto">
+            {t('trial.expired_description')}
+          </p>
+        </div>
+
+        {/* Content */}
+        <div className="p-6 space-y-5">
+          {/* Benefits card */}
+          <div className="bg-card border border-border rounded-2xl p-5 space-y-3 shadow-sm">
             <div className="flex items-start gap-3">
-              <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-foreground">
+              <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <CheckCircle className="w-4 h-4 text-primary" />
+              </div>
+              <p className="text-sm text-foreground flex-1">
                 {t('trial.benefit_1')}
               </p>
             </div>
             <div className="flex items-start gap-3">
-              <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-foreground">
+              <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <CheckCircle className="w-4 h-4 text-primary" />
+              </div>
+              <p className="text-sm text-foreground flex-1">
                 {t('trial.benefit_2')}
               </p>
             </div>
             <div className="flex items-start gap-3">
-              <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-foreground">
+              <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <CheckCircle className="w-4 h-4 text-primary" />
+              </div>
+              <p className="text-sm text-foreground flex-1">
                 {t('trial.benefit_3')}
               </p>
             </div>
           </div>
 
-          <Button 
-            onClick={handleBuyPass}
-            className="w-full h-12 text-base font-semibold"
-            size="lg"
-          >
-            {t('trial.buy_pass_now')}
-          </Button>
+          {/* CTA Buttons */}
+          <div className="space-y-3">
+            <Button 
+              onClick={handleBuyPass}
+              className="w-full h-12 text-base font-semibold bg-gradient-to-r from-primary to-lagoon hover:from-primary/90 hover:to-lagoon/90 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              {t('trial.buy_pass_now')}
+            </Button>
 
-          <Button 
-            onClick={onClose}
-            variant="ghost"
-            className="w-full"
-          >
-            {t('trial.maybe_later')}
-          </Button>
+            <Button 
+              onClick={onClose}
+              variant="ghost"
+              className="w-full text-muted-foreground hover:text-foreground"
+            >
+              {t('trial.maybe_later')}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
