@@ -11,6 +11,7 @@ import { BottomNavigation } from "@/components/BottomNavigation";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
 import { PassSummarySection } from "@/components/PassSummarySection";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { TrialPromoBanner } from "@/components/TrialPromoBanner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -42,6 +43,9 @@ const Index = () => {
         {!isAuthenticated && <HeroUnauthenticated />}
         {isAuthenticated && !hasActivePass && <HeroNoPass />}
         {isAuthenticated && hasActivePass && <HeroWithPass user={user} />}
+        
+        {/* Trial Promo Banner - only for unauthenticated users */}
+        {!isAuthenticated && <TrialPromoBanner />}
         
         {/* Pricing Highlight - only show for unauthenticated or users without pass */}
         {(!isAuthenticated || !hasActivePass) && <PricingHighlight />}

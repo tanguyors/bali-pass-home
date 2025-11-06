@@ -337,6 +337,27 @@ export const fr = {
     reviews: 'avis',
   },
 
+  trial: {
+    expired_title: "Essai terminé !",
+    expired_description: "Vous avez utilisé votre offre d'essai. Découvrez maintenant toutes les offres exclusives avec le BaliPass complet.",
+    benefit_1: "Accès illimité à toutes les offres partenaires",
+    benefit_2: "Réductions exclusives jusqu'à 50%",
+    benefit_3: "Valable 12 mois dans tout Bali",
+    buy_pass_now: "Acheter le BaliPass",
+    maybe_later: "Plus tard"
+  },
+
+  trial_promo: {
+    badge: "🎁 OFFRE SPÉCIALE",
+    title: "Testez gratuitement le BaliPass pendant 7 jours !",
+    description: "Inscrivez-vous maintenant et profitez d'une offre gratuite chez l'un de nos partenaires.",
+    benefit_1: "Accès immédiat après inscription",
+    benefit_2: "Une offre au choix parmi +50 partenaires",
+    benefit_3: "Sans engagement, sans carte bancaire",
+    cta: "Commencer mon essai gratuit",
+    disclaimer: "Offre valable 7 jours • 1 réduction utilisable"
+  },
+
   // Partner Details
   partner_details: {
     loading: 'Chargement du partenaire...',

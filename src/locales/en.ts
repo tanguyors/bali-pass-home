@@ -340,6 +340,17 @@ export const en = {
     maybe_later: "Maybe later"
   },
 
+  trial_promo: {
+    badge: "🎁 SPECIAL OFFER",
+    title: "Try BaliPass free for 7 days!",
+    description: "Sign up now and enjoy one free offer at one of our partners.",
+    benefit_1: "Instant access after registration",
+    benefit_2: "One offer of your choice from 50+ partners",
+    benefit_3: "No commitment, no credit card required",
+    cta: "Start my free trial",
+    disclaimer: "Valid for 7 days • 1 discount redeemable"
+  },
+
   // Partner Details
   partner_details: {
     loading: 'Loading partner...',

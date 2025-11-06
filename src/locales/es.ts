@@ -340,6 +340,17 @@ export const es = {
     maybe_later: "Más tarde"
   },
 
+  trial_promo: {
+    badge: "🎁 OFERTA ESPECIAL",
+    title: "¡Prueba BaliPass gratis durante 7 días!",
+    description: "Regístrate ahora y disfruta de una oferta gratis en uno de nuestros socios.",
+    benefit_1: "Acceso inmediato después del registro",
+    benefit_2: "Una oferta a elección entre más de 50 socios",
+    benefit_3: "Sin compromiso, sin tarjeta de crédito",
+    cta: "Comenzar mi prueba gratuita",
+    disclaimer: "Válido por 7 días • 1 descuento canjeable"
+  },
+
   // Partner Details
   partner_details: {
     loading: 'Cargando socio...',

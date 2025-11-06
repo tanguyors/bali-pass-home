@@ -340,6 +340,17 @@ export const id = {
     maybe_later: "Nanti"
   },
 
+  trial_promo: {
+    badge: "🎁 PENAWARAN SPESIAL",
+    title: "Coba BaliPass gratis selama 7 hari!",
+    description: "Daftar sekarang dan nikmati satu penawaran gratis di salah satu mitra kami.",
+    benefit_1: "Akses langsung setelah pendaftaran",
+    benefit_2: "Satu penawaran pilihan dari 50+ mitra",
+    benefit_3: "Tanpa komitmen, tanpa kartu kredit",
+    cta: "Mulai uji coba gratis saya",
+    disclaimer: "Berlaku 7 hari • 1 diskon dapat ditukar"
+  },
+
   // Partner Details
   partner_details: {
     loading: 'Memuat mitra...',
