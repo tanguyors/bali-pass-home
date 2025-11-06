@@ -55,7 +55,7 @@ export function TrialExpiredModal({ isOpen, onClose }: TrialExpiredModalProps) {
                 <CheckCircle className="w-4 h-4 text-primary" />
               </div>
               <p className="text-sm text-foreground flex-1">
-                Accès à toutes les {offersCount} offres disponibles
+                {t('trial.benefit_1')} {offersCount > 0 && `(${offersCount})`}
               </p>
             </div>
             <div className="flex items-start gap-3">
@@ -76,23 +76,6 @@ export function TrialExpiredModal({ isOpen, onClose }: TrialExpiredModalProps) {
             </div>
           </div>
 
-          {/* CTA Buttons */}
-          <div className="space-y-3">
-            <Button 
-              onClick={handleDiscoverOffers}
-              className="w-full h-12 text-base font-semibold bg-gradient-to-r from-primary to-lagoon hover:from-primary/90 hover:to-lagoon/90 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-            >
-              Découvrir les offres
-            </Button>
-
-            <Button 
-              onClick={onClose}
-              variant="ghost"
-              className="w-full text-muted-foreground hover:text-foreground"
-            >
-              {t('trial.maybe_later')}
-            </Button>
-          </div>
         </div>
       </DialogContent>
     </Dialog>
