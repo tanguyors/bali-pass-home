@@ -63,6 +63,7 @@ export const es = {
   pass: {
     my_pass: 'Mi Bali Pass',
     get_pass: 'Obtener Bali Pass',
+    trial_badge: 'PRUEBA',
     active: 'Activo',
     inactive: 'Inactivo',
     expired: 'Expirado',

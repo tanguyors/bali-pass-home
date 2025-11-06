@@ -338,12 +338,23 @@ const MonPass: React.FC = () => {
                 <h1 className="text-2xl font-bold">{t('pass.my_pass')}</h1>
                 <p className="text-white/80">{getDisplayName()}</p>
               </div>
-              <Badge 
-                variant="secondary" 
-                className="bg-green-100 text-green-800 border-green-200"
-              >
-                {userPass.status === 'active' ? t('pass.active') : t('pass.inactive')}
-              </Badge>
+              <div className="flex flex-col gap-2 items-end">
+                {userPass.qr_token?.startsWith('TRIAL_') && (
+                  <Badge 
+                    variant="secondary" 
+                    className="bg-yellow-100 text-yellow-800 border-yellow-300 font-bold animate-pulse"
+                  >
+                    <Award className="w-3 h-3 mr-1" />
+                    {t('pass.trial_badge')}
+                  </Badge>
+                )}
+                <Badge 
+                  variant="secondary" 
+                  className="bg-green-100 text-green-800 border-green-200"
+                >
+                  {userPass.status === 'active' ? t('pass.active') : t('pass.inactive')}
+                </Badge>
+              </div>
             </div>
             
             <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">

@@ -63,6 +63,7 @@ export const zh = {
   pass: {
     my_pass: '我的巴厘岛通行证',
     get_pass: '获取巴厘岛通行证',
+    trial_badge: '试用',
     active: '有效',
     inactive: '无效',
     expired: '已过期',

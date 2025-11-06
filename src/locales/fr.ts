@@ -66,6 +66,7 @@ export const fr = {
   pass: {
     my_pass: 'Mon Bali\'Pass',
     get_pass: 'Obtenir le Bali\'Pass',
+    trial_badge: 'ESSAI',
     active: 'Actif',
     inactive: 'Inactif',
     expired: 'Expiré',

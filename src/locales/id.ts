@@ -63,6 +63,7 @@ export const id = {
   pass: {
     my_pass: 'Bali Pass Saya',
     get_pass: 'Dapatkan Bali Pass',
+    trial_badge: 'UJI COBA',
     active: 'Aktif',
     inactive: 'Tidak Aktif',
     expired: 'Kedaluwarsa',
