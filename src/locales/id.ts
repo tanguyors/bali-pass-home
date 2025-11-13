@@ -217,7 +217,7 @@ export const id = {
     you_save: 'Anda hemat',
     try_now: 'Coba sekarang',
     for_7_days: 'selama 7 hari',
-    monthly_plan: 'Paket bulanan',
+    starting_from: 'Mulai dari',
     per_month: 'per bulan',
     save_up_to: 'Hemat hingga',
     in_cumulative_savings: 'dalam penghematan kumulatif',

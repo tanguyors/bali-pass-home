@@ -10,7 +10,7 @@ export function PricingHighlight() {
           {/* Left column - Monthly Price */}
           <div className="flex-1 text-center">
             <p className="text-sm text-primary font-semibold uppercase tracking-wide mb-2">
-              {t('pricing.monthly_plan')}
+              {t('pricing.starting_from')}
             </p>
             <p className="text-4xl font-bold text-foreground mb-1">
               $29.99
@@ -29,7 +29,7 @@ export function PricingHighlight() {
               {t('pricing.save_up_to')}
             </p>
             <p className="text-4xl font-bold text-coral mb-1">
-              $1,000.00
+              $2,000.00
             </p>
             <p className="text-sm text-foreground font-medium">
               {t('pricing.in_cumulative_savings')}

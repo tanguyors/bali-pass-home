@@ -217,7 +217,7 @@ export const es = {
     you_save: 'Ahorras',
     try_now: 'Prueba ahora',
     for_7_days: 'por 7 días',
-    monthly_plan: 'Plan mensual',
+    starting_from: 'A partir de',
     per_month: 'al mes',
     save_up_to: 'Ahorra hasta',
     in_cumulative_savings: 'en ahorros acumulados',
