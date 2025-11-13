@@ -7,16 +7,16 @@ export function PricingHighlight() {
     <div className="mx-4 -mt-6 relative z-20">
       <div className="bg-card rounded-3xl p-6 shadow-bali">
         <div className="flex items-center">
-          {/* Left column - Trial Price */}
+          {/* Left column - Monthly Price */}
           <div className="flex-1 text-center">
             <p className="text-sm text-primary font-semibold uppercase tracking-wide mb-2">
-              {t('pricing.try_now')}
+              {t('pricing.monthly_plan')}
             </p>
             <p className="text-4xl font-bold text-foreground mb-1">
-              $0
+              $29.99
             </p>
             <p className="text-sm text-primary font-medium">
-              {t('pricing.for_7_days')}
+              {t('pricing.per_month')}
             </p>
           </div>
           
