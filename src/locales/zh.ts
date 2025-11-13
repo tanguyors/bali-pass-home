@@ -217,6 +217,8 @@ export const zh = {
     you_save: '您节省',
     try_now: '立即试用',
     for_7_days: '7天',
+    monthly_plan: '月度套餐',
+    per_month: '每月',
     save_up_to: '节省高达',
     in_cumulative_savings: '累计节省',
     price_coming_soon: '价格即将公布',

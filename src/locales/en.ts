@@ -217,6 +217,8 @@ export const en = {
     you_save: 'You save',
     try_now: 'Try now',
     for_7_days: 'for 7 days',
+    monthly_plan: 'Monthly plan',
+    per_month: 'per month',
     save_up_to: 'Save up to',
     in_cumulative_savings: 'in cumulative savings',
     price_coming_soon: 'Price coming soon',

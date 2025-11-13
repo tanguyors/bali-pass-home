@@ -223,6 +223,8 @@ export const fr = {
     you_save: 'Vous économisez',
     try_now: 'Essayer maintenant',
     for_7_days: 'pour 7 jours',
+    monthly_plan: 'Plan mensuel',
+    per_month: 'par mois',
     save_up_to: 'Économisez jusqu\'à',
     in_cumulative_savings: 'en réductions cumulées',
     price_coming_soon: 'Prix à venir',
