@@ -13,7 +13,7 @@ export function PricingHighlight() {
               {t('pricing.starting_from')}
             </p>
             <p className="text-4xl font-bold text-foreground mb-1">
-              $29.99
+              $29
             </p>
             <p className="text-sm text-primary font-medium">
               {t('pricing.per_month')}
@@ -29,7 +29,7 @@ export function PricingHighlight() {
               {t('pricing.save_up_to')}
             </p>
             <p className="text-4xl font-bold text-coral mb-1">
-              $2,000.00
+              $2,000
             </p>
             <p className="text-sm text-foreground font-medium">
               {t('pricing.in_cumulative_savings')}
