@@ -52,7 +52,7 @@
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
     
-    <!-- Support for 16KB page sizes (Android 15+ requirement) -->
+    <!-- Support for 16KB page sizes (Android 15+ requirement for Google Play) -->
+    <!-- AGP 8.5.1+ with NDK r28+ provides 16KB alignment by default -->
     <supports-screens android:anyDensity="true" />
-    <uses-feature android:name="android.hardware.ram.normal" android:required="true" />
 </manifest>
