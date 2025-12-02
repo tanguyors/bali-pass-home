@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.balipass.app',
-  appName: "BaliPass - Digital Pass for Bali",
+  appName: "Pass'Bali",
   webDir: 'dist',
   plugins: {
     SplashScreen: {
